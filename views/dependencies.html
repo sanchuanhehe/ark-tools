@@ -1,0 +1,290 @@
+<html>
+
+<head>
+    <style>
+        * {
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        let tomlFilePath = "",
+            page_num = 1,
+            packages = [],
+            page_count = 1,
+            denpencies = [],
+            callingApi = false;
+        const vscode = acquireVsCodeApi();
+        window.onload = function () {
+            window.addEventListener("message", receiveMessage, false);
+        };
+        function receiveMessage(event) {
+            switch (event.data?.command) {
+                case "dependencies": {
+                    try {
+                        tomlFilePath = event.data?.data?.tomlFilePath;
+                        packages = event.data?.data?.packages;
+                        for (let i = 0; i < packages.length; i++) {
+                            let tr = document.createElement("tr");
+                            let td1 = document.createElement("td");
+                            td1.innerText = `${i}`;
+                            tr.appendChild(td1);
+                            let td2 = document.createElement("td");
+                            td2.innerText = `${packages[i].packageName}`;
+                            tr.appendChild(td2);
+                            let td3 = document.createElement("td");
+                            td3.innerText = `${packages[i].packageUrl}`;
+                            tr.appendChild(td3);
+                            let td4 = document.createElement("td");
+                            let a2 = document.createElement("a");
+                            a2.innerText = "Delete";
+                            a2.style = "margin-left:12px";
+                            a2.href = "javascript:;";
+                            a2.onclick = function () {
+                                if (a2.innerText !== 'Pending') {
+                                    let packageName = packages[i].packageName,
+                                        packageUrl = packages[i].packageUrl;
+                                    let obj = {
+                                        command: "remove-package",
+                                        projectName: packageName,
+                                        tomlFilePath: tomlFilePath
+                                    };
+                                    vscode.postMessage(obj);
+                                    a2.innerText = 'Pending';
+                                }
+                            };
+                            tr.appendChild(a2);
+                            document.getElementById("local_content").appendChild(tr);
+                        }
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    break;
+                }
+                case "search": {
+                    try {
+                        document.getElementById("search_content").innerHTML = "";
+                        denpencies = event.data?.data?.denpencies;
+                        page_count = event.data?.data?.page_count;
+                        document
+                            .getElementById("next")
+                            .setAttribute(
+                                "style",
+                                page_count > 1
+                                    ? "margin-left: 8px; border-radius: 24px;padding: 8px;"
+                                    : "margin-left: 8px; border-radius: 24px;padding: 8px;display:none"
+                            );
+                        for (let i = 0; i < denpencies.length; i++) {
+                            let name = denpencies[i]?.name?.replace(/ /gi, "");
+                            let tr = document.createElement("tr");
+                            let td1 = document.createElement("td");
+                            td1.innerText = `${i}`;
+                            tr.appendChild(td1);
+                            let td2 = document.createElement("td");
+                            td2.innerText = name;
+                            tr.appendChild(td2);
+                            let td3 = document.createElement("td");
+                            td3.innerText = `${denpencies[i].description}`;
+                            tr.appendChild(td3);
+                            let td4 = document.createElement("td");
+                            if (packages.findIndex((i) => i.packageName === name) === -1) {
+                                let a1 = document.createElement("a");
+                                a1.innerText = "Install";
+                                a1.href = "javascript:;";
+                                a1.onclick = function () {
+                                    if (a1.innerText !== 'Pending') {
+                                        let obj = {
+                                            command: "install-package",
+                                            projectName: name,
+                                            tomlFilePath: tomlFilePath,
+                                            packageUrl: denpencies[i].http_url_to_repo,
+                                            packageBranch: denpencies[i].default_branch,
+                                            packageVersion: denpencies[i].tag_list[0] ?? "*"
+                                        };
+                                        vscode.postMessage(obj);
+                                        a1.innerText = 'Pending';
+                                    }
+                                };
+                                tr.appendChild(a1);
+                            } else {
+                                let a2 = document.createElement("a");
+                                a2.innerText = "Update";
+                                a2.style = "margin-left:12px";
+                                a2.href = "javascript:;";
+                                a2.onclick = function () {
+                                    if (a2.innerText !== 'Pending') {
+                                        let obj = {
+                                            command: "update-package",
+                                            projectName: name,
+                                            tomlFilePath: tomlFilePath,
+                                            packageUrl: denpencies[i].http_url_to_repo,
+                                            packageBranch: denpencies[i].default_branch,
+                                            packageVersion: denpencies[i].tag_list[0] ?? "*"
+                                        };
+                                        vscode.postMessage(obj);
+                                        a2.innerText = 'Pending';
+                                    }
+                                };
+                                tr.appendChild(a2);
+                            }
+                            document.getElementById("search_content").appendChild(tr);
+                        }
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    callingApi = false;
+                    document.getElementById('search').innerText = "Search";
+                    break;
+                }
+                case "next": {
+                    try {
+                        let arr = event.data?.data?.denpencies;
+                        for (let i = 0; i < arr.length; i++) {
+                            let name = arr[i]?.name?.replace(/ /gi, "");
+                            let tr = document.createElement("tr");
+                            let td1 = document.createElement("td");
+                            td1.innerText = `${i + denpencies.length}`;
+                            tr.appendChild(td1);
+                            let td2 = document.createElement("td");
+                            td2.innerText = name;
+                            tr.appendChild(td2);
+                            let td3 = document.createElement("td");
+                            td3.innerText = `${arr[i].description}`;
+                            tr.appendChild(td3);
+                            let td4 = document.createElement("td");
+                            if (packages.findIndex((i) => i.packageName === name) === -1) {
+                                let a1 = document.createElement("a");
+                                a1.innerText = "Install";
+                                a1.href = "javascript:;";
+                                a1.onclick = function () {
+                                    if (a1.innerText !== 'Pending') {
+                                        let obj = {
+                                            command: "install-package",
+                                            projectName: name,
+                                            tomlFilePath: tomlFilePath,
+                                            packageUrl: arr[i].http_url_to_repo,
+                                            packageBranch: arr[i].default_branch,
+                                            packageVersion: arr[i].tag_list[0] ?? "*",
+                                        };
+                                        vscode.postMessage(obj);
+                                        a1.innerText = 'Pending';
+                                    }
+                                };
+                                tr.appendChild(a1);
+                            } else {
+                                let a2 = document.createElement("a");
+                                a2.innerText = "Update";
+                                a2.style = "margin-left:12px";
+                                a2.href = "javascript:;";
+                                a2.onclick = function () {
+                                    if (a2.innerText !== 'Pending') {
+                                        let obj = {
+                                            command: "update-package",
+                                            projectName: name,
+                                            tomlFilePath: tomlFilePath,
+                                            packageUrl: arr[i].http_url_to_repo,
+                                            packageBranch: arr[i].default_branch,
+                                            packageVersion: arr[i].tag_list[0] ?? "*",
+                                        };
+                                        vscode.postMessage(obj);
+                                        a2.innerText = "Pending";
+                                    }
+                                };
+                                tr.appendChild(a2);
+                            }
+                            document.getElementById("search_content").appendChild(tr);
+                        }
+                        denpencies.push(...arr);
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    callingApi = false;
+                    document.getElementById('next').innerText = "More";
+                    break;
+                }
+            }
+        }
+        function search() {
+            if (!callingApi) {
+                callingApi = true;
+                document.getElementById('search').innerText = "Laoding";
+                page_num = 1;
+                let keywords = document.getElementById("keywords").value;
+                let obj = {
+                    command: "search",
+                    data: keywords.trim()
+                };
+                vscode.postMessage(obj);
+            }
+        }
+        function next() {
+            if (!callingApi) {
+                if (page_count > page_num) {
+                    callingApi = true;
+                    document.getElementById('next').innerText = "Laoding";
+                    page_num++;
+                    let obj = {
+                        command: "next",
+                        data: page_num,
+                    };
+                    vscode.postMessage(obj);
+                }
+                if (page_count <= page_num) {
+                    document.getElementById("next").setAttribute("style", "margin-left: 8px; border-radius: 24px;padding: 8px;display:none");
+                }
+            }
+        }
+        function apply() {
+            let obj = {
+                command: "apply",
+            };
+            vscode.postMessage(obj);
+        }
+    </script>
+</head>
+
+<body>
+    <h3>Project Dependencies</h3>
+    <div>
+        <label>Search Dependencie Online</label>
+        <input id="keywords" type="text" placeholder="Input Here..."
+            style="margin-left: 8px; border-radius: 24px;padding: 8px;border: none;" />
+        <button id="search" style="margin-left: 8px; border-radius: 24px;padding: 8px;"
+            onclick="search()">Search</button>
+        <button style="margin-left: 8px; border-radius: 24px;padding: 8px;"
+            onclick="javascript:document.getElementById('search_content').innerHTML = ''">Clear</button>
+        <button id="next" style="margin-left: 8px; border-radius: 24px;padding: 8px;display: none;"
+            onclick="next()">More</button>
+        <table style="border: 1px solid gray;padding: 6px;margin-top: 8px;">
+            <thead>
+                <tr>
+                    <td style="width: 50px;">Index</td>
+                    <td style="width: 100px;">Package</td>
+                    <td style="width: 250px;">Description</td>
+                    <td style="width: 150px;">More</td>
+                </tr>
+            </thead>
+            <tbody id="search_content">
+            </tbody>
+        </table>
+    </div>
+    <label id="msg" style="color: red;margin-top: 8px;"></label>
+    <div style="margin-top: 8px;">
+        <label>Project Dependencie List</label>
+        <table style="border: 1px solid gray;padding: 6px;margin-top: 8px;">
+            <thead>
+                <tr>
+                    <td style="width: 50px;">Index</td>
+                    <td style="width: 250px;">Package Name</td>
+                    <td style="width: 100px;">Version</td>
+                    <td style="width: 150px;">More</td>
+                </tr>
+            </thead>
+            <tbody id="local_content">
+            </tbody>
+        </table>
+        <button style="margin-left: 8px;margin-top: 8px; border-radius: 24px;padding: 8px;"
+            onclick="apply()">applyNow</button>
+    </div>
+</body>
+
+</html>
