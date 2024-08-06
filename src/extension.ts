@@ -1,10 +1,11 @@
+import { arkTs } from './arkTs';
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	const disposable = vscode.commands.registerCommand('arkts.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World from ArkTS!');
-	});
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.dependencies", (fileUri: vscode.Uri) => {
+		arkTs.dependencies(context.extensionPath, fileUri);
+	}));
+	vscode.window.showInformationMessage("ArkTS Tools is now activate!");
 }
 
 export function deactivate() { }
