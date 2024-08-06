@@ -16,12 +16,12 @@
     "ArkUI"
   ],
   "bugs": {
-    "url": ""
+    "url": "https://gitee.com/michael-eddy/ark-tools/issues"
   },
-  "homepage": "",
+  "homepage": "https://gitee.com/michael-eddy/ark-tools",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://gitee.com/michael-eddy/ark-tools.git"
   },
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -29,27 +29,39 @@
     "viewsWelcome": [
       {
         "view": "explorer",
-        "contents": "[Read](command:cj.about) About Cangjie Tools\n[Create Cangjie Project](command:cj.createProject)"
+        "contents": "[Read](command:arkts.about) About ArkTS Tools\n[Create ArkTS Project](command:arkts.createProject)"
       }
     ],
     "commands": [
       {
-        "command": "arkts.helloWorld",
-        "title": "Hello World"
+        "command": "arkts.dependencies",
+        "title": "Dependencies Tools"
+      },
+      {
+        "command": "arkts.createFile",
+        "title": "Create ets File"
+      },
+      {
+        "command": "arkts.createProject",
+        "title": "Create ArkTs Project"
+      },
+      {
+        "command": "arkts.about",
+        "title": "About Tools"
       }
     ]
   },
   "menus": {
     "explorer/context": [
       {
-        "when": "resourceExtname == .toml",
-        "command": "cj.buildProject",
+        "when": "resourceExtname == .json5",
+        "command": "arkts.dependencies",
         "group": "navigation@1"
       },
       {
         "when": "explorerResourceIsFolder",
-        "command": "cj.createFile",
-        "group": "navigation@6"
+        "command": "arkts.createFile",
+        "group": "navigation@2"
       }
     ]
   },

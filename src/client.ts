@@ -1,3 +1,70 @@
+import axios from "axios";
+import * as vscode from "vscode";
+import { ajaxDenpencies, denpenciesContent } from "./models/ohAjaxResult";
+
 export class client {
-    static page_count: number = 0;
+    private static _keywords: string;
+    private static _page_count: number;
+    private static _denpencies: denpenciesContent[];
+    static get page_count() {
+        return this._page_count;
+    }
+    static get denpencies() {
+        return this._denpencies;
+    }
+
+    static async query(keywords?: string) {
+        try {
+            this._keywords = keywords ?? '';
+            let url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=1&pageSize=10&sortedType=relevancy&isHomePage=false`;
+            let response = await axios({
+                url: url,
+                method: 'get',
+                headers: {
+                    'Origin': 'https://gitcode.com',
+                    'Referer': 'https://gitcode.com'
+                }
+            });
+            if (response.status === 200) {
+                let data: ajaxDenpencies = response.data;
+                this._page_count = data.pages;
+                this._denpencies = data.rows;
+                return data.rows;
+            } else {
+                vscode.window.showErrorMessage(`Load Denpencies Failed, ${response.data}`);
+                return [];
+            }
+        } catch (err) {
+            vscode.window.showErrorMessage(`Load Denpencies Failed, ${err}`);
+            return [];
+        }
+    }
+
+    static async load(page_num: number) {
+        try {
+            if (this._page_count >= page_num) {
+                let url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=${page_num}&pageSize=10&sortedType=relevancy&isHomePage=false`;
+                let response = await axios({
+                    url: url,
+                    method: 'get',
+                    headers: {
+                        'Origin': 'https://gitcode.com',
+                        'Referer': 'https://gitcode.com'
+                    }
+                });
+                if (response.status === 200) {
+                    let data: ajaxDenpencies = response.data;
+                    this._denpencies.push(...data.rows);
+                    return data.rows;
+                } else {
+                    vscode.window.showErrorMessage(`Load Denpencies Failed, ${response.data}`);
+                    return [];
+                }
+            } else
+                return [];
+        } catch (err) {
+            vscode.window.showErrorMessage(`Load Denpencies Failed, ${err}`);
+            return [];
+        }
+    }
 }
