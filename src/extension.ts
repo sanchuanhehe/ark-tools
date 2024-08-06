@@ -1,9 +1,9 @@
 import { arkTs } from './arkts';
 import * as vscode from 'vscode';
-import init from './projects/init';
+import projectCreator from './projects/projectCreator';
 
 export function activate(context: vscode.ExtensionContext) {
-	init.extensionPath = context.extensionPath;
+	projectCreator.extensionPath = context.extensionPath;
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject", () => {
 		arkTs.createProject();

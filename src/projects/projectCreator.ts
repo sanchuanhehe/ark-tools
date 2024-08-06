@@ -18,14 +18,16 @@ class projectCreator {
             prompt: "Enter App name",
             placeHolder: "App Package Name",
         });
-        if (!appName)
+        if (!appName) {
             return Promise.resolve(false);
+        }
         let authorName = await vscode.window.showInputBox({
             prompt: "Enter Author name",
             placeHolder: "Author Name",
         });
-        if (!authorName)
+        if (!authorName) {
             return Promise.resolve(false);
+        }
         this.appName = appName;
         this.authorName = authorName;
         return Promise.resolve(true);
@@ -95,19 +97,19 @@ class projectCreator {
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
         let har = path.join(this.extensionPath, 'templates', 'app.txt');
-        fs.copyFileSync(har, path.join(this.projectPath, 'hvigorfile.ts'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(har, path.join(this.projectPath, 'hvigorfile.ts'),);
         //hvigorw
         let hvigorw = path.join(this.extensionPath, 'templates', 'hvigorw.txt');
-        fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'));
         hvigorw = path.join(this.extensionPath, 'templates', 'hvigorw');
-        fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'));
         //hvigor
         let hvigor = path.join(this.projectPath, 'hvigor'),
             config = path.join(this.extensionPath, 'templates', 'config.txt'),
             wrapper = path.join(this.extensionPath, 'templates', 'wrapper.txt');
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
-        fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
-        fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'));
+        fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'));
     }
 
     private async entry() {
@@ -137,7 +139,7 @@ class projectCreator {
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
         let har = path.join(this.extensionPath, 'templates', 'hap.txt');
-        fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'));
     }
 
     private async appScope() {
@@ -149,7 +151,7 @@ class projectCreator {
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(base));
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(element));
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(media));
-        let af = path.join(this.projectPath, 'app.json5');
+        let af = path.join(app, 'app.json5');
         let content: appScope = {
             app: {
                 bundleName: `com.${this.authorName.trim()}.${this.appName.trim()}`,
