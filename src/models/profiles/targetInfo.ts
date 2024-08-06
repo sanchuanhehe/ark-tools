@@ -1,4 +1,4 @@
 export interface targetInfo {
     name: string;
-    applyToProducts: string[];
+    applyToProducts?: string[];
 }

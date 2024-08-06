@@ -2,7 +2,7 @@ import { appDetail } from "./appDetail";
 import { moduleInfo } from "./moduleInfo";
 
 
-export interface buildProfile {
+export interface globalProfile {
     app: appDetail;
     modules: moduleInfo[];
 }

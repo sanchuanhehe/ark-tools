@@ -6,6 +6,6 @@ export interface ohPackage {
     version: string;
     description: string;
     dependencies: Record<string, string>;
-    devDependencies: Record<string, string>;
-    dynamicDependencies: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    dynamicDependencies?: Record<string, string>;
 }

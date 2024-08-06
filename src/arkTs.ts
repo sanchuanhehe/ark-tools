@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import UiPanel from './views/uiPanel';
-import { initPackage } from './utils';
+import projectCreator from './projects/projectCreator';
 
 export class arkTs {
     static async createProject() {
@@ -29,16 +29,17 @@ export class arkTs {
                     const projectPath = path.join(folder, projectName);
                     let uri = vscode.Uri.parse(projectPath);
                     await vscode.workspace.fs.createDirectory(uri);
-                    return initPackage(projectPath);
+                    if (await projectCreator.name())
+                        return projectCreator.create(projectPath);
+                    else
+                        return '';
                 } catch (error) {
-                    return "";
+                    return '';
                 }
             }
         );
-        if (projectPath.trim() === "") {
-            vscode.window.showErrorMessage(
-                "Failed to create project. Make sure you have Cangjie Sdk installed. [Learn More](https://developer.huawei.com/consumer/cn/doc/openharmony-cangjie/cj-wp-abstract)"
-            );
+        if (projectPath.trim() === '') {
+            vscode.window.showErrorMessage("Failed to create project.");
             return;
         }
         const result = await vscode.window.showInformationMessage(
