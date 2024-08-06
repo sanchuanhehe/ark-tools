@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
-import { isEmpty, objToBuffer } from "../utils";
 import { ohPackage } from '../models/ohPackage';
 import { appScope } from '../models/appScope/appScope';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleProfile } from '../models/profiles/moduleProfile';
+import { createDirectories, isEmpty, objToBuffer } from "../utils";
+import { mainPages } from '../models/projects/mainPages';
 
 class projectCreator {
     extensionPath: string = '';
@@ -113,9 +114,13 @@ class projectCreator {
     }
 
     private async entry() {
-        let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src');
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(entry));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(src));
+        let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src'),
+            main = path.join(src, 'main'), resources = path.join(src, 'resources'),
+            ets = path.join(src, 'ets'), base = path.join(resources, 'base'),
+            profi = path.join(base, 'profile'), media = path.join(base, 'media'),
+            element = path.join(base, 'element'), ability = path.join(base, 'entryability'),
+            page = path.join(base, 'pages');
+        await createDirectories([entry, src, main, resources, ets, base, profi, media, element, ability, page]);
         //build-profile.json5
         let profile: moduleProfile = {
             apiType: 'stageMode',
@@ -140,29 +145,12 @@ class projectCreator {
         //hvigorfile.ts
         let har = path.join(this.extensionPath, 'templates', 'hap.txt');
         fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'));
-    }
-
-    private async appScope() {
-        let app = path.join(this.projectPath, 'AppScope'), resources = path.join(app, 'resources'),
-            base = path.join(resources, 'base'), element = path.join(base, 'element'),
-            media = path.join(base, 'media');
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(app));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(resources));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(base));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(element));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(media));
-        let af = path.join(app, 'app.json5');
-        let content: appScope = {
-            app: {
-                bundleName: `com.${this.authorName.trim()}.${this.appName.trim()}`,
-                vendor: this.authorName.trim(),
-                versionCode: 1000000,
-                versionName: '1.0.0',
-                icon: "$media:app_icon",
-                label: "$string:app_name"
-            }
-        };
-        await vscode.workspace.fs.writeFile(vscode.Uri.parse(af), objToBuffer(content));
+        //media
+        let icon = path.join(this.extensionPath, 'templates', 'media', 'icon.png'),
+            startIcon = path.join(this.extensionPath, 'templates', 'media', 'startIcon.png');
+        fs.copyFileSync(icon, path.join(media, 'icon.png'));
+        fs.copyFileSync(startIcon, path.join(media, 'startIcon.png'));
+        //element
         let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [{
@@ -188,6 +176,59 @@ class projectCreator {
                 value: '#FFFFFF'
             }]
         }));
+        //profile
+        let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
+        await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
+        //entryability
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
+        //pages
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'page.txt'), path.join(page, 'Index.ets'));
+    }
+
+    private async appScope() {
+        let app = path.join(this.projectPath, 'AppScope'), resources = path.join(app, 'resources'),
+            base = path.join(resources, 'base'), element = path.join(base, 'element'),
+            media = path.join(base, 'media');
+        createDirectories([app, resources, base, element, media]);
+        let af = path.join(app, 'app.json5');
+        let content: appScope = {
+            app: {
+                bundleName: `com.${this.authorName.trim()}.${this.appName.trim()}`,
+                vendor: this.authorName.trim(),
+                versionCode: 1000000,
+                versionName: '1.0.0',
+                icon: "$media:app_icon",
+                label: "$string:app_name"
+            }
+        };
+        await vscode.workspace.fs.writeFile(vscode.Uri.parse(af), objToBuffer(content));
+        let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json'),
+            icon = path.join(media, 'app_icon.png');
+        await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
+            string: [{
+                name: 'app_name',
+                value: this.appName
+            },
+            {
+                name: "module_desc",
+                value: this.appName
+            },
+            {
+                name: "EntryAbility_desc",
+                value: this.appName
+            },
+            {
+                name: "EntryAbility_label",
+                value: this.appName
+            }]
+        }));
+        await vscode.workspace.fs.writeFile(vscode.Uri.parse(bc), objToBuffer({
+            color: [{
+                name: 'start_window_background',
+                value: '#FFFFFF'
+            }]
+        }));
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'media', 'app_icon.png'), icon);
     }
 }
 export default new projectCreator();
