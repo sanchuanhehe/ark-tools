@@ -47,36 +47,6 @@ class projectCreator {
         }
     }
 
-    private async entry() {
-        let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src');
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(entry));
-        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(src));
-        //build-profile.json5
-        let profile: moduleProfile = {
-            apiType: 'stageMode',
-            targets: [
-                { name: "default" },
-                { name: "ohosTest" }]
-        };
-        let profileUri = vscode.Uri.parse(path.join(entry, 'build-profile.json5'));
-        await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
-        //oh-package.json5
-        let pkg: ohPackage = {
-            name: 'entry',
-            version: "1.0.0",
-            description: 'Please describe the basic information.',
-            main: '',
-            author: this.authorName,
-            license: '',
-            dependencies: {}
-        };
-        let packageUri = vscode.Uri.parse(path.join(entry, 'oh-package.json5'));
-        await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
-        //hvigorfile.ts
-        let har = path.join(this.extensionPath, 'templates', 'hap.txt');
-        fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
-    }
-
     private async global() {
         //build-profile.json5
         let profile: globalProfile = {
@@ -131,6 +101,43 @@ class projectCreator {
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
         hvigorw = path.join(this.extensionPath, 'templates', 'hvigorw');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        //hvigor
+        let hvigor = path.join(this.projectPath, 'hvigor'),
+            config = path.join(this.extensionPath, 'templates', 'config.txt'),
+            wrapper = path.join(this.extensionPath, 'templates', 'wrapper.txt');
+        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
+        fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+        fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
+    }
+
+    private async entry() {
+        let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src');
+        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(entry));
+        await vscode.workspace.fs.createDirectory(vscode.Uri.parse(src));
+        //build-profile.json5
+        let profile: moduleProfile = {
+            apiType: 'stageMode',
+            targets: [
+                { name: "default" },
+                { name: "ohosTest" }]
+        };
+        let profileUri = vscode.Uri.parse(path.join(entry, 'build-profile.json5'));
+        await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
+        //oh-package.json5
+        let pkg: ohPackage = {
+            name: 'entry',
+            version: "1.0.0",
+            description: 'Please describe the basic information.',
+            main: '',
+            author: this.authorName,
+            license: '',
+            dependencies: {}
+        };
+        let packageUri = vscode.Uri.parse(path.join(entry, 'oh-package.json5'));
+        await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
+        //hvigorfile.ts
+        let har = path.join(this.extensionPath, 'templates', 'hap.txt');
+        fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'), fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL);
     }
 
     private async appScope() {
