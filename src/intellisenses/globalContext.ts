@@ -27,10 +27,10 @@ export class globalContext {
     }
 
     private loadExtend() {
-        let config = vscode.workspace.getConfiguration("cangjieTools.intellisenses");
+        let config = vscode.workspace.getConfiguration("arktsTools.intellisenses");
         let modulesPath = config.inspect<string>('modulesPath')?.globalValue ?? '';
         let files = fs.readdirSync(modulesPath);
-        files = files.filter((i) => i.startsWith('cj_role_') && i.endsWith('.json'));
+        files = files.filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));
         if (files && files.length > 0) {
             let root: string[] = [], modules: moduleName[] = [];
             for (let file of files) {
