@@ -23,9 +23,48 @@
     "type": "git",
     "url": "https://gitee.com/michael-eddy/ark-tools.git"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:arkts",
+    "onLanguage:json5"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "arkts",
+        "aliases": [
+          "ArkTs",
+          "ets"
+        ],
+        "extensions": [
+          ".ets"
+        ],
+        "configuration": "./templates/syntaxes/etsConfiguration.json"
+      },
+      {
+        "id": "json5",
+        "aliases": [
+          "JSON5",
+          "json5"
+        ],
+        "extensions": [
+          ".json5"
+        ],
+        "configuration": "./templates/syntaxes/json5Configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "json5",
+        "scopeName": "source.json5",
+        "path": "./templates/syntaxes/json5Language.json"
+      },
+      {
+        "language": "arkts",
+        "scopeName": "source.ets",
+        "path": "./templates/syntaxes/etsLanguage.json"
+      }
+    ],
     "viewsWelcome": [
       {
         "view": "explorer",

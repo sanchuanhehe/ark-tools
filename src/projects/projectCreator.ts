@@ -97,17 +97,17 @@ class projectCreator {
         let packageUri = vscode.Uri.parse(path.join(this.projectPath, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(this.extensionPath, 'templates', 'app.txt');
+        let har = path.join(this.extensionPath, 'templates', 'project', 'app.txt');
         fs.copyFileSync(har, path.join(this.projectPath, 'hvigorfile.ts'),);
         //hvigorw
-        let hvigorw = path.join(this.extensionPath, 'templates', 'hvigorw.txt');
+        let hvigorw = path.join(this.extensionPath, 'templates', 'project', 'hvigorw.txt');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'));
-        hvigorw = path.join(this.extensionPath, 'templates', 'hvigorw');
+        hvigorw = path.join(this.extensionPath, 'templates', 'project', 'hvigorw');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'));
         //hvigor
         let hvigor = path.join(this.projectPath, 'hvigor'),
-            config = path.join(this.extensionPath, 'templates', 'config.txt'),
-            wrapper = path.join(this.extensionPath, 'templates', 'wrapper.txt');
+            config = path.join(this.extensionPath, 'templates', 'project', 'config.txt'),
+            wrapper = path.join(this.extensionPath, 'templates', 'project', 'wrapper.txt');
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
         fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'));
         fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'));
@@ -115,11 +115,11 @@ class projectCreator {
 
     private async entry() {
         let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src'),
-            main = path.join(src, 'main'), resources = path.join(src, 'resources'),
-            ets = path.join(src, 'ets'), base = path.join(resources, 'base'),
+            main = path.join(src, 'main'), resources = path.join(main, 'resources'),
+            ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
             profi = path.join(base, 'profile'), media = path.join(base, 'media'),
-            element = path.join(base, 'element'), ability = path.join(base, 'entryability'),
-            page = path.join(base, 'pages');
+            element = path.join(base, 'element'), ability = path.join(ets, 'entryability'),
+            page = path.join(ets, 'pages');
         await createDirectories([entry, src, main, resources, ets, base, profi, media, element, ability, page]);
         //build-profile.json5
         let profile: moduleProfile = {
@@ -143,7 +143,7 @@ class projectCreator {
         let packageUri = vscode.Uri.parse(path.join(entry, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(this.extensionPath, 'templates', 'hap.txt');
+        let har = path.join(this.extensionPath, 'templates', 'project', 'hap.txt');
         fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'));
         //media
         let icon = path.join(this.extensionPath, 'templates', 'media', 'icon.png'),
@@ -180,9 +180,9 @@ class projectCreator {
         let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
         //entryability
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
         //pages
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'page.txt'), path.join(page, 'Index.ets'));
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
     }
 
     private async appScope() {
