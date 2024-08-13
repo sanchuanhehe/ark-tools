@@ -16,5 +16,6 @@
     "other": "on",
     "comments": "off",
     "strings": "on"
-  }
+  },
+  "prettier.requirePragma": false
 }

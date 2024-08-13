@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
 import projectCreator from './projects/projectCreator';
 
@@ -29,10 +30,11 @@ export class arkTs {
                     const projectPath = path.join(folder, projectName);
                     let uri = vscode.Uri.parse(projectPath);
                     await vscode.workspace.fs.createDirectory(uri);
-                    if (await projectCreator.name())
+                    if (await projectCreator.name()) {
                         return projectCreator.create(projectPath);
-                    else
+                    } else {
                         return '';
+                    }
                 } catch (error) {
                     return '';
                 }
@@ -82,6 +84,28 @@ export class arkTs {
         const baseUri = panel.webview.asWebviewUri(appDistPathUri);
         panel.webview.html = fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
         panel.onDidDispose(() => panel.dispose(), null);
+    }
 
+    static async format(fileUri: vscode.Uri) {
+        if (fileUri && fileUri.fsPath) {
+            let filePath = fileUri.fsPath;
+            const text = fs.readFileSync(filePath, { encoding: 'utf8' });
+            const document = vscode.window.activeTextEditor?.document;
+            if (document) {
+                let i = 0, j = 0;
+                const string0 = document.getText(), formatted = prettier.format(text);
+                while (i < string0.length && i < formatted.length && string0[i] === formatted[i]) {
+                    ++i;
+                }
+                while (i + j < string0.length && i + j < formatted.length && string0[string0.length - j - 1] === formatted[formatted.length - j - 1]) {
+                    ++j;
+                }
+                const newText = formatted.substring(i, formatted.length - j);
+                const pos0 = document.positionAt(i), pos1 = document.positionAt(string0.length - j);
+                const edit = new vscode.WorkspaceEdit();
+                edit.replace(document.uri, new vscode.Range(pos0, pos1), newText);
+                return vscode.workspace.applyEdit(edit);
+            }
+        }
     }
 }

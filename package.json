@@ -87,8 +87,19 @@
       {
         "command": "arkts.about",
         "title": "About Tools"
+      },
+      {
+        "command": "arkts.format",
+        "title": "Format Document"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title/context": [
+        {
+          "command": "arkts.format"
+        }
+      ]
+    }
   },
   "menus": {
     "explorer/context": [
@@ -123,7 +134,8 @@
     "test": "vscode-test"
   },
   "dependencies": {
-    "axios": "1.7.x"
+    "axios": "1.7.x",
+    "prettier": "^2.8.8"
   },
   "devDependencies": {
     "@types/vscode": "^1.65.0",
@@ -133,6 +145,7 @@
     "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5",
+    "@types/prettier": "^2.7.2",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.4.0"
   }
