@@ -27,29 +27,35 @@ export class globalContext {
     }
 
     private loadExtend() {
-        let config = vscode.workspace.getConfiguration("arktsTools.intellisenses");
-        let modulesPath = config.inspect<string>('modulesPath')?.globalValue ?? '';
-        let files = fs.readdirSync(modulesPath);
-        files = files.filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));
-        if (files && files.length > 0) {
-            let root: string[] = [], modules: moduleName[] = [];
-            for (let file of files) {
-                try {
-                    let fp = path.join(modulesPath, file);
-                    const jsonContent = fs.readFileSync(fp, 'utf8');
-                    let obj: moduleName[] = JSON.parse(jsonContent);
-                    for (let k of obj) {
-                        if (k.digit > 0 && typeof k.root !== 'undefined' && k.libs.length > 0) {
-                            root.push(k.root);
-                            modules.push(k);
+        try {
+            let config = vscode.workspace.getConfiguration("arktsTools.intellisenses");
+            let modulesPath = config.inspect<string>('modulesPath')?.globalValue ?? '';
+            if (typeof modulesPath !== 'undefined' && modulesPath !== '') {
+                let files = fs.readdirSync(modulesPath);
+                files = files.filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));
+                if (files && files.length > 0) {
+                    let root: string[] = [], modules: moduleName[] = [];
+                    for (let file of files) {
+                        try {
+                            let fp = path.join(modulesPath, file);
+                            const jsonContent = fs.readFileSync(fp, 'utf8');
+                            let obj: moduleName[] = JSON.parse(jsonContent);
+                            for (let k of obj) {
+                                if (k.digit > 0 && typeof k.root !== 'undefined' && k.libs.length > 0) {
+                                    root.push(k.root);
+                                    modules.push(k);
+                                }
+                            }
+                        } catch (e) {
+                            vscode.window.showErrorMessage(`Load Extend Modules Role [${file}] Failed! Please check reference file! Error Message: [${e}]`);
                         }
                     }
-                } catch (e) {
-                    vscode.window.showErrorMessage(`Load Extend Modules Role [${file}] Failed! Please check reference file! Error Message: [${e}]`);
+                    this._root.push(...root);
+                    this.importModules.push(...modules);
                 }
             }
-            this._root.push(...root);
-            this.importModules.push(...modules);
+        } catch (err) {
+            vscode.window.showErrorMessage(`Load intellisenses modulesInfo Failed, ${err}`);
         }
     }
 

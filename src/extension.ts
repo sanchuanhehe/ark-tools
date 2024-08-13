@@ -1,9 +1,12 @@
 import { arkTs } from './arkts';
 import * as vscode from 'vscode';
 import projectCreator from './projects/projectCreator';
+import { registerProvider } from './intellisenses/providers';
+import { globalContext } from './intellisenses/globalContext';
 
 export function activate(context: vscode.ExtensionContext) {
 	projectCreator.extensionPath = context.extensionPath;
+    globalContext.instance.initialize();
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject", () => {
 		arkTs.createProject();
@@ -25,6 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
 		return arkTs.format(fileUri);
 	}));
 
+    registerProvider(context);
 	vscode.window.showInformationMessage("ArkTS Tools is now activate!");
 }
 

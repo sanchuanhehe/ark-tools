@@ -11,7 +11,7 @@ export const variableProvider: intellisenseProvider = {
     provider: {
         provideCompletionItems,
     },
-    triggerCharacters: [':', '@']
+    triggerCharacters: [':']
 };
 
 async function provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.CompletionItem[]> {
