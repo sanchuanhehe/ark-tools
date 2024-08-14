@@ -1,5 +1,6 @@
 {
   "name": "ark-tools",
+  "icon": "icon.png",
   "displayName": "ArkTS",
   "description": "Fast way to create, init, build and run ArkTS project",
   "version": "0.0.1",
