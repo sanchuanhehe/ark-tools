@@ -108,6 +108,10 @@
       "editor/context": [
         {
           "command": "arkts.format"
+        },
+        {
+          "when": "resourceFilename == oh-package.json5",
+          "command": "arkts.dependencies"
         }
       ]
     }
@@ -120,7 +124,7 @@
         "group": "navigation@1"
       },
       {
-        "when": "resourceExtname == .json5",
+        "when": "resourceFilename == oh-package.json5",
         "command": "arkts.dependencies",
         "group": "navigation@2"
       }

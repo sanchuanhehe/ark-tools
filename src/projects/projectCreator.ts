@@ -179,7 +179,9 @@ class projectCreator {
         //profile
         let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
-        //entryability
+        //module
+        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'module.txt'), path.join(main, 'module.json5'));
+        //ability
         fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
         //pages
         fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
