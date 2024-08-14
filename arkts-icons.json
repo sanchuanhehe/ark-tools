@@ -39,6 +39,9 @@
         "_xml": {
             "iconPath": "./views/icons/xml.svg"
         },
+        "_ets": {
+            "iconPath": "./views/icons/ets.svg"
+        },
         "_yaml": {
             "iconPath": "./views/icons/yaml.svg"
         },
@@ -85,6 +88,7 @@
         "makefile": "_makefile"
     },
     "fileExtensions": {
+        "ets": "_ets",
         "gitignore": "_ignore_file",
         "ignore": "_ignore_file",
         "html": "_html",
