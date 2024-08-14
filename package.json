@@ -105,7 +105,7 @@
       }
     ],
     "menus": {
-      "editor/title/context": [
+      "editor/context": [
         {
           "command": "arkts.format"
         }
@@ -115,24 +115,14 @@
   "menus": {
     "explorer/context": [
       {
-        "when": "resourceExtname == .json5",
-        "command": "arkts.dependencies",
+        "when": "explorerResourceIsFolder",
+        "command": "arkts.createFile",
         "group": "navigation@1"
       },
       {
-        "when": "explorerResourceIsFolder",
-        "command": "arkts.createFile",
-        "group": "navigation@2"
-      },
-      {
-        "when": "resourceExtname == .ets",
-        "command": "arkts.format",
-        "group": "navigation@3"
-      },
-      {
         "when": "resourceExtname == .json5",
-        "command": "arkts.format",
-        "group": "navigation@4"
+        "command": "arkts.dependencies",
+        "group": "navigation@2"
       }
     ]
   },

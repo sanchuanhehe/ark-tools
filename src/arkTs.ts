@@ -6,6 +6,8 @@ import UiPanel from './views/uiPanel';
 import projectCreator from './projects/projectCreator';
 
 export class arkTs {
+    static readonly encoder = new TextEncoder();
+
     static async createProject() {
         const projectName = await vscode.window.showInputBox({
             prompt: "Enter project name",
@@ -54,7 +56,7 @@ export class arkTs {
         }
     }
 
-    public static async createFile(fileUri: vscode.Uri) {
+    public static async createFile(extensionPath: string, fileUri: vscode.Uri) {
         const fileName = await vscode.window.showInputBox({
             prompt: "Enter File name",
             placeHolder: "ArkTs File",
@@ -62,7 +64,9 @@ export class arkTs {
         if (fileName && fileUri && fileUri.fsPath) {
             let targetPath = path.extname(fileUri.path).length > 0 ? path.dirname(fileUri.path) : fileUri.path;
             let uri = vscode.Uri.parse(path.join(targetPath, `${fileName}.ets`));
-            await vscode.workspace.fs.writeFile(uri, new Uint8Array());
+            let source = fs.readFileSync(path.join(extensionPath, 'templates', 'project', 'page.txt'), 'utf-8');
+            let data = this.encoder.encode(source.replace('Index', fileName));
+            await vscode.workspace.fs.writeFile(uri, data);
         }
     }
 
