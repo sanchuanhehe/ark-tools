@@ -225,7 +225,7 @@
         "class-identifier": {
             "patterns": [
                 {
-                    "match": "(?<!\\$)\\b(bool|num|int|double|dynamic)\\b(?!\\$)",
+                    "match": "(?<!\\$)\\b(String|Number|Boolean|string|number|boolean)\\b(?!\\$)",
                     "name": "support.class.dart"
                 },
                 {
@@ -336,7 +336,7 @@
                 },
                 {
                     "name": "storage.type.primitive.dart",
-                    "match": "(?<!\\$)\\b(?:void|var|let)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(?:void|var)\\b(?!\\$)"
                 }
             ]
         },

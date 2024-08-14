@@ -105,6 +105,18 @@
       }
     ],
     "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "arkts.createFile",
+          "group": "navigation@1"
+        },
+        {
+          "when": "resourceFilename == oh-package.json5",
+          "command": "arkts.dependencies",
+          "group": "navigation@2"
+        }
+      ],
       "editor/context": [
         {
           "command": "arkts.format"
@@ -115,20 +127,6 @@
         }
       ]
     }
-  },
-  "menus": {
-    "explorer/context": [
-      {
-        "when": "explorerResourceIsFolder",
-        "command": "arkts.createFile",
-        "group": "navigation@1"
-      },
-      {
-        "when": "resourceFilename == oh-package.json5",
-        "command": "arkts.dependencies",
-        "group": "navigation@2"
-      }
-    ]
   },
   "configuration": {
     "title": "ArkTS Tools",
