@@ -1,0 +1,122 @@
+{
+    "iconDefinitions": {
+        "_ignore_file": {
+            "iconPath": "./views/icons/ignore_file.svg"
+        },
+        "_folder": {
+            "iconPath": "./views/icons/folder.svg"
+        },
+        "_folder_resources": {
+            "iconPath": "./views/icons/folder_resources.svg"
+        },
+        "_html": {
+            "iconPath": "./views/icons/html.svg"
+        },
+        "_cpp": {
+            "iconPath": "./views/icons/cpp.svg"
+        },
+        "_cpp_header": {
+            "iconPath": "./views/icons/cpp_header.svg"
+        },
+        "_image": {
+            "iconPath": "./views/icons/image.svg"
+        },
+        "_javascript": {
+            "iconPath": "./views/icons/javascript.svg"
+        },
+        "_json": {
+            "iconPath": "./views/icons/json.svg"
+        },
+        "_markdown": {
+            "iconPath": "./views/icons/markdown.svg"
+        },
+        "_text": {
+            "iconPath": "./views/icons/text.svg"
+        },
+        "_typescript": {
+            "iconPath": "./views/icons/typescript.svg"
+        },
+        "_xml": {
+            "iconPath": "./views/icons/xml.svg"
+        },
+        "_yaml": {
+            "iconPath": "./views/icons/yaml.svg"
+        },
+        "_cpp_file": {
+            "iconPath": "./views/icons/cpp_file.svg"
+        },
+        "_cmake": {
+            "iconPath": "./views/icons/cmake.svg"
+        },
+        "_makefile": {
+            "iconPath": "./views/icons/makefile.svg"
+        },
+        "_eslint": {
+            "iconPath": "./views/icons/eslint.svg"
+        },
+        "_stylelint": {
+            "iconPath": "./views/icons/stylelint.svg"
+        }
+    },
+    "file": "_text",
+    "folder": "_folder",
+    "folderNames": {
+        "resources": "_folder_resources"
+    },
+    "fileNames": {
+        ".eslintrc": "_eslint",
+        ".eslintrc.json": "_eslint",
+        ".eslintrc.yml": "_eslint",
+        ".eslintrc.js": "_eslint",
+        ".stylelintrc": "_stylelint",
+        ".stylelintrc.js": "_stylelint",
+        ".stylelintrc.json": "_stylelint",
+        ".stylelintrc.yml": "_stylelint",
+        ".prettierrc": "_json",
+        "cmakelists.txt": "_cmake",
+        ".eslintignore": "_text",
+        ".gitmodules": "_text",
+        ".jshintignore": "_text",
+        ".npmignore": "_text",
+        ".npmrc": "_text",
+        ".nvmrc": "_text",
+        ".stylelintignore": "_text",
+        ".yarnrc": "_text",
+        "makefile": "_makefile"
+    },
+    "fileExtensions": {
+        "gitignore": "_ignore_file",
+        "ignore": "_ignore_file",
+        "html": "_html",
+        "bmp": "_image",
+        "gif": "_image",
+        "ico": "_image",
+        "jpeg": "_image",
+        "jpg": "_image",
+        "png": "_image",
+        "tif": "_image",
+        "tiff": "_image",
+        "wbmp": "_image",
+        "svg": "_image",
+        "js": "_javascript",
+        "json": "_json",
+        "json5": "_json",
+        "markdown": "_markdown",
+        "md": "_markdown",
+        "ts": "_typescript",
+        "xml": "_xml",
+        "yaml": "_yaml",
+        "yml": "_yaml",
+        "c": "_cpp_file",
+        "cc": "_cpp_file",
+        "cpp": "_cpp_file",
+        "cxx": "_cpp_file",
+        "h": "_cpp_file",
+        "cmake": "_cmake",
+        "bat": "_text",
+        "cmd": "_text",
+        "log": "_text",
+        "txt": "_text",
+        "mk": "_makefile"
+    }
+}

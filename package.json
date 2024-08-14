@@ -28,6 +28,10 @@
     "onLanguage:json5"
   ],
   "main": "./out/extension.js",
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
   "contributes": {
     "languages": [
       {
@@ -63,6 +67,13 @@
         "language": "arkts",
         "scopeName": "source.ets",
         "path": "./templates/syntaxes/etsLanguage.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "arkts-icons",
+        "label": "ArkTs Icons",
+        "path": "arkts-icons.json"
       }
     ],
     "viewsWelcome": [
