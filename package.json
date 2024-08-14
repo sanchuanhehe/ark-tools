@@ -1,7 +1,7 @@
 {
   "name": "ark-tools",
   "icon": "icon.png",
-  "displayName": "ArkTS",
+  "displayName": "ArkUI/TS",
   "description": "Fast way to create, init, build and run ArkTS project",
   "version": "0.0.1",
   "publisher": "michaelding",
@@ -9,13 +9,19 @@
     "vscode": "^1.65.0"
   },
   "categories": [
+    "Themes",
+    "Snippets",
     "Programming Languages"
   ],
   "keywords": [
     "HarmonyOS",
     "OpenHarmony",
     "ArkTS",
-    "ArkUI"
+    "ArkUI",
+    "ets",
+    "ark",
+    "arkts",
+    "arkui"
   ],
   "bugs": {
     "url": "https://gitee.com/michael-eddy/ark-tools/issues"
