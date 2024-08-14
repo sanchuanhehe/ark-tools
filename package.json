@@ -3,6 +3,7 @@
   "displayName": "ArkTS",
   "description": "Fast way to create, init, build and run ArkTS project",
   "version": "0.0.1",
+  "publisher": "michaelding",
   "engines": {
     "vscode": "^1.65.0"
   },
@@ -148,6 +149,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
+    "package": "vsce package --baseImagesUrl https://gitee.com/michael-eddy/ark-tools/raw/master/",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
