@@ -139,12 +139,32 @@
   "configuration": {
     "title": "ArkTS Tools",
     "properties": {
-      "arkts.ohpmPath": {
+      "arktsTools.ohpmPath": {
         "type": "string",
         "default": "",
         "description": "The absolute path to ohpm"
       },
-      "arkts.intellisenses.modulesPath": {
+      "arktsTools.hvigorPath": {
+        "type": "string",
+        "default": "",
+        "description": "The absolute path to hvigor"
+      },
+      "arktsTools.hdcPath": {
+        "type": "string",
+        "default": "",
+        "description": "The absolute path to hdc"
+      },
+      "arktsTools.jdkPath": {
+        "type": "string",
+        "default": "",
+        "description": "The absolute path to jdk"
+      },
+      "arktsTools.codelinter": {
+        "type": "string",
+        "default": "",
+        "description": "The absolute path to codelinter"
+      },
+      "arktsTools.intellisenses.modulesPath": {
         "type": "string",
         "default": "",
         "description": "The absolute path to intellisenses modules roles. \n WARNING! \n The Location MUST be a FOLDER and file name MUST like \"ets_role_***.json\""

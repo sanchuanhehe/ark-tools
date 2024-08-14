@@ -4,14 +4,17 @@ This is the extension for ArkTs Language. Fast way to create, init, build and ru
 
 ## Requirements
 
-After VsCode 1.65.0
+VsCode version >= 1.65.0
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-- `arkts.ohpmPath`: The absolute path to ohpm.
-- `arkts.intellisenses.modulesPath`: The absolute path to intellisenses modules roles. WARNING! The Location MUST be a FOLDER and file name MUST like "ets_role_***.json".
+- `arktsTools.jdkPath`: The absolute path to jdk.
+- `arktsTools.hdcPath`: The absolute path to hdc.
+- `arktsTools.ohpmPath`: The absolute path to ohpm.
+- `arktsTools.hvigorPath`: The absolute path to hvigor.
+- `arktsTools.intellisenses.modulesPath`: The absolute path to intellisenses modules roles. WARNING! The Location MUST be a FOLDER and file name MUST like "ets_role_***.json".
 
 ## Capture
 

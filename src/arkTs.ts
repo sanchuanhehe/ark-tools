@@ -25,7 +25,8 @@ export class arkTs {
                         openLabel: "Select",
                         canSelectFolders: true,
                         canSelectFiles: false,
-                    }); const folder = folders ? folders[0].fsPath : undefined;
+                    }); 
+                    const folder = folders ? folders[0].fsPath : undefined;
                     if (!folder) {
                         return '';
                     }
