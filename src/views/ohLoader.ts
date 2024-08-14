@@ -20,12 +20,10 @@ export class ohLoader {
                 for (const key in dep) {
                     if (dep.hasOwnProperty(key)) {
                         const value = dep[key];
-                        let row: dependencie = { packageName: key };
-                        if (value.startsWith('file://')) {
-                            row.packagePath = value;
-                        } else {
-                            row.packageVersion = value;
-                        }
+                        let row: dependencie = {
+                            packageName: key,
+                            packageVersion: value
+                        };
                         this.packages.push(row);
                     }
                 }
@@ -46,8 +44,7 @@ export class ohLoader {
         delete obj.dependencies;
         const dependencies: dependencies = {};
         this.packages.forEach((item) => {
-            let value = isEmpty(item.packagePath) ? item.packageVersion : item.packagePath;
-            dependencies[item.packageName] = value ?? '*';
+            dependencies[item.packageName] = item.packageVersion;
         });
         obj.dependencies = dependencies;
         const updatedJsonString = JSON.stringify(obj, null, 2);
@@ -55,27 +52,16 @@ export class ohLoader {
     }
 
     addNode(message: PackageMessage) {
-        if (message.packagePath) {
-            this.packages.push({
-                packageName: message.packageName,
-                packagePath: message.packagePath
-            });
-        } else {
-            this.packages.push({
-                packageName: message.packageName,
-                packageVersion: message.packageVersion
-            });
-        }
+        this.packages.push({
+            packageName: message.packageName,
+            packageVersion: message.packageVersion
+        });
     }
 
     updateNode(message: PackageMessage) {
         let update = this.packages.find((i) => i.packageName.toLowerCase() === message.packageName.toLowerCase());
         if (update) {
-            if (update.packagePath?.trim() !== '') {
-                update.packagePath = message.packagePath;
-            } else {
-                update.packageVersion = message.packageVersion ?? "";
-            }
+            update.packageVersion = message.packageVersion ?? "";
         }
     }
 

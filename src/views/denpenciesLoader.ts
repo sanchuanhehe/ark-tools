@@ -2,12 +2,12 @@ import { client } from "../client";
 import { denpenciesContent } from "../models/ohAjaxResult";
 
 export class denpenciesLoader {
-    static query(keywords: string): Promise<denpenciesContent[]> {
-        return client.query(keywords);
+    static async query(keywords: string): Promise<denpenciesContent[]> {
+        return await client.query(keywords);
     }
 
-    static load(page: number): Promise<denpenciesContent[]> {
-        return client.load(page);
+    static async load(page: number): Promise<denpenciesContent[]> {
+        return await client.load(page);
     }
 
     static get denpencies() {

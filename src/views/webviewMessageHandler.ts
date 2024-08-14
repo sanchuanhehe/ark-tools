@@ -21,21 +21,25 @@ export default class WebviewMessageHandler {
         this.readToml(pgFilePath);
     }
 
-    private readToml(pgFilePath: string) {
+    private readToml(pgFilePath: string, command = 'dependencies') {
         this.loader.loadFile();
         let packages: dependencie[] = this.loader.getPackages();
-        this.webview.postMessage({ command: 'dependencies', data: { packages, pgFilePath } });
+        this.webview.postMessage({ command: command, data: { packages, pgFilePath } });
     }
 
-    applySave() {
+    applySave(pgFilePath?: string) {
         this.loader.applyNow();
         this._needApply = false;
+        if (pgFilePath) {
+            this.readToml(pgFilePath, 'reload');
+        }
     }
 
     private handleMessage(message: UIMessage): void {
         switch (message.command) {
             case 'apply': {
-                this.applySave();
+                let pgFilePath = message.data.toString();
+                this.applySave(pgFilePath);
                 break;
             }
             case 'search': {

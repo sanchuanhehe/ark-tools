@@ -7,7 +7,7 @@
         }
     </style>
     <script>
-        let tomlFilePath = "",
+        let pgFilePath = "",
             page_num = 1,
             packages = [],
             page_count = 1,
@@ -19,42 +19,23 @@
         };
         function receiveMessage(event) {
             switch (event.data?.command) {
+                case 'reload': {
+                    try {
+                        document.getElementById("local_content").innerHTML = "";
+                        document.getElementById("search_content").innerHTML = "";
+                        pgFilePath = event.data?.data?.pgFilePath;
+                        packages = event.data?.data?.packages;
+                        load(pgFilePath, packages);
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    break;
+                }
                 case "dependencies": {
                     try {
-                        tomlFilePath = event.data?.data?.tomlFilePath;
+                        pgFilePath = event.data?.data?.pgFilePath;
                         packages = event.data?.data?.packages;
-                        for (let i = 0; i < packages.length; i++) {
-                            let tr = document.createElement("tr");
-                            let td1 = document.createElement("td");
-                            td1.innerText = `${i}`;
-                            tr.appendChild(td1);
-                            let td2 = document.createElement("td");
-                            td2.innerText = `${packages[i].packageName}`;
-                            tr.appendChild(td2);
-                            let td3 = document.createElement("td");
-                            td3.innerText = `${packages[i].packageUrl}`;
-                            tr.appendChild(td3);
-                            let td4 = document.createElement("td");
-                            let a2 = document.createElement("a");
-                            a2.innerText = "Delete";
-                            a2.style = "margin-left:12px";
-                            a2.href = "javascript:;";
-                            a2.onclick = function () {
-                                if (a2.innerText !== 'Pending') {
-                                    let packageName = packages[i].packageName,
-                                        packageUrl = packages[i].packageUrl;
-                                    let obj = {
-                                        command: "remove-package",
-                                        projectName: packageName,
-                                        tomlFilePath: tomlFilePath
-                                    };
-                                    vscode.postMessage(obj);
-                                    a2.innerText = 'Pending';
-                                }
-                            };
-                            tr.appendChild(a2);
-                            document.getElementById("local_content").appendChild(tr);
-                        }
+                        load(pgFilePath, packages);
                     } catch (e) {
                         document.getElementById("msg").innerText = e.message;
                     }
@@ -83,7 +64,7 @@
                             td2.innerText = name;
                             tr.appendChild(td2);
                             let td3 = document.createElement("td");
-                            td3.innerText = `${denpencies[i].description}`;
+                            td3.innerText = `${denpencies[i]?.description}`;
                             tr.appendChild(td3);
                             let td4 = document.createElement("td");
                             if (packages.findIndex((i) => i.packageName === name) === -1) {
@@ -94,11 +75,9 @@
                                     if (a1.innerText !== 'Pending') {
                                         let obj = {
                                             command: "install-package",
-                                            projectName: name,
-                                            tomlFilePath: tomlFilePath,
-                                            packageUrl: denpencies[i].http_url_to_repo,
-                                            packageBranch: denpencies[i].default_branch,
-                                            packageVersion: denpencies[i].tag_list[0] ?? "*"
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
                                         };
                                         vscode.postMessage(obj);
                                         a1.innerText = 'Pending';
@@ -114,11 +93,9 @@
                                     if (a2.innerText !== 'Pending') {
                                         let obj = {
                                             command: "update-package",
-                                            projectName: name,
-                                            tomlFilePath: tomlFilePath,
-                                            packageUrl: denpencies[i].http_url_to_repo,
-                                            packageBranch: denpencies[i].default_branch,
-                                            packageVersion: denpencies[i].tag_list[0] ?? "*"
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
                                         };
                                         vscode.postMessage(obj);
                                         a2.innerText = 'Pending';
@@ -159,11 +136,9 @@
                                     if (a1.innerText !== 'Pending') {
                                         let obj = {
                                             command: "install-package",
-                                            projectName: name,
-                                            tomlFilePath: tomlFilePath,
-                                            packageUrl: arr[i].http_url_to_repo,
-                                            packageBranch: arr[i].default_branch,
-                                            packageVersion: arr[i].tag_list[0] ?? "*",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
                                         };
                                         vscode.postMessage(obj);
                                         a1.innerText = 'Pending';
@@ -179,11 +154,9 @@
                                     if (a2.innerText !== 'Pending') {
                                         let obj = {
                                             command: "update-package",
-                                            projectName: name,
-                                            tomlFilePath: tomlFilePath,
-                                            packageUrl: arr[i].http_url_to_repo,
-                                            packageBranch: arr[i].default_branch,
-                                            packageVersion: arr[i].tag_list[0] ?? "*",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
                                         };
                                         vscode.postMessage(obj);
                                         a2.innerText = "Pending";
@@ -203,10 +176,45 @@
                 }
             }
         }
+        function load(pgFilePath, packages) {
+            for (let i = 0; i < packages.length; i++) {
+                let packageVersion = packages[i].packageVersion;
+                let tr = document.createElement("tr");
+                let td1 = document.createElement("td");
+                td1.innerText = `${i}`;
+                tr.appendChild(td1);
+                let td2 = document.createElement("td");
+                td2.innerText = `${packages[i].packageName}`;
+                tr.appendChild(td2);
+                let td3 = document.createElement("td");
+                td3.innerText = `${packageVersion}`;
+                tr.appendChild(td3);
+                let td4 = document.createElement("td");
+                let a2 = document.createElement("a");
+                a2.innerText = "Delete";
+                a2.style = "margin-left:12px";
+                a2.href = "javascript:;";
+                a2.onclick = function () {
+                    if (a2.innerText !== 'Pending') {
+                        let packageName = packages[i].packageName;
+                        let obj = {
+                            command: "remove-package",
+                            packageName: packageName,
+                            pgFilePath: pgFilePath
+                        };
+                        vscode.postMessage(obj);
+                        a2.innerText = 'Pending';
+                    }
+                };
+                tr.appendChild(a2);
+                document.getElementById("local_content").appendChild(tr);
+            }
+
+        }
         function search() {
             if (!callingApi) {
                 callingApi = true;
-                document.getElementById('search').innerText = "Laoding";
+                document.getElementById('search').innerText = "Loading";
                 page_num = 1;
                 let keywords = document.getElementById("keywords").value;
                 let obj = {
@@ -220,7 +228,7 @@
             if (!callingApi) {
                 if (page_count > page_num) {
                     callingApi = true;
-                    document.getElementById('next').innerText = "Laoding";
+                    document.getElementById('next').innerText = "Loading";
                     page_num++;
                     let obj = {
                         command: "next",
@@ -236,6 +244,7 @@
         function apply() {
             let obj = {
                 command: "apply",
+                data: pgFilePath.trim()
             };
             vscode.postMessage(obj);
         }

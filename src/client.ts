@@ -21,12 +21,12 @@ export class client {
                 url: url,
                 method: 'get',
                 headers: {
-                    'Origin': 'https://gitcode.com',
-                    'Referer': 'https://gitcode.com'
+                    'Origin': 'https://ohpm.openharmony.cn',
+                    'Referer': 'https://ohpm.openharmony.cn'
                 }
             });
             if (response.status === 200) {
-                let data: ajaxDenpencies = response.data;
+                let data: ajaxDenpencies = response.data.body;
                 this._page_count = data.pages;
                 this._denpencies = data.rows;
                 return data.rows;
@@ -48,20 +48,21 @@ export class client {
                     url: url,
                     method: 'get',
                     headers: {
-                        'Origin': 'https://gitcode.com',
-                        'Referer': 'https://gitcode.com'
+                        'Origin': 'https://ohpm.openharmony.cn',
+                        'Referer': 'https://ohpm.openharmony.cn'
                     }
                 });
                 if (response.status === 200) {
-                    let data: ajaxDenpencies = response.data;
+                    let data: ajaxDenpencies = response.data.body;
                     this._denpencies.push(...data.rows);
                     return data.rows;
                 } else {
                     vscode.window.showErrorMessage(`Load Denpencies Failed, ${response.data}`);
                     return [];
                 }
-            } else
+            } else {
                 return [];
+            }
         } catch (err) {
             vscode.window.showErrorMessage(`Load Denpencies Failed, ${err}`);
             return [];

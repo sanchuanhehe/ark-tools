@@ -4,6 +4,5 @@ export interface dependencies {
 
 export interface dependencie {
     packageName: string;
-    packagePath?: string;
-    packageVersion?: string;
+    packageVersion: string;
 }

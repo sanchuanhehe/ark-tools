@@ -6,6 +6,5 @@ export interface UIMessage {
 export interface PackageMessage extends UIMessage {
     pgFilePath: string;
     packageName: string;
-    packagePath?: string;
-    packageVersion?: string;
+    packageVersion: string;
 }
