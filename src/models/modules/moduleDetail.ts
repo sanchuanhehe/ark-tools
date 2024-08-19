@@ -3,7 +3,7 @@ import { abilityDetail } from "./abilityDetail";
 
 export interface moduleDetail {
     name: string;
-    type: string;
+    type: moduleType;
     description: string;
     mainElement: string;
     deviceTypes: deviceType[];
@@ -13,3 +13,4 @@ export interface moduleDetail {
     pages: string;
     abilities: abilityDetail[];
 }
+export type moduleType = 'shared' | 'entry' | 'har' | 'feature';

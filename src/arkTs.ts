@@ -5,7 +5,7 @@ import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
 import projectCreator from './projects/projectCreator';
 
-export class arkTs {
+export class arkts {
     static readonly encoder = new TextEncoder();
 
     static async createProject() {
@@ -25,7 +25,7 @@ export class arkTs {
                         openLabel: "Select",
                         canSelectFolders: true,
                         canSelectFiles: false,
-                    }); 
+                    });
                     const folder = folders ? folders[0].fsPath : undefined;
                     if (!folder) {
                         return '';
@@ -33,12 +33,9 @@ export class arkTs {
                     const projectPath = path.join(folder, projectName);
                     let uri = vscode.Uri.parse(projectPath);
                     await vscode.workspace.fs.createDirectory(uri);
-                    if (await projectCreator.name()) {
-                        return projectCreator.create(projectPath);
-                    } else {
-                        return '';
-                    }
+                    return projectCreator.create(projectPath);
                 } catch (error) {
+                    vscode.window.showErrorMessage(`Failed to create project. ${error}`);
                     return '';
                 }
             }

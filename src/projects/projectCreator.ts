@@ -1,48 +1,37 @@
 import fs from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
+import { globalData } from '../globalData';
 import { ohPackage } from '../models/ohPackage';
 import { appScope } from '../models/appScope/appScope';
+import { mainPages } from '../models/projects/mainPages';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { createDirectories, isEmpty, objToBuffer } from "../utils";
-import { mainPages } from '../models/projects/mainPages';
 
 class projectCreator {
-    extensionPath: string = '';
-    private appName: string = '';
-    private authorName: string = '';
     private projectPath: string = '';
-
-    async name(): Promise<boolean> {
-        let appName = await vscode.window.showInputBox({
-            prompt: "Enter App name",
-            placeHolder: "App Package Name",
-        });
-        if (!appName) {
-            return Promise.resolve(false);
-        }
-        let authorName = await vscode.window.showInputBox({
-            prompt: "Enter Author name",
-            placeHolder: "Author Name",
-        });
-        if (!authorName) {
-            return Promise.resolve(false);
-        }
-        this.appName = appName;
-        this.authorName = authorName;
-        return Promise.resolve(true);
-    }
 
     async create(projectPath: string): Promise<string> {
         try {
             if (!isEmpty(projectPath)) {
-                this.projectPath = projectPath;
-                this.global();
-                this.appScope();
-                this.entry();
+                let appName = await vscode.window.showInputBox({
+                    prompt: "Enter App name",
+                    placeHolder: "App Package Name",
+                });
+                let authorName = await vscode.window.showInputBox({
+                    prompt: "Enter Author name",
+                    placeHolder: "Author Name",
+                });
+                if (appName && authorName) {
+                    this.projectPath = projectPath;
+                    this.global(appName, authorName);
+                    this.appScope(appName, authorName);
+                    this.entry(appName, authorName);
+                    return Promise.resolve(projectPath);
+                }
             }
-            return Promise.resolve(projectPath);
+            return Promise.reject(`Create Project Failed`);
         }
         catch (err) {
             vscode.window.showErrorMessage(`Create Project Failed, ${err}`);
@@ -50,7 +39,7 @@ class projectCreator {
         }
     }
 
-    private async global() {
+    private async global(appName: string, authorName: string) {
         //build-profile.json5
         let profile: globalProfile = {
             app: {
@@ -81,11 +70,11 @@ class projectCreator {
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
         let pkg: ohPackage = {
-            name: this.appName,
+            name: appName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
             main: '',
-            author: this.authorName,
+            author: authorName,
             license: '',
             dependencies: {
             },
@@ -97,23 +86,24 @@ class projectCreator {
         let packageUri = vscode.Uri.parse(path.join(this.projectPath, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(this.extensionPath, 'templates', 'project', 'app.txt');
+        let har = path.join(globalData.extensionPath, 'templates', 'project', 'app.txt');
         fs.copyFileSync(har, path.join(this.projectPath, 'hvigorfile.ts'),);
         //hvigorw
-        let hvigorw = path.join(this.extensionPath, 'templates', 'project', 'hvigorw.txt');
+        let hvigorw = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw.txt');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'));
-        hvigorw = path.join(this.extensionPath, 'templates', 'project', 'hvigorw');
+        hvigorw = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'));
         //hvigor
         let hvigor = path.join(this.projectPath, 'hvigor'),
-            config = path.join(this.extensionPath, 'templates', 'project', 'config.txt'),
-            wrapper = path.join(this.extensionPath, 'templates', 'project', 'wrapper.txt');
+            config = path.join(globalData.extensionPath, 'templates', 'project', 'config.txt'),
+            wrapper = path.join(globalData.extensionPath, 'templates', 'project', 'wrapper.txt');
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
         fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'));
         fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'));
     }
 
-    private async entry() {
+
+    private async entry(appName: string, authorName: string) {
         let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
@@ -136,18 +126,18 @@ class projectCreator {
             version: "1.0.0",
             description: 'Please describe the basic information.',
             main: '',
-            author: this.authorName,
+            author: authorName,
             license: '',
             dependencies: {}
         };
         let packageUri = vscode.Uri.parse(path.join(entry, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(this.extensionPath, 'templates', 'project', 'hap.txt');
+        let har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
         fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'));
         //media
-        let icon = path.join(this.extensionPath, 'templates', 'media', 'icon.png'),
-            startIcon = path.join(this.extensionPath, 'templates', 'media', 'startIcon.png');
+        let icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
+            startIcon = path.join(globalData.extensionPath, 'templates', 'media', 'startIcon.png');
         fs.copyFileSync(icon, path.join(media, 'icon.png'));
         fs.copyFileSync(startIcon, path.join(media, 'startIcon.png'));
         //element
@@ -155,19 +145,19 @@ class projectCreator {
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [{
                 name: 'app_name',
-                value: this.appName
+                value: appName
             },
             {
                 name: "module_desc",
-                value: this.appName
+                value: appName
             },
             {
                 name: "EntryAbility_desc",
-                value: this.appName
+                value: appName
             },
             {
                 name: "EntryAbility_label",
-                value: this.appName
+                value: appName
             }]
         }));
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bc), objToBuffer({
@@ -180,14 +170,14 @@ class projectCreator {
         let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
         //module
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'module.txt'), path.join(main, 'module.json5'));
+        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'module.txt'), path.join(main, 'module.json5'));
         //ability
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
+        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
         //pages
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
+        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
     }
 
-    private async appScope() {
+    private async appScope(appName: string, authorName: string) {
         let app = path.join(this.projectPath, 'AppScope'), resources = path.join(app, 'resources'),
             base = path.join(resources, 'base'), element = path.join(base, 'element'),
             media = path.join(base, 'media');
@@ -195,8 +185,8 @@ class projectCreator {
         let af = path.join(app, 'app.json5');
         let content: appScope = {
             app: {
-                bundleName: `com.${this.authorName.trim()}.${this.appName.trim()}`,
-                vendor: this.authorName.trim(),
+                bundleName: `com.${authorName.trim()}.${appName.trim()}`,
+                vendor: authorName.trim(),
                 versionCode: 1000000,
                 versionName: '1.0.0',
                 icon: "$media:app_icon",
@@ -209,19 +199,19 @@ class projectCreator {
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [{
                 name: 'app_name',
-                value: this.appName
+                value: appName
             },
             {
                 name: "module_desc",
-                value: this.appName
+                value: appName
             },
             {
                 name: "EntryAbility_desc",
-                value: this.appName
+                value: appName
             },
             {
                 name: "EntryAbility_label",
-                value: this.appName
+                value: appName
             }]
         }));
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bc), objToBuffer({
@@ -230,7 +220,7 @@ class projectCreator {
                 value: '#FFFFFF'
             }]
         }));
-        fs.copyFileSync(path.join(this.extensionPath, 'templates', 'media', 'app_icon.png'), icon);
+        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'media', 'app_icon.png'), icon);
     }
 }
 export default new projectCreator();

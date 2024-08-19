@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+const decoder = new TextDecoder('utf8');
 export function isEmpty(obj: any) {
     if (typeof obj === 'undefined' || obj === null) {
         return true;
@@ -16,6 +17,12 @@ export function isEmpty(obj: any) {
 export function objToBuffer(obj: any) {
     let json = JSON.stringify(obj);
     return Buffer.from(json, 'utf8');
+}
+
+export async function fileToJson(path: string) {
+    let stream = await vscode.workspace.fs.readFile(vscode.Uri.parse(path));
+    let content = decoder.decode(stream);
+    return JSON.parse(content);
 }
 
 export async function createDirectories(dirs: string[]) {
