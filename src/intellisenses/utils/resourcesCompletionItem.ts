@@ -31,7 +31,7 @@ export class resourcesCompletionItem {
                 label: mark,
                 insertText: mark,
                 range: this.context.importRange,
-                kind: vscode.CompletionItemKind.File
+                kind: vscode.CompletionItemKind.Value
             };
             this.arr.push(item);
         }
