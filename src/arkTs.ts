@@ -3,6 +3,8 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
+import { globalData } from './globalData';
+import projectLoader from './projects/projectLoader';
 import projectCreator from './projects/projectCreator';
 
 export class arkts {
@@ -54,7 +56,18 @@ export class arkts {
         }
     }
 
-    public static async createFile(extensionPath: string, fileUri: vscode.Uri) {
+
+    static async refreshProject(fileUri: vscode.Uri) {
+        let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
+        let path = fileUri.fsPath.substring(0, index);
+        if (path === globalData.projectPath.fsPath) {
+            projectLoader.load(vscode.Uri.parse(path));
+        } else {
+            projectLoader.loadModule(path);
+        }
+    }
+
+    public static async createFile(fileUri: vscode.Uri) {
         const fileName = await vscode.window.showInputBox({
             prompt: "Enter File name",
             placeHolder: "ArkTs File",
@@ -62,25 +75,25 @@ export class arkts {
         if (fileName && fileUri && fileUri.fsPath) {
             let targetPath = path.extname(fileUri.path).length > 0 ? path.dirname(fileUri.path) : fileUri.path;
             let uri = vscode.Uri.parse(path.join(targetPath, `${fileName}.ets`));
-            let source = fs.readFileSync(path.join(extensionPath, 'templates', 'project', 'page.txt'), 'utf-8');
+            let source = fs.readFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), 'utf-8');
             let data = this.encoder.encode(source.replace('Index', fileName));
             await vscode.workspace.fs.writeFile(uri, data);
         }
     }
 
-    static dependencies(extensionPath: string, fileUri: vscode.Uri) {
+    static dependencies(fileUri: vscode.Uri) {
         if (fileUri && fileUri.fsPath) {
-            UiPanel.createOrShow(extensionPath, fileUri);
+            UiPanel.createOrShow(fileUri);
         }
     }
 
-    static showAbout(extensionPath: string) {
+    static showAbout() {
         let panel = vscode.window.createWebviewPanel('arkts.about', 'About ArkTs Tools', vscode.ViewColumn.One, {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "app"))],
+            localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))],
             retainContextWhenHidden: true,
         });
-        const appDistPath = path.join(extensionPath, 'views'),
+        const appDistPath = path.join(globalData.extensionPath, 'views'),
             appDistPathUri = vscode.Uri.file(appDistPath),
             indexPath = path.join(appDistPath, 'about.html');
         const baseUri = panel.webview.asWebviewUri(appDistPathUri);

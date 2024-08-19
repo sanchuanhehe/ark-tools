@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { globalData } from '../globalData';
 import WebviewMessageHandler from './webviewMessageHandler';
 
 export default class UiPanel {
@@ -12,14 +13,14 @@ export default class UiPanel {
     public static currentPanels: Record<string, UiPanel | undefined> = {};
     private static currentMessageHandler: Record<string, WebviewMessageHandler | undefined> = {};
 
-    public static async createOrShow(extensionPath: string, projectFileUri: vscode.Uri) {
+    public static async createOrShow(projectFileUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
         const projectFilePath = projectFileUri.path;
         const existingPanel = UiPanel.currentPanels[projectFilePath];
         if (existingPanel) {
             existingPanel.panel.reveal(column);
         } else {
-            UiPanel.currentPanels[projectFilePath] = new UiPanel(extensionPath, column || vscode.ViewColumn.One, projectFileUri);
+            UiPanel.currentPanels[projectFilePath] = new UiPanel(globalData.extensionPath, column || vscode.ViewColumn.One, projectFileUri);
         }
         return UiPanel.currentPanels;
     }

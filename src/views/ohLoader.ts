@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { isEmpty } from '../utils';
+import * as JSON5 from 'json5';
 import { PackageMessage } from "../models/uiMessage";
 import { dependencie, dependencies } from "../models/ohosFile";
 
@@ -14,7 +14,7 @@ export class ohLoader {
     loadFile() {
         try {
             const content = fs.readFileSync(this.filePath, 'utf8');
-            const obj = JSON.parse(content);
+            const obj = JSON5.parse(content);
             if (obj.dependencies) {
                 const dep: dependencies = obj.dependencies;
                 for (const key in dep) {
@@ -40,14 +40,14 @@ export class ohLoader {
 
     applyNow() {
         const content = fs.readFileSync(this.filePath, 'utf8');
-        const obj = JSON.parse(content);
+        const obj = JSON5.parse(content);
         delete obj.dependencies;
         const dependencies: dependencies = {};
         this.packages.forEach((item) => {
             dependencies[item.packageName] = item.packageVersion;
         });
         obj.dependencies = dependencies;
-        const updatedJsonString = JSON.stringify(obj, null, 2);
+        const updatedJsonString = JSON5.stringify(obj, null, 2);
         fs.writeFileSync(this.filePath, updatedJsonString);
     }
 

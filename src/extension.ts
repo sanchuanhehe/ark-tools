@@ -1,28 +1,34 @@
 import { arkts } from './arkts';
 import * as vscode from 'vscode';
 import { globalData } from './globalData';
+import projectLoader from './projects/projectLoader';
 import { registerProvider } from './intellisenses/providers';
 import { globalContext } from './intellisenses/globalContext';
 
 export function activate(context: vscode.ExtensionContext) {
 	globalData.extensionPath = context.extensionPath;
-	globalData.projectPath = vscode.workspace.workspaceFolders?.[0].uri.path ?? '';
+	globalData.projectPath = vscode.workspace.workspaceFolders?.[0].uri ?? vscode.Uri.parse('./');
 	globalContext.instance.initialize();
+	projectLoader.tryLoad();
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject", () => {
 		arkts.createProject();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.about", () => {
-		arkts.showAbout(context.extensionPath);
+		arkts.showAbout();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createFile", (fileUri: vscode.Uri) => {
-		arkts.createFile(context.extensionPath, fileUri);
+		arkts.createFile(fileUri);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.refreshProject", (fileUri: vscode.Uri) => {
+		arkts.refreshProject(fileUri);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.dependencies", (fileUri: vscode.Uri) => {
-		arkts.dependencies(context.extensionPath, fileUri);
+		arkts.dependencies(fileUri);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.format", (fileUri: vscode.Uri) => {

@@ -20,7 +20,7 @@ export class moduleCreator {
     }
 
     private async createEntryModule(name: string, authorName: string) {
-        let module = path.join(globalData.projectPath, 'name'), src = path.join(module, 'src'),
+        let module = path.join(globalData.projectPath.fsPath, 'name'), src = path.join(module, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
             profi = path.join(base, 'profile'), media = path.join(base, 'media'),

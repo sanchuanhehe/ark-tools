@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { std } from './std';
 import * as path from 'path';
+import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
 import { moduleName } from '../models/moduleName';
 
@@ -39,7 +40,7 @@ export class globalContext {
                         try {
                             let fp = path.join(modulesPath, file);
                             const jsonContent = fs.readFileSync(fp, 'utf8');
-                            let obj: moduleName[] = JSON.parse(jsonContent);
+                            let obj: moduleName[] = JSON5.parse(jsonContent);
                             for (let k of obj) {
                                 if (k.digit > 0 && typeof k.root !== 'undefined' && k.libs.length > 0) {
                                     root.push(k.root);

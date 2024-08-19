@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 export class globalData {
     private static _extensionPath: string;
     static get extensionPath() {
@@ -7,11 +9,11 @@ export class globalData {
         this._extensionPath = extensionPath;
     }
 
-    private static _projectPath: string;
+    private static _projectPath: vscode.Uri;
     static get projectPath() {
         return this._projectPath;
     }
-    static set projectPath(projectPath: string) {
+    static set projectPath(projectPath: vscode.Uri) {
         this._projectPath = projectPath;
     }
 }
