@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import projectLoader from './projectLoader';
-import { buildTools } from "../build/buildTools";
+import { buildTools } from "./build/buildTools";
 
 export class projectBuilder {
     private readonly open;

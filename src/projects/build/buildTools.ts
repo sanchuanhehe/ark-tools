@@ -1,9 +1,9 @@
 import fs from 'fs';
 import * as vscode from 'vscode';
-import { executor } from '../executor';
-import { fileToJson, isEmpty } from '../utils';
-import { module } from '../models/modules/module';
-import projectLoader from '../projects/projectLoader';
+import { executor } from '../../executor';
+import { fileToJson, isEmpty } from '../../utils';
+import { module } from '../../models/modules/module';
+import projectLoader from '../../projects/projectLoader';
 
 export class buildTools {
     private static enable = false;

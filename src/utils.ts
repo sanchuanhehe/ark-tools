@@ -42,3 +42,9 @@ export async function createDirectories(dirs: string[]) {
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(dir));
     }
 }
+
+export function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+};

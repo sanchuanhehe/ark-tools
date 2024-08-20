@@ -10,35 +10,20 @@ export function activate(context: vscode.ExtensionContext) {
 	globalData.projectPath = vscode.workspace.workspaceFolders?.[0].uri ?? vscode.Uri.parse('./');
 	globalContext.instance.initialize();
 	projectLoader.tryLoad();
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject", () => {
-		arkts.createProject();
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.about", () => {
-		arkts.showAbout();
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.createFile", (fileUri: vscode.Uri) => {
-		arkts.createFile(fileUri);
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.refreshProject", (fileUri: vscode.Uri) => {
-		arkts.refreshProject(fileUri);
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.buildProject", (fileUri: vscode.Uri) => {
-		arkts.buildProject(fileUri);
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.dependencies", (fileUri: vscode.Uri) => {
-		arkts.dependencies(fileUri);
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand("arkts.format", (fileUri: vscode.Uri) => {
-		return arkts.format(fileUri);
-	}));
-
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject",
+		() => arkts.createProject()));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.about",
+		() => arkts.showAbout()));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.createFile",
+		(fileUri: vscode.Uri) => arkts.createFile(fileUri)));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.refreshProject",
+		(fileUri: vscode.Uri) => arkts.refreshProject(fileUri)));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.buildProject",
+		(fileUri: vscode.Uri) => arkts.buildProject(fileUri)));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.dependencies",
+		(fileUri: vscode.Uri) => arkts.dependencies(fileUri)));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.format",
+		(fileUri: vscode.Uri) => arkts.format(fileUri)));
 	registerProvider(context);
 	vscode.window.showInformationMessage("ArkTS Tools is now activate!");
 }
