@@ -1,14 +1,21 @@
 import * as vscode from 'vscode';
 import { context } from './context';
+import projectLoader from '../../projects/projectLoader';
 
 export class pathCompletionItem {
-    private static context: context;
     private static arr: vscode.CompletionItem[] = [];
     static create(mark: string, context: context) {
         this.arr = [];
-        this.context = context;
-        
-        this.newItems(['']);
+        let projectModule = projectLoader.getProjectModule(context);
+        if (projectModule) {
+            let paths: string[] = [];
+            let index = context.document.uri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/'), path = context.document.uri.fsPath.substring(0, index);
+            for (let file of projectModule.files) {
+                let rep = file.fsPath.replace(path, '');
+                console.log(rep);
+            }
+            this.newItems(paths);
+        }
         return this.arr;
     }
 
@@ -17,7 +24,6 @@ export class pathCompletionItem {
             let item = {
                 label: mark,
                 insertText: mark,
-                range: this.context.importRange,
                 kind: vscode.CompletionItemKind.File
             };
             this.arr.push(item);

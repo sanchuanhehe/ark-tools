@@ -18,8 +18,8 @@ async function provideCompletionItems(document: vscode.TextDocument, position: v
     const context = createContext(document, position);
     const { textFullLine } = context;
     if (typeof textFullLine !== 'undefined') {
-        if (textFullLine.startsWith('import')) {
-            let arr = pathCompletionItem.create(textFullLine, context);
+        if (textFullLine.trim().startsWith('import')) {
+            let arr = pathCompletionItem.create(textFullLine.trim(), context);
             return Promise.resolve(arr);
         }
     }

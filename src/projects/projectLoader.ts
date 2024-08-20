@@ -48,8 +48,13 @@ class projectLoader {
             if (name) {
                 return this._modules.get(name);
             } else {
-                let index = ctx.document.uri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
-                let path = ctx.document.uri.fsPath.substring(0, index);
+                let filePath = ctx.document.uri.fsPath,
+                    index = filePath.includes('src') ? filePath.lastIndexOf('src') :
+                        filePath.lastIndexOf(process.platform === 'win32' ? '\\' : '/'),
+                    path = filePath.substring(0, index);
+                if (path.endsWith('/')) {
+                    path = path.substring(0, path.length - 1);
+                }
                 let module = this._profile?.modules.find((i) => path.endsWith(i.srcPath.replace('./', '')));
                 return this._modules.get(module?.name ?? '');
             }
