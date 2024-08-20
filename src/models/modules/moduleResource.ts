@@ -4,8 +4,9 @@ import { moduleDetail } from "./moduleDetail";
 
 export interface moduleResource {
     name: string;
-    detail: moduleDetail;
+    detail?: moduleDetail;
     colors: Array<resNode>;
     strings: Array<resNode>;
+    medias: Array<string>;
     files: Array<vscode.Uri>;
 }
