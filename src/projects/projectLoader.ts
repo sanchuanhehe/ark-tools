@@ -3,15 +3,17 @@ import { fileToJson } from '../utils';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
 import { module } from '../models/modules/module';
+import { projectBuilder } from './projectBuilder';
 import { context } from '../intellisenses/utils/context';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
 
 class projectLoader {
+    private builder: projectBuilder | undefined;
     private _profile: globalProfile | undefined;
     private readonly _ctxs: Map<context, string>;
-    private projectPath: vscode.Uri = vscode.Uri.parse('./');
     private readonly _modules: Map<string, moduleResource>;
+    private projectPath: vscode.Uri = vscode.Uri.parse('./');
 
     get globalProfile() {
         return this._profile;
@@ -38,6 +40,16 @@ class projectLoader {
         }
     }
 
+    async build() {
+        if (this.builder) {
+            await this.builder.check();
+            await this.builder.build();
+        } else {
+            vscode.window.showErrorMessage(`Try Loading Project, Please build it later... `);
+            await this.tryLoad();
+        }
+    }
+
     async tryLoad() {
         let files = await vscode.workspace.findFiles('build-profile.json5', globalData.projectPath.fsPath, 1);
         if (files.length > 0) {
@@ -58,7 +70,7 @@ class projectLoader {
                     this.loadResources(name, module.srcPath);
                     this.loadPathIntellisenses(name, module.srcPath);
                 }
-
+                this.builder = new projectBuilder(projectPath);
             } else {
                 vscode.window.showErrorMessage(`Load Project Done, but it sense none modules? `);
             }
