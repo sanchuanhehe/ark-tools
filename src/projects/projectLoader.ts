@@ -6,9 +6,10 @@ import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
+import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
-import { moduleProfile } from '../models/profiles/moduleProfile';
+import path from 'path';
 
 class projectLoader {
     private _entries: string[] = [];
@@ -198,8 +199,10 @@ class projectLoader {
         let module = this._modules?.get(name);
         if (module) {
             let ets = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'ets');
-            let tsFiles = await vscode.workspace.findFiles("**/*.ts", ets.fsPath);
-            let etsFiles = await vscode.workspace.findFiles("**/*.ets", ets.fsPath);
+            let tsPattern = new vscode.RelativePattern(ets, "**/*.ts"),
+                etsPattern = new vscode.RelativePattern(ets, "**/*.ets");
+            let tsFiles = await vscode.workspace.findFiles(tsPattern);
+            let etsFiles = await vscode.workspace.findFiles(etsPattern);
             if (tsFiles) {
                 module.files.push(...tsFiles);
             }

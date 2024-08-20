@@ -4,16 +4,28 @@ import { context } from "./context";
 export function createContext(document: vscode.TextDocument, position: vscode.Position): context {
     const range = document.lineAt(position).range;
     const textFullLine = document.getText(range);
+    const fromString = getFromString(textFullLine, position.character);
     const documentExtension = extractExtension(document);
     return {
         document,
+        fromString,
         textFullLine,
         documentExtension,
         importRange: range
     };
 }
 
-export function extractExtension(document: vscode.TextDocument) {
+function getFromString(textFullLine: string, position: number) {
+    const textToPosition = textFullLine.substring(0, position);
+    const quoatationPosition = Math.max(
+        textToPosition.lastIndexOf('"'),
+        textToPosition.lastIndexOf("'"),
+        textToPosition.lastIndexOf("`")
+    );
+    return quoatationPosition !== -1 ? textToPosition.substring(quoatationPosition + 1, textToPosition.length) : undefined;
+}
+
+function extractExtension(document: vscode.TextDocument) {
     if (document.isUntitled) {
         return undefined;
     }
