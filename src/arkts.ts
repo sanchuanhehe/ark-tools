@@ -67,6 +67,12 @@ export class arkts {
         }
     }
 
+    static buildProject(fileUri: vscode.Uri) {
+        if (fileUri && fileUri.fsPath) {
+            projectLoader.build(fileUri);
+        }
+    }
+
     public static async createFile(fileUri: vscode.Uri) {
         const fileName = await vscode.window.showInputBox({
             prompt: "Enter File name",

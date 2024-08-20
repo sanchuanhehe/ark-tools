@@ -4,19 +4,35 @@ import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
+import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
+import { moduleProfile } from '../models/profiles/moduleProfile';
 
 class projectLoader {
+    private _entries: string[] = [];
+    private _scope: appScope | undefined;
     private builder: projectBuilder | undefined;
     private _profile: globalProfile | undefined;
     private readonly _ctxs: Map<context, string>;
+    private _path: vscode.Uri = vscode.Uri.parse('./');
     private readonly _modules: Map<string, moduleResource>;
-    private projectPath: vscode.Uri = vscode.Uri.parse('./');
 
     get globalProfile() {
         return this._profile;
+    }
+
+    get appScope() {
+        return this._scope;
+    }
+
+    get projectPath() {
+        return this._path;
+    }
+
+    get moduleEntries() {
+        return this._entries;
     }
 
     constructor() {
@@ -40,10 +56,10 @@ class projectLoader {
         }
     }
 
-    async build() {
+    async build(fileUri: vscode.Uri) {
         if (this.builder) {
             await this.builder.check();
-            await this.builder.build();
+            await this.builder.build(fileUri);
         } else {
             vscode.window.showErrorMessage(`Try Loading Project, Please build it later... `);
             await this.tryLoad();
@@ -59,7 +75,7 @@ class projectLoader {
 
     async load(projectPath: vscode.Uri): Promise<boolean> {
         try {
-            this.projectPath = projectPath;
+            this._path = projectPath;
             let profile = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
             this._profile = await fileToJson(profile);
             if (typeof this.globalProfile?.modules !== 'undefined') {
@@ -82,6 +98,8 @@ class projectLoader {
     }
 
     private async loadAppScope() {
+        let app = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'app.json5');
+        this._scope = await fileToJson(app);
         let module: moduleResource = {
             files: [],
             colors: [],
@@ -111,19 +129,25 @@ class projectLoader {
                 }
             }
         }
+        if (module.detail?.type === 'entry') {
+            this._entries.push(module.detail.name);
+        }
         this._modules?.set('appScope', module);
     }
 
     async loadModule(modulePath: string) {
+        let profile = vscode.Uri.joinPath(this.projectPath, modulePath, 'build-profile.json5');
         let module = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'module.json5');
-        let profile: module = await fileToJson(module);
+        let m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile);
         let resource: moduleResource = {
             files: [],
             colors: [],
             medias: [],
             strings: [],
-            detail: profile.module,
-            name: profile.module.name
+            detail: m.module,
+            moduleProfile: mp,
+            name: m.module.name,
+            modulePath: vscode.Uri.joinPath(this.projectPath, modulePath)
         };
         this._modules?.set(resource.name, resource);
         return resource.name;

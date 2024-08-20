@@ -108,6 +108,10 @@
         "title": "Refresh ArkTs Project"
       },
       {
+        "command": "arkts.buildProject",
+        "title": "Build ArkTs Project"
+      },
+      {
         "command": "arkts.about",
         "title": "About Tools"
       },
@@ -132,6 +136,11 @@
           "when": "resourceFilename == build-profile.json5",
           "command": "arkts.refreshProject",
           "group": "navigation@3"
+        },
+        {
+          "when": "resourceFilename == build-profile.json5",
+          "command": "arkts.buildProject",
+          "group": "navigation@4"
         }
       ],
       "editor/context": [
@@ -190,7 +199,7 @@
     "test": "vscode-test"
   },
   "dependencies": {
-    "opn": "^6.0.0",
+    "opn": "^5.5.0",
     "axios": "1.7.x",
     "json5": "^2.2.3",
     "prettier": "^2.8.8"

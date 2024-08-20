@@ -27,6 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
 		arkts.refreshProject(fileUri);
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.buildProject", (fileUri: vscode.Uri) => {
+		arkts.buildProject(fileUri);
+	}));
+
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.dependencies", (fileUri: vscode.Uri) => {
 		arkts.dependencies(fileUri);
 	}));

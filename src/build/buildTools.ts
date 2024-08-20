@@ -1,8 +1,13 @@
 import fs from 'fs';
 import * as vscode from 'vscode';
+import { executor } from '../executor';
+import { fileToJson, isEmpty } from '../utils';
+import { module } from '../models/modules/module';
+import projectLoader from '../projects/projectLoader';
 
 export class buildTools {
     private static enable = false;
+    private static lastEntry: string = '';
 
     static check(): Promise<boolean> {
         return new Promise((resolve) => {
@@ -31,22 +36,49 @@ export class buildTools {
 
     static init() {
         if (this.enable) {
-            switch (process.platform) {
-                case 'win32': {
-
-                    break;
-                }
-                case 'linux': {
-
-                    break;
-                }
-                case 'darwin': {
-
-                    break;
-                }
+            for (let i of projectLoader.globalProfile?.modules ?? []) {
+                let modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
+                executor.runInTerminal(`cd \"${modulePath}\"`);
+                executor.runInTerminal('ohpm install');
             }
         } else {
             vscode.window.showErrorMessage('Failed to init build tools. Please check your env or config then restart the VsCode!');
+        }
+    }
+
+    static build(entry: string, mode: string) {
+        executor.runInTerminal(`cd \"${projectLoader.projectPath}\"`);
+        executor.runInTerminal('hvigorw clean --no-daemon');
+        executor.runInTerminal(`hvigorw assembleHap --mode module -p product=${entry} -p debuggable=false -p buildMode=${mode} --no-daemon`);
+        this.lastEntry = entry;
+    }
+
+    static async buildModule(fileUri: vscode.Uri, path: string) {
+        let profile: module = await fileToJson(fileUri),
+            m = projectLoader.getProjectModule(profile.module.name);
+        executor.runInTerminal(`cd \"${path}\"`);
+        executor.runInTerminal('hvigorw clean --no-daemon');
+        let entry = profile.module.name,
+            targetName = m?.moduleProfile?.targets[0] ?? '';
+        if (profile.module.type === 'har') {
+            executor.runInTerminal(`hvigorw assembleHar --mode module -p module=${entry}@${targetName} -p product=${entry} --no-daemon`);
+        } else if (profile.module.type === 'shared') {
+            executor.runInTerminal(`hvigorw assembleHsp --mode module -p module=${entry}@${targetName} -p product=${entry} --no-daemon`);
+        }
+    }
+
+    static install(start: boolean = false) {
+        if (!isEmpty(this.lastEntry)) {
+            let scope = projectLoader.appScope,
+                m = projectLoader.getProjectModule(this.lastEntry);
+            executor.runInTerminal(`hdc file send "${m?.modulePath?.fsPath}/build/default/outputs/default/entry-default-signed.hap" "data/local/tmp/entry-default-signed.hap"`);
+            executor.runInTerminal('hdc shell bm install -p "data/local/tmp/entry-default-signed.hap"');
+            executor.runInTerminal('hdc shell rm -rf "data/local/tmp/entry-default-signed.hap"');
+            if (start) {
+                executor.runInTerminal(`hdc shell aa start -a ${m?.detail?.mainElement} -b ${scope?.app.bundleName} -m entry`);
+            }
+        } else {
+            vscode.window.showErrorMessage("Please build project first! ");
         }
     }
 }
