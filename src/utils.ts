@@ -47,4 +47,23 @@ export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => {
         setTimeout(resolve, ms);
     });
-};
+}
+
+export function relativePath(mark: string) {
+    let fidx = mark.lastIndexOf('from');
+    let relative = mark.substring(fidx + 4).trim().replace(/\'/g, '');
+    if (!relative.endsWith('\'') || !relative.endsWith('\"')) {
+        relative = relative.replace(';', '');
+    }
+    return relative.replaceAll('\'', '').replaceAll('\"', '');
+}
+
+export function getFolder(fsPath: string) {
+    let index = fsPath.lastIndexOf('/');
+    let lastPart = fsPath.substring(index);
+    if (lastPart.indexOf('.') !== -1) {
+        return fsPath.substring(0, index);
+    } else {
+        return fsPath;
+    }
+}
