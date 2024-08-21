@@ -25,7 +25,9 @@ This extension contributes the following settings:
 <img src="images/high-light.png">
 
 - Intellisenses
-<img src="images/intellisenses.png">
+<img src="images/key-intellisenses.png">
+<img src="images/class-intellisenses.png">
+<img src="images/path-intellisenses.png">
 
 ## Report Issues
 
