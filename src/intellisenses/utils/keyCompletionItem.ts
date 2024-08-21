@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { context } from '../utils/context';
 
-const keys = ['async', 'await', 'extends', 'function', 'import', 'private', 'public', 'protected'];
+const keys = ['async', 'await', 'extends', 'function', 'import', 'from', 'private', 'public', 'protected'];
 
 export class keyCompletionItem {
     private static context: context;
@@ -17,8 +17,12 @@ export class keyCompletionItem {
 
     private static newItems(marks: string[]) {
         for (let mark of marks) {
+            let label = mark;
+            if (mark === 'import') {
+                mark = `import {} from '';`;
+            }
             let item = {
-                label: mark,
+                label: label,
                 insertText: mark,
                 range: this.context.importRange,
                 kind: vscode.CompletionItemKind.Keyword
