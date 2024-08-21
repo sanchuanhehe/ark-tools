@@ -35,11 +35,11 @@ export class classCompletionItem {
                             let idx = name.lastIndexOf(':');
                             this.newItem(idx > -1 ? name.substring(0, idx) : name, vscode.CompletionItemKind.Value);
                         }
-                    } else if (line.includes('class') || line.includes('enum')) {
-                        const match = line.match(/export\s+(class|enum)\s+([^ ,{]+)/);
+                    } else if (line.includes('class') || line.includes('enum') || line.includes('struct')) {
+                        const match = line.match(/export\s+(class|enum|struct)\s+([^ ,{]+)/);
                         const name = match?.[2];
                         if (name) {
-                            let kind = line.includes('class') ? vscode.CompletionItemKind.Class : vscode.CompletionItemKind.Enum;
+                            let kind = line.includes('class') ? vscode.CompletionItemKind.Class : (line.includes('enum') ? vscode.CompletionItemKind.Enum : vscode.CompletionItemKind.Struct);
                             this.newItem(name, kind);
                         }
                     }

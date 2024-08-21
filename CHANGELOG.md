@@ -7,3 +7,7 @@
 - Path Intellisense support
 - Resources Intellisense support
 - Build project/module support
+
+## [v0.0.6]
+- Fix Issues
+- Import Intellisense support
