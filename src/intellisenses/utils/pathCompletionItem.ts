@@ -39,10 +39,21 @@ export class pathCompletionItem {
             for (const file of files) {
                 const fileStat = await vscode.workspace.fs.stat(vscode.Uri.file(join(path, file)));
                 if (!file.endsWith(fileName)) {
-                    fileInfoList.push({
-                        file, isFile: fileStat.type === vscode.FileType.File,
-                        documentExtension: this.getDocumentExtension(file, fileStat)
-                    });
+                    if (fileStat.type === vscode.FileType.File) {
+                        if (file.endsWith('.ets') || file.endsWith('.ts')) {
+                            fileInfoList.push({
+                                file,
+                                isFile: true,
+                                documentExtension: this.getDocumentExtension(file, fileStat)
+                            });
+                        }
+                    } else {
+                        fileInfoList.push({
+                            file,
+                            isFile: false,
+                            documentExtension: this.getDocumentExtension(file, fileStat)
+                        });
+                    }
                 }
             }
             return fileInfoList;
