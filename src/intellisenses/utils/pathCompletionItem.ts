@@ -7,8 +7,9 @@ export class pathCompletionItem {
     static async create(context: context) {
         const workspace = vscode.workspace.getWorkspaceFolder(context.document.uri);
         const rootPath = workspace?.uri.fsPath;
+        const index = context.document.uri.fsPath.lastIndexOf('/'), fileName = context.document.uri.fsPath.substring(index + 1);
         const path = this.getPathOfFolderToLookupFiles(context.document.uri.fsPath, context.fromString, rootPath);
-        const childrenOfPath = await this.getChildrenOfPath(path);
+        const childrenOfPath = await this.getChildrenOfPath(path, fileName);
         return [...childrenOfPath.map((child) => this.createPathCompletionItem(child))];
     }
 
@@ -31,17 +32,18 @@ export class pathCompletionItem {
         return path.join(rootFolder, pathEntered);
     }
 
-    private static async getChildrenOfPath(path: string) {
+    private static async getChildrenOfPath(path: string, fileName: string) {
         try {
             const files = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(path))).map((fileTuble) => fileTuble[0]);
             const fileInfoList: fileInfo[] = [];
             for (const file of files) {
                 const fileStat = await vscode.workspace.fs.stat(vscode.Uri.file(join(path, file)));
-                fileInfoList.push({
-                    file,
-                    isFile: fileStat.type === vscode.FileType.File,
-                    documentExtension: this.getDocumentExtension(file, fileStat)
-                });
+                if (!file.endsWith(fileName)) {
+                    fileInfoList.push({
+                        file, isFile: fileStat.type === vscode.FileType.File,
+                        documentExtension: this.getDocumentExtension(file, fileStat)
+                    });
+                }
             }
             return fileInfoList;
         } catch (error) {

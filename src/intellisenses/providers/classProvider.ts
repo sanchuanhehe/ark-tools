@@ -17,7 +17,7 @@ export const classProvider: intellisenseProvider = {
 async function provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.CompletionItem[]> {
     const context = createContext(document, position);
     const { textFullLine } = context;
-    if (typeof textFullLine !== 'undefined' && textFullLine.trim().startsWith('import') && textFullLine.includes('from')) {
+    if (typeof textFullLine !== 'undefined' && textFullLine.includes('from')) {
         let arr = classCompletionItem.create(textFullLine.trim());
         return Promise.resolve(arr);
     }
