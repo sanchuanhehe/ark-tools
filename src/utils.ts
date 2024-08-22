@@ -16,7 +16,7 @@ export function isEmpty(obj: any) {
 }
 
 export function objToBuffer(obj: any) {
-    let json = JSON5.stringify(obj);
+    let json = JSON.stringify(obj);
     return textToBuffer(json);
 }
 
