@@ -28,5 +28,6 @@
     "buildLater": "未加载项目将尝试加载，成功后再进行尝试构建...",
     "emptyModules": "加载项目完成，但似乎并不包含任何模块?",
     "pjLoadFailed": "加载项目失败",
-    "updateProfileFailed": "更新项目配置文件失败。"
+    "updateProfileFailed": "更新项目配置文件失败。",
+    "ccInitFailed": "初始化Code Linter工具失败。"
 }

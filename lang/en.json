@@ -28,5 +28,6 @@
     "buildLater": "Try Loading Project, Please build it later...",
     "emptyModules": "Load Project Done, but it sense none modules?",
     "pjLoadFailed": "Failed to load project",
-    "updateProfileFailed": "Failed to update project profile."
+    "updateProfileFailed": "Failed to update project profile.",
+    "ccInitFailed": "Failed to init Code Linter Tools."
 }

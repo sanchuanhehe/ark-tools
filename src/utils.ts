@@ -43,29 +43,44 @@ export function $r(key: string, end?: any) {
 }
 
 export async function fileToJson(path: string | vscode.Uri) {
-    if (typeof path === 'string') {
-        path = vscode.Uri.parse(path);
+    try {
+        if (typeof path === 'string') {
+            path = vscode.Uri.parse(path);
+        }
+        let stream = await vscode.workspace.fs.readFile(path);
+        let content = decoder.decode(stream);
+        return JSON5.parse(content);
+    } catch (err) {
+        console.log(err);
+        return undefined;
     }
-    let stream = await vscode.workspace.fs.readFile(path);
-    let content = decoder.decode(stream);
-    return JSON5.parse(content);
 }
 
 export function fileToJsonSync(path: string | vscode.Uri) {
-    if (typeof path !== 'string') {
-        path = path.fsPath;
+    try {
+        if (typeof path !== 'string') {
+            path = path.fsPath;
+        }
+        let stream = fs.readFileSync(path);
+        let content = decoder.decode(stream);
+        return JSON5.parse(content);
+    } catch (err) {
+        console.log(err);
+        return undefined;
     }
-    let stream = fs.readFileSync(path);
-    let content = decoder.decode(stream);
-    return JSON5.parse(content);
 }
 
 export async function fileToContent(path: string | vscode.Uri) {
-    if (typeof path === 'string') {
-        path = vscode.Uri.parse(path);
+    try {
+        if (typeof path === 'string') {
+            path = vscode.Uri.parse(path);
+        }
+        let stream = await vscode.workspace.fs.readFile(path);
+        return decoder.decode(stream);
+    } catch (err) {
+        console.log(err);
+        return undefined;
     }
-    let stream = await vscode.workspace.fs.readFile(path);
-    return decoder.decode(stream);
 }
 
 export async function createDirectories(dirs: string[]) {

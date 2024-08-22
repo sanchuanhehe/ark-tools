@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
+import { projectLinter } from './projectLinter';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
@@ -13,6 +14,7 @@ import { moduleResource } from '../models/modules/moduleResource';
 
 class projectLoader {
     private _appName = '';
+    private readonly linter;
     private _entries: string[] = [];
     private _scope: appScope | undefined;
     private builder: projectBuilder | undefined;
@@ -44,6 +46,7 @@ class projectLoader {
     constructor() {
         this._ctxs = new Map();
         this._modules = new Map();
+        this.linter = new projectLinter();
     }
 
     tryGetAuthor() {
@@ -55,6 +58,10 @@ class projectLoader {
             }
         }
         return author;
+    }
+
+    onChangeInit() {
+        this.linter.register();
     }
 
     getProjectModule(ctx: context | string) {
@@ -93,30 +100,6 @@ class projectLoader {
         if (files.length > 0) {
             await this.load(globalData.projectPath);
         }
-    }
-
-    onChangeInit() {
-        vscode.workspace.onDidDeleteFiles((e) => {
-            for (let file of e.files) {
-                if (file.fsPath.includes('resources')) {
-
-                }
-            }
-        });
-        vscode.workspace.onDidCreateFiles((e) => {
-            for (let file of e.files) {
-                if (file.fsPath.includes('resources')) {
-
-                }
-            }
-        });
-        vscode.workspace.onDidRenameFiles((e) => {
-            for (let file of e.files) {
-                if (file.newUri.fsPath.includes('resources')) {
-
-                }
-            }
-        });
     }
 
     async load(projectPath: vscode.Uri): Promise<boolean> {
