@@ -1,6 +1,7 @@
 import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
 
+const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf8');
 export function isEmpty(obj: any) {
     if (typeof obj === 'undefined' || obj === null) {
@@ -21,7 +22,7 @@ export function objToBuffer(obj: any) {
 }
 
 export function textToBuffer(text: string) {
-    return Buffer.from(text, 'utf8');
+    return encoder.encode(text);
 }
 
 export async function fileToJson(path: string | vscode.Uri) {

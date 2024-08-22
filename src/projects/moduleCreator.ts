@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
+import projectLoader from './projectLoader';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { mainPages } from '../models/projects/mainPages';
@@ -26,6 +27,13 @@ class moduleCreator {
                     this.createFeatureModule(moduleName, appName, authorName);
                     break;
             }
+            let targets = projectLoader.globalProfile?.modules[0].targets ?? [];
+            projectLoader.globalProfile?.modules.push({
+                name: moduleName,
+                srcPath: `./${moduleName}`,
+                targets: targets
+            });
+            projectLoader.updateGlobalProfile();
         } catch (err) {
             vscode.window.showErrorMessage(`Failed to create module. ${err}`);
         }
@@ -40,8 +48,8 @@ class moduleCreator {
         await createDirectories([module, src, main, resources, ets, base, element, components, profi, page]);
         //build-profile.json5
         let profile: moduleProfile = {
-            apiType: 'stageMode',
             buildOption: {},
+            apiType: 'stageMode',
             targets: [{ name: "default" }]
         };
         let profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));

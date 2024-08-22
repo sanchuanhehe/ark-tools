@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
-import { fileToJson, isEmpty } from '../utils';
+import { fileToJson, isEmpty, objToBuffer } from '../utils';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
@@ -139,6 +139,14 @@ class projectLoader {
         } catch (err) {
             vscode.window.showErrorMessage(`Load Project Failed, ${err}`);
             return Promise.reject(err);
+        }
+    }
+
+    async updateGlobalProfile() {
+        if (this.globalProfile) {
+            let data = objToBuffer(this.globalProfile);
+            let profileUri = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
+            await vscode.workspace.fs.writeFile(profileUri, data);
         }
     }
 
