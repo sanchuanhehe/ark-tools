@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { $r } from '../utils';
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
 import WebviewMessageHandler from './webviewMessageHandler';
@@ -30,7 +31,7 @@ export default class UiPanel {
         this.builtAppFolder = 'app';
         this.projectFileUri = projectFileUri;
         const projectName = path.basename(this.projectFileUri.path);
-        this.panel = vscode.window.createWebviewPanel('arkts.dependencies', `ArkTS Tools: ${projectName}`, column, {
+        this.panel = vscode.window.createWebviewPanel('arkts.dependencies', projectName, column, {
             enableScripts: true,
             localResourceRoots: [vscode.Uri.file(path.join(this.extensionPath, this.builtAppFolder))],
             retainContextWhenHidden: true,
@@ -43,12 +44,8 @@ export default class UiPanel {
     private async dispose() {
         let currentMessageHandler = UiPanel.currentMessageHandler[this.projectFileUri.path];
         if (currentMessageHandler?.needApply) {
-            const result = await vscode.window.showInformationMessage(
-                `the denpencies change but not save, give up without saving?`,
-                "Yes",
-                "No"
-            );
-            if (result === "No") {
+            const result = await vscode.window.showInformationMessage($r('dpSaveWarning'), $r('yes'), $r('no'));
+            if (result === $r('no')) {
                 currentMessageHandler.applySave();
             }
         }

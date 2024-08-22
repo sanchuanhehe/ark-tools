@@ -8,7 +8,7 @@ import { module } from '../models/modules/module';
 import { mainPages } from '../models/projects/mainPages';
 import { moduleType } from '../models/modules/moduleDetail';
 import { moduleProfile } from '../models/profiles/moduleProfile';
-import { createDirectories, objToBuffer, textToBuffer } from '../utils';
+import { $r, createDirectories, objToBuffer, textToBuffer } from '../utils';
 
 class moduleCreator {
     async createModule(moduleName: string, appName: string, authorName: string, type: moduleType) {
@@ -35,7 +35,7 @@ class moduleCreator {
             });
             projectLoader.updateGlobalProfile();
         } catch (err) {
-            vscode.window.showErrorMessage(`Failed to create module. ${err}`);
+            vscode.window.showErrorMessage($r('moduleCreateFailed', err));
         }
     }
 

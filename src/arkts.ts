@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { $r } from './utils';
 import * as vscode from 'vscode';
 import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
@@ -14,19 +15,19 @@ export class arkts {
 
     static async createProject() {
         const projectName = await vscode.window.showInputBox({
-            prompt: "Enter project name",
-            placeHolder: "ArkTs Project",
+            prompt: $r('enterProjectName'),
+            placeHolder: $r('pjPlaceHolder')
         });
         let projectPath = await vscode.window.withProgress<string>(
             { location: vscode.ProgressLocation.Notification, cancellable: false },
             async (progress) => {
-                progress.report({ message: `Creating a new project: ${projectName}` });
+                progress.report({ message: $r('pjCreateNew', projectName) });
                 try {
                     if (!projectName) {
                         return '';
                     }
                     const folders = await vscode.window.showOpenDialog({
-                        openLabel: "Select",
+                        openLabel: $r('select'),
                         canSelectFolders: true,
                         canSelectFiles: false,
                     });
@@ -39,21 +40,17 @@ export class arkts {
                     await vscode.workspace.fs.createDirectory(uri);
                     return projectCreator.create(projectPath);
                 } catch (error) {
-                    vscode.window.showErrorMessage(`Failed to create project. ${error}`);
+                    vscode.window.showErrorMessage($r('pjCreateFailed', error));
                     return '';
                 }
             }
         );
         if (projectPath.trim() === '') {
-            vscode.window.showErrorMessage("Failed to create project.");
+            vscode.window.showErrorMessage($r('pjCreateFailed'));
             return;
         }
-        const result = await vscode.window.showInformationMessage(
-            `Project ${projectName} created at ${projectPath}`,
-            "Open",
-            "Cancel"
-        );
-        if (result === "Open") {
+        const result = await vscode.window.showInformationMessage($r('pjCreated'), $r('open'), $r('cancel'));
+        if (result === $r('open')) {
             vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(projectPath), false);
         }
     }
@@ -76,8 +73,8 @@ export class arkts {
 
     static async createFile(fileUri: vscode.Uri) {
         const fileName = await vscode.window.showInputBox({
-            prompt: "Enter File name",
-            placeHolder: "ArkTs File",
+            prompt: $r('enterFileName'),
+            placeHolder: $r('filePlaceHolder')
         });
         if (fileName && fileUri && fileUri.fsPath) {
             let targetPath = path.extname(fileUri.path).length > 0 ? path.dirname(fileUri.path) : fileUri.path;
@@ -95,7 +92,7 @@ export class arkts {
     }
 
     static showAbout() {
-        let panel = vscode.window.createWebviewPanel('arkts.about', 'About ArkTs Tools', vscode.ViewColumn.One, {
+        let panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
             enableScripts: true,
             localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))],
             retainContextWhenHidden: true,
@@ -137,14 +134,14 @@ export class arkts {
 
     static async createModule() {
         const moduleName = await vscode.window.showInputBox({
-            prompt: "Enter module name",
-            placeHolder: "ArkTs Project Module",
+            prompt: $r('enterModuleName'),
+            placeHolder: $r('modulePlaceHolder')
         });
         let mode = await vscode.window.showQuickPick(['entry', 'shared', 'static', 'feature']);
         await vscode.window.withProgress<void>(
             { location: vscode.ProgressLocation.Notification, cancellable: false },
             async (progress) => {
-                progress.report({ message: `Creating a new module: ${moduleName}` });
+                progress.report({ message: $r('moduleCreate', moduleName) });
                 try {
                     if (moduleName) {
                         const modulePath = path.join(projectLoader.projectPath.fsPath, moduleName);
@@ -163,7 +160,7 @@ export class arkts {
                         await projectLoader.loadModule(moduleName);
                     }
                 } catch (error) {
-                    vscode.window.showErrorMessage(`Failed to create project. ${error}`);
+                    vscode.window.showErrorMessage($r('pjCreateFailed', error));
                 }
             }
         );

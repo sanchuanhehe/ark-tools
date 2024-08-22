@@ -6,7 +6,7 @@ import moduleCreator from './moduleCreator';
 import { ohPackage } from '../models/ohPackage';
 import { appScope } from '../models/appScope/appScope';
 import { globalProfile } from '../models/profiles/globalProfile';
-import { createDirectories, isEmpty, objToBuffer } from "../utils";
+import { $r, createDirectories, isEmpty, objToBuffer } from "../utils";
 
 class projectCreator {
     private projectPath: string = '';
@@ -15,12 +15,12 @@ class projectCreator {
         try {
             if (!isEmpty(projectPath)) {
                 let appName = await vscode.window.showInputBox({
-                    prompt: "Enter App name",
-                    placeHolder: "App Package Name",
+                    prompt: $r('enterAppName'),
+                    placeHolder: $r('appPlaceHolder')
                 });
                 let authorName = await vscode.window.showInputBox({
-                    prompt: "Enter Author name",
-                    placeHolder: "Author Name",
+                    prompt: $r('enterAuthorName'),
+                    placeHolder: $r('authorPlaceHolder')
                 });
                 if (appName && authorName) {
                     this.projectPath = projectPath;
@@ -31,10 +31,10 @@ class projectCreator {
                     return Promise.resolve(projectPath);
                 }
             }
-            return Promise.reject(`Create Project Failed`);
+            return Promise.reject($r('pjCreateFailed'));
         }
         catch (err) {
-            vscode.window.showErrorMessage(`Create Project Failed, ${err}`);
+            vscode.window.showErrorMessage($r('pjCreateFailed', err));
             return Promise.reject(err);
         }
     }

@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { $r } from '../utils';
 import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
 import { PackageMessage } from "../models/uiMessage";
@@ -30,7 +31,7 @@ export class ohLoader {
             }
 
         } catch (err) {
-            vscode.window.showErrorMessage(`Load Ohos Package file failed! ${err}`);
+            vscode.window.showErrorMessage($r('dpLoadFailed', err));
         }
     }
 

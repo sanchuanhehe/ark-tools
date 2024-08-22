@@ -6,7 +6,7 @@ import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
-import { fileToJson, isEmpty, objToBuffer } from '../utils';
+import { $r, fileToJson, isEmpty, objToBuffer } from '../utils';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
@@ -83,7 +83,7 @@ class projectLoader {
             await this.builder.check();
             await this.builder.build(fileUri);
         } else {
-            vscode.window.showErrorMessage(`Try Loading Project, Please build it later... `);
+            vscode.window.showErrorMessage($r('buildLater'));
             await this.tryLoad();
         }
     }
@@ -131,11 +131,11 @@ class projectLoader {
                 }
                 this.builder = new projectBuilder(projectPath);
             } else {
-                vscode.window.showErrorMessage(`Load Project Done, but it sense none modules? `);
+                vscode.window.showErrorMessage($r('emptyModules'));
             }
             return Promise.resolve(true);
         } catch (err) {
-            vscode.window.showErrorMessage(`Load Project Failed, ${err}`);
+            vscode.window.showErrorMessage($r('pjLoadFailed', err));
             return Promise.reject(err);
         }
     }
@@ -148,7 +148,7 @@ class projectLoader {
                 await vscode.workspace.fs.writeFile(profileUri, data);
             }
         } catch (err) {
-            vscode.window.showErrorMessage(`Failed to update project rofile. ${err}`);
+            vscode.window.showErrorMessage($r('updateProfileFailed', err));
         }
     }
 

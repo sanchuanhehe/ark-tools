@@ -1,3 +1,4 @@
+import { $r } from './utils';
 import { arkts } from './arkts';
 import * as vscode from 'vscode';
 import { language } from './language';
@@ -30,6 +31,6 @@ export function activate(context: vscode.ExtensionContext) {
 		() => arkts.createModule()));
 	registerProvider(context);
 	language.newInstance(context.extensionPath);
-	vscode.window.showInformationMessage(language.instance.getContent('activeMessage'));
+	vscode.window.showInformationMessage($r('activeMessage'));
 }
 export function deactivate() { }

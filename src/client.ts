@@ -1,4 +1,5 @@
 import axios from "axios";
+import { $r } from "./utils";
 import * as vscode from "vscode";
 import { ajaxDenpencies, denpenciesContent } from "./models/ohAjaxResult";
 
@@ -31,11 +32,11 @@ export class client {
                 this._denpencies = data.rows;
                 return data.rows;
             } else {
-                vscode.window.showErrorMessage(`Load Denpencies Failed, ${response.data}`);
+                vscode.window.showErrorMessage($r('dpLoadFailed', response.data));
                 return [];
             }
         } catch (err) {
-            vscode.window.showErrorMessage(`Load Denpencies Failed, ${err}`);
+            vscode.window.showErrorMessage($r('dpLoadFailed', err));
             return [];
         }
     }
@@ -57,14 +58,14 @@ export class client {
                     this._denpencies.push(...data.rows);
                     return data.rows;
                 } else {
-                    vscode.window.showErrorMessage(`Load Denpencies Failed, ${response.data}`);
+                    vscode.window.showErrorMessage($r('dpLoadFailed', response.data));
                     return [];
                 }
             } else {
                 return [];
             }
         } catch (err) {
-            vscode.window.showErrorMessage(`Load Denpencies Failed, ${err}`);
+            vscode.window.showErrorMessage($r('dpLoadFailed', err));
             return [];
         }
     }

@@ -1,3 +1,4 @@
+import { $r } from '../utils';
 import * as vscode from 'vscode';
 import projectLoader from './projectLoader';
 import { buildTools } from "./build/buildTools";
@@ -13,8 +14,8 @@ export class projectBuilder {
     async check() {
         let ret = await buildTools.check();
         if (!ret) {
-            const result = await vscode.window.showInformationMessage('Failed to build project. Please follow the guide then retry', "Open", "Cancel");
-            if (result === "Open") {
+            const result = await vscode.window.showInformationMessage($r('pjBuildFailed'), $r('open'), $r('cancel'));
+            if (result === $r('open')) {
                 this.open('http://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos');
             }
         } else {
@@ -43,7 +44,7 @@ export class projectBuilder {
                 buildTools.buildModule(fileUri, path);
             }
         } catch (err) {
-            vscode.window.showErrorMessage(`Failed to build module. ${err}`);
+            vscode.window.showErrorMessage($r('moduleBuildFailed', err));
         }
     }
 }

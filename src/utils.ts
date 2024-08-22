@@ -1,6 +1,7 @@
 import fs from 'fs';
 import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
+import { language } from './language';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf8');
@@ -34,6 +35,11 @@ export function hasFile(path: string) {
 
 export function textToBuffer(text: string) {
     return encoder.encode(text);
+}
+
+export function $r(key: string, end?: any) {
+    let content = language.instance.getContent(key);
+    return `${content} ${end ?? ''}`;
 }
 
 export async function fileToJson(path: string | vscode.Uri) {
