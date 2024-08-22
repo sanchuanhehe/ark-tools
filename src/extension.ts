@@ -10,6 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 	globalData.projectPath = vscode.workspace.workspaceFolders?.[0].uri ?? vscode.Uri.parse('./');
 	globalContext.instance.initialize();
 	projectLoader.tryLoad();
+	projectLoader.onChangeInit();
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createProject",
 		() => arkts.createProject()));
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.about",

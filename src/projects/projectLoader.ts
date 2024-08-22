@@ -95,6 +95,30 @@ class projectLoader {
         }
     }
 
+    onChangeInit() {
+        vscode.workspace.onDidDeleteFiles((e) => {
+            for (let file of e.files) {
+                if (file.fsPath.includes('resources')) {
+
+                }
+            }
+        });
+        vscode.workspace.onDidCreateFiles((e) => {
+            for (let file of e.files) {
+                if (file.fsPath.includes('resources')) {
+
+                }
+            }
+        });
+        vscode.workspace.onDidRenameFiles((e) => {
+            for (let file of e.files) {
+                if (file.newUri.fsPath.includes('resources')) {
+
+                }
+            }
+        });
+    }
+
     async load(projectPath: vscode.Uri): Promise<boolean> {
         try {
             this._path = projectPath;
