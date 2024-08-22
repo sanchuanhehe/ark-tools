@@ -45,6 +45,15 @@ export async function fileToJson(path: string | vscode.Uri) {
     return JSON5.parse(content);
 }
 
+export function fileToJsonSync(path: string | vscode.Uri) {
+    if (typeof path !== 'string') {
+        path = path.fsPath;
+    }
+    let stream = fs.readFileSync(path);
+    let content = decoder.decode(stream);
+    return JSON5.parse(content);
+}
+
 export async function fileToContent(path: string | vscode.Uri) {
     if (typeof path === 'string') {
         path = vscode.Uri.parse(path);

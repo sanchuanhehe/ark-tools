@@ -1,5 +1,6 @@
 import { arkts } from './arkts';
 import * as vscode from 'vscode';
+import { language } from './language';
 import { globalData } from './globalData';
 import projectLoader from './projects/projectLoader';
 import { registerProvider } from './intellisenses/providers';
@@ -26,8 +27,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.format",
 		(fileUri: vscode.Uri) => arkts.format(fileUri)));
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createModule",
-		(fileUri: vscode.Uri) => arkts.createModule()));
+		() => arkts.createModule()));
 	registerProvider(context);
-	vscode.window.showInformationMessage("ArkTS Tools is now activate!");
+	language.newInstance(context.extensionPath);
+	vscode.window.showInformationMessage(language.instance.getContent('activeMessage'));
 }
 export function deactivate() { }
