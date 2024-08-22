@@ -3,7 +3,7 @@
   "icon": "icon.png",
   "displayName": "ArkUI/TS",
   "description": "Fast way to create, init, build and run ArkTS project",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "publisher": "michaelding",
   "engines": {
     "vscode": "^1.65.0"

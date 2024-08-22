@@ -7,6 +7,7 @@ import { globalData } from './globalData';
 import moduleCreator from './projects/moduleCreator';
 import projectLoader from './projects/projectLoader';
 import projectCreator from './projects/projectCreator';
+import { moduleType } from './models/modules/moduleDetail';
 
 export class arkts {
     static readonly encoder = new TextEncoder();
@@ -135,6 +136,7 @@ export class arkts {
             prompt: "Enter module name",
             placeHolder: "ArkTs Project Module",
         });
+        let mode = await vscode.window.showQuickPick(['entry', 'shared', 'static', 'feature']);
         await vscode.window.withProgress<void>(
             { location: vscode.ProgressLocation.Notification, cancellable: false },
             async (progress) => {
@@ -145,7 +147,15 @@ export class arkts {
                         const uri = vscode.Uri.parse(projectPath),
                             authorName = projectLoader.tryGetAuthor();
                         await vscode.workspace.fs.createDirectory(uri);
-                        await moduleCreator.createModule(moduleName, projectLoader.appName, authorName, 'entry');
+                        let type: moduleType = 'entry';
+                        if (mode === 'shared') {
+                            type = 'shared';
+                        } else if (mode === 'static') {
+                            type = 'har';
+                        } else if (mode === 'feature') {
+                            type = 'feature';
+                        }
+                        await moduleCreator.createModule(moduleName, projectLoader.appName, authorName, type);
                     }
                 } catch (error) {
                     vscode.window.showErrorMessage(`Failed to create project. ${error}`);

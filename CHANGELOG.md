@@ -11,3 +11,7 @@
 ## [v0.0.6]
 - Fix Issues
 - Import Intellisense support
+
+## [v0.0.8]
+- Fix Issues
+- Create modules supports
