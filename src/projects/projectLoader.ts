@@ -214,7 +214,6 @@ class projectLoader {
         this._modules?.set(name, resource);
         this.loadMedias(name, moduleName);
         this.loadResources(name, moduleName);
-        console.log(resource);
     }
 
     private async loadMedias(name: string, modulePath: string) {

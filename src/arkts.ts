@@ -115,7 +115,11 @@ export class arkts {
             const document = vscode.window.activeTextEditor?.document;
             if (document) {
                 let i = 0, j = 0;
-                const string0 = document.getText(), formatted = prettier.format(text);
+                const string0 = document.getText(), formatted = prettier.format(text, {
+                    tabWidth: 4,
+                    semi: false,
+                    parser: (filePath.endsWith('.json') || filePath.endsWith('.json5')) ? "json5" : "typescript"
+                });
                 while (i < string0.length && i < formatted.length && string0[i] === formatted[i]) {
                     ++i;
                 }
