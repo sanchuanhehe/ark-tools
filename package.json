@@ -2,8 +2,8 @@
   "name": "ark-tools",
   "icon": "icon.png",
   "displayName": "ArkUI/TS",
-  "description": "Fast way to create, init, build and run ArkTS project",
-  "version": "0.0.8",
+  "description": "%ext.description%",
+  "version": "0.1.0",
   "publisher": "michaelding",
   "engines": {
     "vscode": "^1.65.0"
@@ -93,35 +93,35 @@
     "commands": [
       {
         "command": "arkts.dependencies",
-        "title": "Dependencies Tools"
+        "title": "%ext.command.dependencies%"
       },
       {
         "command": "arkts.createFile",
-        "title": "Create ets File"
+        "title": "%ext.command.createFile%"
       },
       {
         "command": "arkts.createModule",
-        "title": "Create new Module"
+        "title": "%ext.command.createModule%"
       },
       {
         "command": "arkts.createProject",
-        "title": "Create ArkTs Project"
+        "title": "%ext.command.createProject%"
       },
       {
         "command": "arkts.refreshProject",
-        "title": "Refresh ArkTs Project"
+        "title": "%ext.command.refreshProject%"
       },
       {
         "command": "arkts.buildProject",
-        "title": "Build ArkTs Project"
+        "title": "%ext.command.buildProject%"
       },
       {
         "command": "arkts.about",
-        "title": "About Tools"
+        "title": "%ext.command.about%"
       },
       {
         "command": "arkts.format",
-        "title": "Format Document"
+        "title": "%ext.command.format%"
       }
     ],
     "menus": {
@@ -211,9 +211,11 @@
     "opn": "^5.5.0",
     "axios": "1.7.x",
     "json5": "^2.2.3",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "vscode-nls": "^5.2.0"
   },
   "devDependencies": {
+    "vscode-nls-dev": "^4.0.4",
     "@types/opn": "^5.5.0",
     "@types/vscode": "^1.65.0",
     "@types/mocha": "^10.0.6",

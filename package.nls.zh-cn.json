@@ -1,0 +1,11 @@
+{
+    "ext.description": "一个快速构建、编译和运行ArkTS的插件",
+    "ext.command.dependencies": "ohpm包管理",
+    "ext.command.createFile": "新建ets文件...",
+    "ext.command.createModule": "新建模块...",
+    "ext.command.createProject": "新建项目...",
+    "ext.command.refreshProject": "刷新项目",
+    "ext.command.buildProject": "构建项目",
+    "ext.command.about": "关于本工具",
+    "ext.command.format": "格式化文档"
+}

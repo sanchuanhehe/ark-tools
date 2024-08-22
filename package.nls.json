@@ -1,0 +1,11 @@
+{
+    "ext.description": "Fast way to create, build and run ArkTS project",
+    "ext.command.dependencies": "Dependencies Tools",
+    "ext.command.createFile": "Create ets File",
+    "ext.command.createModule": "Create new Module",
+    "ext.command.createProject": "Create ArkTs Project",
+    "ext.command.refreshProject": "Refresh ArkTs Project",
+    "ext.command.buildProject": "Build ArkTs Project",
+    "ext.command.about": "About Tools",
+    "ext.command.format": "Format Document"
+}

@@ -15,3 +15,7 @@
 ## [v0.0.8]
 - Fix Issues
 - Create modules supports
+
+## [v0.0.8]
+- Fix Issues
+- Muli-Languages support
