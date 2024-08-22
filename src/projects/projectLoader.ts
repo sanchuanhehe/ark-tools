@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { fileToJson, isEmpty } from '../utils';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
+import { fileToJson, isEmpty } from '../utils';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';

@@ -5,9 +5,7 @@ import { globalData } from '../globalData';
 import moduleCreator from './moduleCreator';
 import { ohPackage } from '../models/ohPackage';
 import { appScope } from '../models/appScope/appScope';
-import { mainPages } from '../models/projects/mainPages';
 import { globalProfile } from '../models/profiles/globalProfile';
-import { moduleProfile } from '../models/profiles/moduleProfile';
 import { createDirectories, isEmpty, objToBuffer } from "../utils";
 
 class projectCreator {
@@ -26,6 +24,7 @@ class projectCreator {
                 });
                 if (appName && authorName) {
                     this.projectPath = projectPath;
+                    globalData.projectPath = vscode.Uri.parse(projectPath);
                     this.global(appName, authorName);
                     this.appScope(appName, authorName);
                     moduleCreator.createModule('entry', appName, authorName, 'entry');

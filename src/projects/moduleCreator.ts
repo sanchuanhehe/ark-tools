@@ -11,19 +11,23 @@ import { createDirectories, objToBuffer, textToBuffer } from '../utils';
 
 class moduleCreator {
     async createModule(moduleName: string, appName: string, authorName: string, type: moduleType) {
-        switch (type) {
-            case 'entry':
-                this.createEntryModule(moduleName, appName, authorName);
-                break;
-            case 'har':
-                this.createStaticModule(moduleName, authorName);
-                break;
-            case 'shared':
-                this.createSharedModule(moduleName, authorName);
-                break;
-            case 'feature':
-                this.createFeatureModule(moduleName, appName, authorName);
-                break;
+        try {
+            switch (type) {
+                case 'entry':
+                    this.createEntryModule(moduleName, appName, authorName);
+                    break;
+                case 'har':
+                    this.createStaticModule(moduleName, authorName);
+                    break;
+                case 'shared':
+                    this.createSharedModule(moduleName, authorName);
+                    break;
+                case 'feature':
+                    this.createFeatureModule(moduleName, appName, authorName);
+                    break;
+            }
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to create module. ${err}`);
         }
     }
 
