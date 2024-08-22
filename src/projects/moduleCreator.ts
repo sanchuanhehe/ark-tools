@@ -15,16 +15,16 @@ class moduleCreator {
         try {
             switch (type) {
                 case 'entry':
-                    this.createEntryModule(moduleName, appName, authorName);
+                    await this.createEntryModule(moduleName, appName, authorName);
                     break;
                 case 'har':
-                    this.createStaticModule(moduleName, authorName);
+                    await this.createStaticModule(moduleName, authorName);
                     break;
                 case 'shared':
-                    this.createSharedModule(moduleName, authorName);
+                    await this.createSharedModule(moduleName, authorName);
                     break;
                 case 'feature':
-                    this.createFeatureModule(moduleName, appName, authorName);
+                    await this.createFeatureModule(moduleName, appName, authorName);
                     break;
             }
             let targets = projectLoader.globalProfile?.modules[0].targets ?? [];

@@ -143,8 +143,8 @@ export class arkts {
                 progress.report({ message: `Creating a new module: ${moduleName}` });
                 try {
                     if (moduleName) {
-                        const projectPath = path.join(projectLoader.projectPath.fsPath, moduleName);
-                        const uri = vscode.Uri.parse(projectPath),
+                        const modulePath = path.join(projectLoader.projectPath.fsPath, moduleName);
+                        const uri = vscode.Uri.parse(modulePath),
                             authorName = projectLoader.tryGetAuthor();
                         await vscode.workspace.fs.createDirectory(uri);
                         let type: moduleType = 'entry';
@@ -156,6 +156,7 @@ export class arkts {
                             type = 'feature';
                         }
                         await moduleCreator.createModule(moduleName, projectLoader.appName, authorName, type);
+                        await projectLoader.loadModule(moduleName);
                     }
                 } catch (error) {
                     vscode.window.showErrorMessage(`Failed to create project. ${error}`);

@@ -127,9 +127,7 @@ class projectLoader {
             if (typeof this.globalProfile?.modules !== 'undefined') {
                 this.loadAppScope();
                 for (let module of this.globalProfile.modules) {
-                    let name = await this.loadModule(module.srcPath);
-                    this.loadMedias(name, module.srcPath);
-                    this.loadResources(name, module.srcPath);
+                    await this.loadModule(module.srcPath);
                 }
                 this.builder = new projectBuilder(projectPath);
             } else {
@@ -196,12 +194,13 @@ class projectLoader {
         this._modules?.set('appScope', module);
     }
 
-    async loadModule(modulePath: string) {
-        let pack = vscode.Uri.joinPath(this.projectPath, modulePath, 'oh-package.json5');
-        let profile = vscode.Uri.joinPath(this.projectPath, modulePath, 'build-profile.json5');
-        let module = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'module.json5');
+    async loadModule(moduleName: string) {
+        let pack = vscode.Uri.joinPath(this.projectPath, moduleName, 'oh-package.json5');
+        let profile = vscode.Uri.joinPath(this.projectPath, moduleName, 'build-profile.json5');
+        let module = vscode.Uri.joinPath(this.projectPath, moduleName, 'src', 'main', 'module.json5');
         let m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile),
-            pkg: ohPackage = await fileToJson(pack);
+            pkg: ohPackage = await fileToJson(pack),
+            name = m.module.name;
         let resource: moduleResource = {
             colors: [],
             medias: [],
@@ -210,10 +209,12 @@ class projectLoader {
             detail: m.module,
             moduleProfile: mp,
             name: m.module.name,
-            modulePath: vscode.Uri.joinPath(this.projectPath, modulePath)
+            modulePath: vscode.Uri.joinPath(this.projectPath, moduleName)
         };
-        this._modules?.set(resource.name, resource);
-        return resource.name;
+        this._modules?.set(name, resource);
+        this.loadMedias(name, moduleName);
+        this.loadResources(name, moduleName);
+        console.log(resource);
     }
 
     private async loadMedias(name: string, modulePath: string) {
