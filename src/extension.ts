@@ -24,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 		(fileUri: vscode.Uri) => arkts.dependencies(fileUri)));
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.format",
 		(fileUri: vscode.Uri) => arkts.format(fileUri)));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.createModule",
+		(fileUri: vscode.Uri) => arkts.createModule()));
 	registerProvider(context);
 	vscode.window.showInformationMessage("ArkTS Tools is now activate!");
 }

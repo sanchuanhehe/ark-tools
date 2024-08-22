@@ -17,7 +17,11 @@ export function isEmpty(obj: any) {
 
 export function objToBuffer(obj: any) {
     let json = JSON5.stringify(obj);
-    return Buffer.from(json, 'utf8');
+    return textToBuffer(json);
+}
+
+export function textToBuffer(text: string) {
+    return Buffer.from(text, 'utf8');
 }
 
 export async function fileToJson(path: string | vscode.Uri) {

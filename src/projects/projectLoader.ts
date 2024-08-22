@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import { fileToJson } from '../utils';
+import { fileToJson, isEmpty } from '../utils';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
+import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
 import { appScope } from '../models/appScope/appScope';
@@ -9,9 +10,9 @@ import { context } from '../intellisenses/utils/context';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
-import path from 'path';
 
 class projectLoader {
+    private _appName = '';
     private _entries: string[] = [];
     private _scope: appScope | undefined;
     private builder: projectBuilder | undefined;
@@ -22,6 +23,10 @@ class projectLoader {
 
     get globalProfile() {
         return this._profile;
+    }
+
+    get appName() {
+        return this._appName;
     }
 
     get appScope() {
@@ -39,6 +44,17 @@ class projectLoader {
     constructor() {
         this._ctxs = new Map();
         this._modules = new Map();
+    }
+
+    tryGetAuthor() {
+        let author = '';
+        for (let value of this._modules.values()) {
+            let ret = value.package?.author;
+            if (ret && !isEmpty(ret)) {
+                author = ret;
+            }
+        }
+        return author;
     }
 
     getProjectModule(ctx: context | string) {
@@ -90,7 +106,6 @@ class projectLoader {
                     let name = await this.loadModule(module.srcPath);
                     this.loadMedias(name, module.srcPath);
                     this.loadResources(name, module.srcPath);
-                    this.loadPathIntellisenses(name, module.srcPath);
                 }
                 this.builder = new projectBuilder(projectPath);
             } else {
@@ -106,8 +121,12 @@ class projectLoader {
     private async loadAppScope() {
         let app = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'app.json5');
         this._scope = await fileToJson(app);
+        this._appName = this._scope?.app.label.trim() ?? '';
+        if (this._appName.startsWith('$string:')) {
+            let index = this._appName.indexOf(':');
+            this._appName = this._appName.substring(index);
+        }
         let module: moduleResource = {
-            files: [],
             colors: [],
             medias: [],
             strings: [],
@@ -142,14 +161,16 @@ class projectLoader {
     }
 
     async loadModule(modulePath: string) {
+        let pack = vscode.Uri.joinPath(this.projectPath, modulePath, 'oh-package.json5');
         let profile = vscode.Uri.joinPath(this.projectPath, modulePath, 'build-profile.json5');
         let module = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'module.json5');
-        let m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile);
+        let m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile),
+            pkg: ohPackage = await fileToJson(pack);
         let resource: moduleResource = {
-            files: [],
             colors: [],
             medias: [],
             strings: [],
+            package: pkg,
             detail: m.module,
             moduleProfile: mp,
             name: m.module.name,
@@ -191,23 +212,6 @@ class projectLoader {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private async loadPathIntellisenses(name: string, modulePath: string) {
-        let module = this._modules?.get(name);
-        if (module) {
-            let ets = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'ets');
-            let tsPattern = new vscode.RelativePattern(ets, "**/*.ts"),
-                etsPattern = new vscode.RelativePattern(ets, "**/*.ets");
-            let tsFiles = await vscode.workspace.findFiles(tsPattern);
-            let etsFiles = await vscode.workspace.findFiles(etsPattern);
-            if (tsFiles) {
-                module.files.push(...tsFiles);
-            }
-            if (etsFiles) {
-                module.files.push(...etsFiles);
             }
         }
     }

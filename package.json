@@ -100,6 +100,10 @@
         "title": "Create ets File"
       },
       {
+        "command": "arkts.createModule",
+        "title": "Create new Module"
+      },
+      {
         "command": "arkts.createProject",
         "title": "Create ArkTs Project"
       },
@@ -141,6 +145,11 @@
           "when": "resourceFilename == build-profile.json5",
           "command": "arkts.buildProject",
           "group": "navigation@4"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "arkts.createModule",
+          "group": "navigation@5"
         }
       ],
       "editor/context": [

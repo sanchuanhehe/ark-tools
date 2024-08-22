@@ -9,5 +9,5 @@ export interface abilityDetail {
     startWindowIcon: string;
     startWindowBackground: string;
     exported: boolean;
-    skills: skillDetail[];
+    skills?: skillDetail[];
 }

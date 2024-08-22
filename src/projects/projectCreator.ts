@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
+import moduleCreator from './moduleCreator';
 import { ohPackage } from '../models/ohPackage';
 import { appScope } from '../models/appScope/appScope';
 import { mainPages } from '../models/projects/mainPages';
@@ -27,7 +28,7 @@ class projectCreator {
                     this.projectPath = projectPath;
                     this.global(appName, authorName);
                     this.appScope(appName, authorName);
-                    this.entry(appName, authorName);
+                    moduleCreator.createModule('entry', appName, authorName, 'entry');
                     return Promise.resolve(projectPath);
                 }
             }
@@ -100,81 +101,6 @@ class projectCreator {
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
         fs.copyFileSync(config, path.join(hvigor, 'hvigor-config.json5'));
         fs.copyFileSync(wrapper, path.join(hvigor, 'hvigor-wrapper.js'));
-    }
-
-
-    private async entry(appName: string, authorName: string) {
-        let entry = path.join(this.projectPath, 'entry'), src = path.join(entry, 'src'),
-            main = path.join(src, 'main'), resources = path.join(main, 'resources'),
-            ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
-            profi = path.join(base, 'profile'), media = path.join(base, 'media'),
-            element = path.join(base, 'element'), ability = path.join(ets, 'entryability'),
-            page = path.join(ets, 'pages');
-        await createDirectories([entry, src, main, resources, ets, base, profi, media, element, ability, page]);
-        //build-profile.json5
-        let profile: moduleProfile = {
-            apiType: 'stageMode',
-            targets: [
-                { name: "default" },
-                { name: "ohosTest" }]
-        };
-        let profileUri = vscode.Uri.parse(path.join(entry, 'build-profile.json5'));
-        await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
-        //oh-package.json5
-        let pkg: ohPackage = {
-            name: 'entry',
-            version: "1.0.0",
-            description: 'Please describe the basic information.',
-            main: '',
-            author: authorName,
-            license: '',
-            dependencies: {}
-        };
-        let packageUri = vscode.Uri.parse(path.join(entry, 'oh-package.json5'));
-        await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
-        //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
-        fs.copyFileSync(har, path.join(entry, 'hvigorfile.ts'));
-        //media
-        let icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
-            startIcon = path.join(globalData.extensionPath, 'templates', 'media', 'startIcon.png');
-        fs.copyFileSync(icon, path.join(media, 'icon.png'));
-        fs.copyFileSync(startIcon, path.join(media, 'startIcon.png'));
-        //element
-        let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
-        await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
-            string: [{
-                name: 'app_name',
-                value: appName
-            },
-            {
-                name: "module_desc",
-                value: appName
-            },
-            {
-                name: "EntryAbility_desc",
-                value: appName
-            },
-            {
-                name: "EntryAbility_label",
-                value: appName
-            }]
-        }));
-        await vscode.workspace.fs.writeFile(vscode.Uri.parse(bc), objToBuffer({
-            color: [{
-                name: 'start_window_background',
-                value: '#FFFFFF'
-            }]
-        }));
-        //profile
-        let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
-        await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
-        //module
-        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'module.txt'), path.join(main, 'module.json5'));
-        //ability
-        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'EntryAbility.ets'));
-        //pages
-        fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
     }
 
     private async appScope(appName: string, authorName: string) {

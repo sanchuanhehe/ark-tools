@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
 import { globalData } from './globalData';
+import moduleCreator from './projects/moduleCreator';
 import projectLoader from './projects/projectLoader';
 import projectCreator from './projects/projectCreator';
 
@@ -56,7 +57,6 @@ export class arkts {
         }
     }
 
-
     static async refreshProject(fileUri: vscode.Uri) {
         let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
         let path = fileUri.fsPath.substring(0, index);
@@ -73,7 +73,7 @@ export class arkts {
         }
     }
 
-    public static async createFile(fileUri: vscode.Uri) {
+    static async createFile(fileUri: vscode.Uri) {
         const fileName = await vscode.window.showInputBox({
             prompt: "Enter File name",
             placeHolder: "ArkTs File",
@@ -128,5 +128,29 @@ export class arkts {
                 return vscode.workspace.applyEdit(edit);
             }
         }
+    }
+
+    static async createModule() {
+        const moduleName = await vscode.window.showInputBox({
+            prompt: "Enter module name",
+            placeHolder: "ArkTs Project Module",
+        });
+        await vscode.window.withProgress<void>(
+            { location: vscode.ProgressLocation.Notification, cancellable: false },
+            async (progress) => {
+                progress.report({ message: `Creating a new module: ${moduleName}` });
+                try {
+                    if (moduleName) {
+                        const projectPath = path.join(projectLoader.projectPath.fsPath, moduleName);
+                        const uri = vscode.Uri.parse(projectPath),
+                            authorName = projectLoader.tryGetAuthor();
+                        await vscode.workspace.fs.createDirectory(uri);
+                        await moduleCreator.createModule(moduleName, projectLoader.appName, authorName, 'entry');
+                    }
+                } catch (error) {
+                    vscode.window.showErrorMessage(`Failed to create project. ${error}`);
+                }
+            }
+        );
     }
 }
