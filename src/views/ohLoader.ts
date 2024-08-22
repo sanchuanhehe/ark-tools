@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as vscode from 'vscode';
 import * as JSON5 from 'json5';
+import * as vscode from 'vscode';
 import { PackageMessage } from "../models/uiMessage";
 import { dependencie, dependencies } from "../models/ohosFile";
 

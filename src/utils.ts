@@ -1,3 +1,4 @@
+import fs from 'fs';
 import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
 
@@ -19,6 +20,16 @@ export function isEmpty(obj: any) {
 export function objToBuffer(obj: any) {
     let json = JSON.stringify(obj);
     return textToBuffer(json);
+}
+
+export function hasFile(path: string) {
+    try {
+        fs.statSync(path);
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 export function textToBuffer(text: string) {

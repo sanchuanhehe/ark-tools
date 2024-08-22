@@ -8,12 +8,16 @@ export class variableCompletionItem {
     private static arr: vscode.CompletionItem[] = [];
     static create(mark: string) {
         this.arr = [];
-        let tag = mark.toLowerCase().split(':')?.[1] ?? '';
-        if (tag || tag === '') {
-            tag = mark.toLowerCase().split('@')?.[1] ?? '';
+        try {
+            let tag = mark.toLowerCase().split(':')?.[1] ?? '';
+            if (tag || tag === '') {
+                tag = mark.toLowerCase().split('@')?.[1] ?? '';
+            }
+            let arr = tag === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(tag));
+            this.newItems(arr);
+        } catch (err) {
+            console.log(err);
         }
-        let arr = tag === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(tag));
-        this.newItems(arr);
         return this.arr;
     }
 

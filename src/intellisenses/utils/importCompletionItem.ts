@@ -5,16 +5,20 @@ export class importCompletionItem {
     private static arr: vscode.CompletionItem[] = [];
     static create(mark: string) {
         this.arr = [];
-        if (mark === 'import') {
-            let root = globalContext.instance.root;
-            this.newItems(root);
-        } else {
-            let fns = mark.split(' ')?.[1]?.trim(), cld = fns?.split('.'), root = cld[0]?.toLowerCase();
-            let digit = cld.filter((i) => i.trim() !== '').length;
-            if (globalContext.instance.root.includes(root)) {
-                let modules = globalContext.instance.getModules(root, digit, fns);
-                this.newItems(modules, fns);
+        try {
+            if (mark === 'import') {
+                let root = globalContext.instance.root;
+                this.newItems(root);
+            } else {
+                let fns = mark.split(' ')?.[1]?.trim(), cld = fns?.split('.'), root = cld[0]?.toLowerCase();
+                let digit = cld.filter((i) => i.trim() !== '').length;
+                if (globalContext.instance.root.includes(root)) {
+                    let modules = globalContext.instance.getModules(root, digit, fns);
+                    this.newItems(modules, fns);
+                }
             }
+        } catch (err) {
+            console.log(err);
         }
         return this.arr;
     }

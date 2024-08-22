@@ -62,11 +62,15 @@ export class globalContext {
 
     getModules(ns: string, digit: number = 1, fns: string) {
         let arr: string[] = [];
-        if (this.importModules) {
-            let nameSpace = this.importModules.find((i) => i.digit === digit && i.root === ns.toLowerCase());
-            if (nameSpace) {
-                arr = nameSpace.libs.filter((i) => i.includes(fns));
+        try {
+            if (this.importModules) {
+                let nameSpace = this.importModules.find((i) => i.digit === digit && i.root === ns.toLowerCase());
+                if (nameSpace) {
+                    arr = nameSpace.libs.filter((i) => i.includes(fns));
+                }
             }
+        } catch (err) {
+            console.log(err);
         }
         return arr;
     }

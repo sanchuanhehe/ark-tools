@@ -23,23 +23,27 @@ export class projectBuilder {
     }
 
     async build(fileUri: vscode.Uri) {
-        let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
-        let path = fileUri.fsPath.substring(0, index);
-        if (this.projectPath.fsPath === path) {
-            let entries = projectLoader.moduleEntries;
-            let mode = await vscode.window.showQuickPick(['debug', 'release']);
-            if (mode) {
-                if (entries.length === 1) {
-                    buildTools.build(entries[0], mode);
-                } else {
-                    let name = await vscode.window.showQuickPick(entries);
-                    if (name) {
-                        buildTools.build(name, mode);
+        try {
+            let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
+            let path = fileUri.fsPath.substring(0, index);
+            if (this.projectPath.fsPath === path) {
+                let entries = projectLoader.moduleEntries;
+                let mode = await vscode.window.showQuickPick(['debug', 'release']);
+                if (mode) {
+                    if (entries.length === 1) {
+                        buildTools.build(entries[0], mode);
+                    } else {
+                        let name = await vscode.window.showQuickPick(entries);
+                        if (name) {
+                            buildTools.build(name, mode);
+                        }
                     }
                 }
+            } else {
+                buildTools.buildModule(fileUri, path);
             }
-        } else {
-            buildTools.buildModule(fileUri, path);
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to build module. ${err}`);
         }
     }
 }

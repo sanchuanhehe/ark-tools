@@ -8,10 +8,14 @@ export class keyCompletionItem {
     private static arr: vscode.CompletionItem[] = [];
     static create(mark: string, context: context) {
         this.arr = [];
-        this.context = context;
-        let tag = mark.toLowerCase();
-        let arr = keys.filter((i) => i.startsWith(tag));
-        this.newItems(arr);
+        try {
+            this.context = context;
+            let tag = mark.toLowerCase();
+            let arr = keys.filter((i) => i.startsWith(tag));
+            this.newItems(arr);
+        } catch (err) {
+            console.log(err);
+        }
         return this.arr;
     }
 

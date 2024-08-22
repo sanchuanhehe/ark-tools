@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
-import { fileToJson, isEmpty, objToBuffer } from '../utils';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
+import { fileToJson, isEmpty, objToBuffer } from '../utils';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
@@ -143,10 +143,14 @@ class projectLoader {
     }
 
     async updateGlobalProfile() {
-        if (this.globalProfile) {
-            let data = objToBuffer(this.globalProfile);
-            let profileUri = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
-            await vscode.workspace.fs.writeFile(profileUri, data);
+        try {
+            if (this.globalProfile) {
+                let data = objToBuffer(this.globalProfile);
+                let profileUri = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
+                await vscode.workspace.fs.writeFile(profileUri, data);
+            }
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to update project rofile. ${err}`);
         }
     }
 

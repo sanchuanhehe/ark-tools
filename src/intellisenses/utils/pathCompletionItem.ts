@@ -5,12 +5,17 @@ import { fileInfo } from '../../models/fileInfo';
 
 export class pathCompletionItem {
     static async create(context: context) {
-        const workspace = vscode.workspace.getWorkspaceFolder(context.document.uri);
-        const rootPath = workspace?.uri.fsPath;
-        const index = context.document.uri.fsPath.lastIndexOf('/'), fileName = context.document.uri.fsPath.substring(index + 1);
-        const path = this.getPathOfFolderToLookupFiles(context.document.uri.fsPath, context.fromString, rootPath);
-        const childrenOfPath = await this.getChildrenOfPath(path, fileName);
-        return [...childrenOfPath.map((child) => this.createPathCompletionItem(child))];
+        try {
+            const workspace = vscode.workspace.getWorkspaceFolder(context.document.uri);
+            const rootPath = workspace?.uri.fsPath;
+            const index = context.document.uri.fsPath.lastIndexOf('/'), fileName = context.document.uri.fsPath.substring(index + 1);
+            const path = this.getPathOfFolderToLookupFiles(context.document.uri.fsPath, context.fromString, rootPath);
+            const childrenOfPath = await this.getChildrenOfPath(path, fileName);
+            return [...childrenOfPath.map((child) => this.createPathCompletionItem(child))];
+        } catch (err) {
+            console.log(err);
+            return [];
+        }
     }
 
     private static createPathCompletionItem(fileInfo: fileInfo): vscode.CompletionItem {

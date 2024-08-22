@@ -3,7 +3,7 @@ import path from 'path';
 import * as vscode from 'vscode';
 import * as readline from 'readline';
 import { context } from '../utils/context';
-import { getFolder, relativePath } from '../../utils';
+import { getFolder, hasFile, relativePath } from '../../utils';
 
 export class classCompletionItem {
     private static arr: vscode.CompletionItem[] = [];
@@ -19,35 +19,39 @@ export class classCompletionItem {
             let files = fs.readdirSync(folder),
                 file = files.filter(x => x.startsWith(name))?.[0],
                 absoluteFile = path.join(folder, file);
-            let rl = readline.createInterface({ input: fs.createReadStream(absoluteFile) });
-            rl.on('line', line => {
-                if (line.trim().startsWith('export')) {
-                    if (line.includes('function')) {
-                        const match = line.match(/export\s+function\s+([^ (]+)\(([^)]*)\)/);
-                        const name = match?.[1];
-                        if (name) {
-                            this.newItem(name, vscode.CompletionItemKind.Function);
-                        }
-                    } else if (line.includes('const')) {
-                        let match = line.match(/export\s+const\s+([^ :=]+)/);
-                        const name = match?.[1];
-                        if (name) {
-                            let idx = name.lastIndexOf(':');
-                            this.newItem(idx > -1 ? name.substring(0, idx) : name, vscode.CompletionItemKind.Value);
-                        }
-                    } else if (line.includes('class') || line.includes('enum') || line.includes('struct')) {
-                        const match = line.match(/export\s+(class|enum|struct)\s+([^ ,{]+)/);
-                        const name = match?.[2];
-                        if (name) {
-                            let kind = line.includes('class') ? vscode.CompletionItemKind.Class : (line.includes('enum') ? vscode.CompletionItemKind.Enum : vscode.CompletionItemKind.Struct);
-                            this.newItem(name, kind);
+            if (hasFile(absoluteFile)) {
+                let rl = readline.createInterface({ input: fs.createReadStream(absoluteFile) });
+                rl.on('line', line => {
+                    if (line.trim().startsWith('export')) {
+                        if (line.includes('function')) {
+                            const match = line.match(/export\s+function\s+([^ (]+)\(([^)]*)\)/);
+                            const name = match?.[1];
+                            if (name) {
+                                this.newItem(name, vscode.CompletionItemKind.Function);
+                            }
+                        } else if (line.includes('const')) {
+                            let match = line.match(/export\s+const\s+([^ :=]+)/);
+                            const name = match?.[1];
+                            if (name) {
+                                let idx = name.lastIndexOf(':');
+                                this.newItem(idx > -1 ? name.substring(0, idx) : name, vscode.CompletionItemKind.Value);
+                            }
+                        } else if (line.includes('class') || line.includes('enum') || line.includes('struct')) {
+                            const match = line.match(/export\s+(class|enum|struct)\s+([^ ,{]+)/);
+                            const name = match?.[2];
+                            if (name) {
+                                let kind = line.includes('class') ? vscode.CompletionItemKind.Class : (line.includes('enum') ? vscode.CompletionItemKind.Enum : vscode.CompletionItemKind.Struct);
+                                this.newItem(name, kind);
+                            }
                         }
                     }
-                }
-            });
-            rl.on('close', () => {
+                });
+                rl.on('close', () => {
+                    resolve(this.arr);
+                });
+            } else {
                 resolve(this.arr);
-            });
+            }
         });
     }
 
