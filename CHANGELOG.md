@@ -19,3 +19,7 @@
 ## [v0.0.8]
 - Fix Issues
 - Muli-Languages support
+
+## [v0.1.0]
+- Fix Issues
+- Initial Command Line Tools
