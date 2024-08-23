@@ -5,6 +5,7 @@ import { projectLinter } from './projectLinter';
 import { ohPackage } from '../models/ohPackage';
 import { module } from '../models/modules/module';
 import { projectBuilder } from './projectBuilder';
+import codelinterTools from './build/codelinterTools';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
 import { $r, fileToJson, isEmpty, objToBuffer } from '../utils';
@@ -120,6 +121,10 @@ class projectLoader {
                     await this.loadModule(module.srcPath);
                 }
                 this.builder = new projectBuilder(projectPath);
+                this.builder.check();
+                if (await codelinterTools.check()) {
+                    this.linter.register();
+                }
             } else {
                 vscode.window.showErrorMessage($r('emptyModules'));
             }
