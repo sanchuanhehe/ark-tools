@@ -62,10 +62,11 @@ export default class UiPanel {
     }
 
     private _getHtmlForWebview() {
-        const appDistPath = path.join(this.extensionPath, 'views');
-        const appDistPathUri = vscode.Uri.file(appDistPath);
-        const baseUri = this.panel.webview.asWebviewUri(appDistPathUri);
-        const indexPath = path.join(appDistPath, 'dependencies.html');
+        const lng = vscode.env.language.includes('zh') ? 'cn' : 'en',
+            appDistPath = path.join(this.extensionPath, 'views', lng),
+            appDistPathUri = vscode.Uri.file(appDistPath),
+            baseUri = this.panel.webview.asWebviewUri(appDistPathUri),
+            indexPath = path.join(appDistPath, 'dependencies.html');
         return fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
     }
 }

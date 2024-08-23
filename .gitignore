@@ -4,4 +4,4 @@
 **/.vscode-test
 **/*.vsix
 **/.cache
-**/tools
+tools/**

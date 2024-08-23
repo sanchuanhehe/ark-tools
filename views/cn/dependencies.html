@@ -1,0 +1,299 @@
+<html>
+
+<head>
+    <style>
+        * {
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        let pgFilePath = "",
+            page_num = 1,
+            packages = [],
+            page_count = 1,
+            denpencies = [],
+            callingApi = false;
+        const vscode = acquireVsCodeApi();
+        window.onload = function () {
+            window.addEventListener("message", receiveMessage, false);
+        };
+        function receiveMessage(event) {
+            switch (event.data?.command) {
+                case 'reload': {
+                    try {
+                        document.getElementById("local_content").innerHTML = "";
+                        document.getElementById("search_content").innerHTML = "";
+                        pgFilePath = event.data?.data?.pgFilePath;
+                        packages = event.data?.data?.packages;
+                        load(pgFilePath, packages);
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    break;
+                }
+                case "dependencies": {
+                    try {
+                        pgFilePath = event.data?.data?.pgFilePath;
+                        packages = event.data?.data?.packages;
+                        load(pgFilePath, packages);
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    break;
+                }
+                case "search": {
+                    try {
+                        document.getElementById("search_content").innerHTML = "";
+                        denpencies = event.data?.data?.denpencies;
+                        page_count = event.data?.data?.page_count;
+                        document
+                            .getElementById("next")
+                            .setAttribute(
+                                "style",
+                                page_count > 1
+                                    ? "margin-left: 8px; border-radius: 24px;padding: 8px;"
+                                    : "margin-left: 8px; border-radius: 24px;padding: 8px;display:none"
+                            );
+                        for (let i = 0; i < denpencies.length; i++) {
+                            let name = denpencies[i]?.name?.replace(/ /gi, "");
+                            let tr = document.createElement("tr");
+                            let td1 = document.createElement("td");
+                            td1.innerText = `${i}`;
+                            tr.appendChild(td1);
+                            let td2 = document.createElement("td");
+                            td2.innerText = name;
+                            tr.appendChild(td2);
+                            let td3 = document.createElement("td");
+                            td3.innerText = `${denpencies[i]?.description}`;
+                            tr.appendChild(td3);
+                            let td4 = document.createElement("td");
+                            if (packages.findIndex((i) => i.packageName === name) === -1) {
+                                let a1 = document.createElement("a");
+                                a1.innerText = "安装";
+                                a1.href = "javascript:;";
+                                a1.onclick = function () {
+                                    if (a1.innerText !== '等待') {
+                                        let obj = {
+                                            command: "install-package",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
+                                        };
+                                        vscode.postMessage(obj);
+                                        a1.innerText = '等待';
+                                    }
+                                };
+                                tr.appendChild(a1);
+                            } else {
+                                let a2 = document.createElement("a");
+                                a2.innerText = "更新";
+                                a2.style = "margin-left:12px";
+                                a2.href = "javascript:;";
+                                a2.onclick = function () {
+                                    if (a2.innerText !== '等待') {
+                                        let obj = {
+                                            command: "update-package",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
+                                        };
+                                        vscode.postMessage(obj);
+                                        a2.innerText = '等待';
+                                    }
+                                };
+                                tr.appendChild(a2);
+                            }
+                            document.getElementById("search_content").appendChild(tr);
+                        }
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    callingApi = false;
+                    document.getElementById('search').innerText = "搜索";
+                    break;
+                }
+                case "next": {
+                    try {
+                        let arr = event.data?.data?.denpencies;
+                        for (let i = 0; i < arr.length; i++) {
+                            let name = arr[i]?.name?.replace(/ /gi, "");
+                            let tr = document.createElement("tr");
+                            let td1 = document.createElement("td");
+                            td1.innerText = `${i + denpencies.length}`;
+                            tr.appendChild(td1);
+                            let td2 = document.createElement("td");
+                            td2.innerText = name;
+                            tr.appendChild(td2);
+                            let td3 = document.createElement("td");
+                            td3.innerText = `${arr[i].description}`;
+                            tr.appendChild(td3);
+                            let td4 = document.createElement("td");
+                            if (packages.findIndex((i) => i.packageName === name) === -1) {
+                                let a1 = document.createElement("a");
+                                a1.innerText = "安装";
+                                a1.href = "javascript:;";
+                                a1.onclick = function () {
+                                    if (a1.innerText !== '等待') {
+                                        let obj = {
+                                            command: "install-package",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
+                                        };
+                                        vscode.postMessage(obj);
+                                        a1.innerText = '等待';
+                                    }
+                                };
+                                tr.appendChild(a1);
+                            } else {
+                                let a2 = document.createElement("a");
+                                a2.innerText = "更新";
+                                a2.style = "margin-left:12px";
+                                a2.href = "javascript:;";
+                                a2.onclick = function () {
+                                    if (a2.innerText !== '等待') {
+                                        let obj = {
+                                            command: "update-package",
+                                            packageName: name,
+                                            pgFilePath: pgFilePath,
+                                            packageVersion: denpencies[i].latestVersion
+                                        };
+                                        vscode.postMessage(obj);
+                                        a2.innerText = "等待";
+                                    }
+                                };
+                                tr.appendChild(a2);
+                            }
+                            document.getElementById("search_content").appendChild(tr);
+                        }
+                        denpencies.push(...arr);
+                    } catch (e) {
+                        document.getElementById("msg").innerText = e.message;
+                    }
+                    callingApi = false;
+                    document.getElementById('next').innerText = "下一页";
+                    break;
+                }
+            }
+        }
+        function load(pgFilePath, packages) {
+            for (let i = 0; i < packages.length; i++) {
+                let packageVersion = packages[i].packageVersion;
+                let tr = document.createElement("tr");
+                let td1 = document.createElement("td");
+                td1.innerText = `${i}`;
+                tr.appendChild(td1);
+                let td2 = document.createElement("td");
+                td2.innerText = `${packages[i].packageName}`;
+                tr.appendChild(td2);
+                let td3 = document.createElement("td");
+                td3.innerText = `${packageVersion}`;
+                tr.appendChild(td3);
+                let td4 = document.createElement("td");
+                let a2 = document.createElement("a");
+                a2.innerText = "移除";
+                a2.style = "margin-left:12px";
+                a2.href = "javascript:;";
+                a2.onclick = function () {
+                    if (a2.innerText !== '等待') {
+                        let packageName = packages[i].packageName;
+                        let obj = {
+                            command: "remove-package",
+                            packageName: packageName,
+                            pgFilePath: pgFilePath
+                        };
+                        vscode.postMessage(obj);
+                        a2.innerText = '等待';
+                    }
+                };
+                tr.appendChild(a2);
+                document.getElementById("local_content").appendChild(tr);
+            }
+
+        }
+        function search() {
+            if (!callingApi) {
+                callingApi = true;
+                document.getElementById('search').innerText = "加载中";
+                page_num = 1;
+                let keywords = document.getElementById("keywords").value;
+                let obj = {
+                    command: "search",
+                    data: keywords.trim()
+                };
+                vscode.postMessage(obj);
+            }
+        }
+        function next() {
+            if (!callingApi) {
+                if (page_count > page_num) {
+                    callingApi = true;
+                    document.getElementById('next').innerText = "加载中";
+                    page_num++;
+                    let obj = {
+                        command: "next",
+                        data: page_num,
+                    };
+                    vscode.postMessage(obj);
+                }
+                if (page_count <= page_num) {
+                    document.getElementById("next").setAttribute("style", "margin-left: 8px; border-radius: 24px;padding: 8px;display:none");
+                }
+            }
+        }
+        function apply() {
+            let obj = {
+                command: "apply",
+                data: pgFilePath.trim()
+            };
+            vscode.postMessage(obj);
+        }
+    </script>
+</head>
+
+<body>
+    <h3>模块依赖</h3>
+    <div>
+        <label>在线搜索依赖</label>
+        <input id="keywords" type="text" placeholder="输入关键字..."
+            style="margin-left: 8px; border-radius: 24px;padding: 8px;border: none;" />
+        <button id="search" style="margin-left: 8px; border-radius: 24px;padding: 8px;"
+            onclick="search()">搜索</button>
+        <button style="margin-left: 8px; border-radius: 24px;padding: 8px;"
+            onclick="javascript:document.getElementById('search_content').innerHTML = ''">清空</button>
+        <button id="next" style="margin-left: 8px; border-radius: 24px;padding: 8px;display: none;"
+            onclick="next()">下一页</button>
+        <table style="border: 1px solid gray;padding: 6px;margin-top: 8px;">
+            <thead>
+                <tr>
+                    <td style="width: 50px;">索引</td>
+                    <td style="width: 100px;">包名</td>
+                    <td style="width: 250px;">描述</td>
+                    <td style="width: 150px;">更多</td>
+                </tr>
+            </thead>
+            <tbody id="search_content">
+            </tbody>
+        </table>
+    </div>
+    <label id="msg" style="color: red;margin-top: 8px;"></label>
+    <div style="margin-top: 8px;">
+        <label>模块依赖</label>
+        <table style="border: 1px solid gray;padding: 6px;margin-top: 8px;">
+            <thead>
+                <tr>
+                    <td style="width: 50px;">索引</td>
+                    <td style="width: 100px;">包名</td>
+                    <td style="width: 250px;">描述</td>
+                    <td style="width: 150px;">更多</td>
+                </tr>
+            </thead>
+            <tbody id="local_content">
+            </tbody>
+        </table>
+        <button style="margin-left: 8px;margin-top: 8px; border-radius: 24px;padding: 8px;"
+            onclick="apply()">应用</button>
+    </div>
+</body>
+
+</html>

@@ -97,10 +97,11 @@ export class arkts {
             localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))],
             retainContextWhenHidden: true,
         });
-        const appDistPath = path.join(globalData.extensionPath, 'views'),
+        const lng = vscode.env.language.includes('zh') ? 'cn' : 'en',
+            appDistPath = path.join(globalData.extensionPath, 'views', lng),
             appDistPathUri = vscode.Uri.file(appDistPath),
-            indexPath = path.join(appDistPath, 'about.html');
-        const baseUri = panel.webview.asWebviewUri(appDistPathUri);
+            indexPath = path.join(appDistPath, 'about.html'),
+            baseUri = panel.webview.asWebviewUri(appDistPathUri);
         panel.webview.html = fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
         panel.onDidDispose(() => panel.dispose(), null);
     }

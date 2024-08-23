@@ -10,5 +10,5 @@
     "ext.command.format": "格式化文档",
     "ext.command.codelinter": "执行代码检查",
     "ext.command.toolsInit": "初始化构建工具",
-    "ext.explorer.contents": "[阅读](command:arkts.about) 关于ArkTS Tools\n[初始化构建工具](command:arkts.toolsInit)\n[创建ArkUI项目](command:arkts.createProject)"
+    "ext.explorer.contents": "[阅读](command:arkts.about) 关于ArkTS Tools\n[创建ArkUI项目](command:arkts.createProject)"
 }

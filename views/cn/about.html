@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <style>
+        * {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h3>This is the extension for ArkTs Language. Fast way to create, init, build and
+            run ArkTs project.</h3>
+        <h2>Requirements</h2>
+        <p>After VsCode 1.65.0</p>
+        <h2>Extension Settings</h2>
+        <p>This extension contributes the following settings:</p>
+        <ul>
+            <li><code>arktsTools.ohpmPath</code>: The absolute path to ohpm</li>
+            <li><code>arktsTools.hvigorPath</code>: The absolute path to hvigor</li>
+            <li><code>arktsTools.hdcPath</code>: The absolute path to hdc</li>
+            <li><code>arktsTools.jdkPath</code>: The absolute path to jdk</li>
+            <li><code>arktsTools.codelinterPath</code>: The absolute path to codelinter</li>
+            <li><code>arktsTools.codelinterReloadChange</code>: Refresh struct after file/resources/folder change</li>
+            <li><code>arktsTools.codelinterCheckAfterSave</code>: Run codelinter after save text document</li>
+            <li><code>arktsTools.intellisensesModulesPath</code>: The absolute path to intellisenses modules roles. \n
+                WARNING! \n The Location MUST be a FOLDER and file name MUST like "ets_role_***.json"</li>
+        </ul>
+        <p>
+            <strong>About Init Build Tool!</strong>
+        </p>
+    </div>
+    <div>
+        <h2>Intellisenses Modules Roles</h2>
+        <p>Introduce Role Field</p>
+        <p>1 - root: Package Name or Modules Name, like 'std' in native module;</p>
+        <p>2 - digit: check trigger digit. for exmaple, if the value is 1, it'll get the name when you key in "import
+            std.".when
+            value is 2 will happend key in "import std.collection.";</p>
+        <p>3 - libs: all Modules Name in this Package;</p>
+        </p>
+    </div>
+</body>
+
+</html>
