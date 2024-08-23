@@ -28,8 +28,9 @@ export class arkts {
                         return '';
                     }
                     const folders = await vscode.window.showOpenDialog({
-                        openLabel: $r('select'),
-                        canSelectFiles: true
+                        canSelectMany: false,
+                        canSelectFolders: true,
+                        openLabel: $r('select')
                     });
                     const folder = folders ? folders[0].fsPath : undefined;
                     if (!folder) {
@@ -94,15 +95,16 @@ export class arkts {
     static showAbout() {
         const panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
             enableScripts: true,
-            localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))],
             retainContextWhenHidden: true,
+            localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))]
         });
         const lng = vscode.env.language.includes('zh') ? 'cn' : 'en',
             appDistPath = path.join(globalData.extensionPath, 'views', lng),
             appDistPathUri = vscode.Uri.file(appDistPath),
             indexPath = path.join(appDistPath, 'about.html'),
             baseUri = panel.webview.asWebviewUri(appDistPathUri);
-        panel.webview.html = fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
+        const content = fs.readFileSync(indexPath, { encoding: 'utf8' });
+        panel.webview.html = content.replace('<base href="/">', `<base href="${String(baseUri)}/">`);
         panel.onDidDispose(() => panel.dispose(), null);
     }
 
@@ -175,11 +177,10 @@ export class arkts {
 
     static async toolsInit() {
         const folders = await vscode.window.showOpenDialog({
-            openLabel: $r('select'),
+            canSelectMany: false,
             canSelectFiles: true,
-            filters: {
-                'Zip': ['zip']
-            }
+            openLabel: $r('select'),
+            filters: { 'Zip': ['zip'] }
         });
         let path = folders?.[0].fsPath;
         if (path && path.endsWith('.zip')) {
