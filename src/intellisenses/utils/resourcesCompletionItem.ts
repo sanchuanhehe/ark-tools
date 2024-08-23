@@ -13,35 +13,35 @@ export class resourcesCompletionItem {
                 this.newItems(['$r(\'app.string\')']);
                 this.newItems(['$r(\'app.media\')']);
             } else {
-                let rows: string[] = [];
-                let appScope = projectLoader.getProjectModule('appScope');
-                let projectModule = projectLoader.getProjectModule(context);
+                const rows: string[] = [];
+                const appScope = projectLoader.getProjectModule('appScope');
+                const projectModule = projectLoader.getProjectModule(context);
                 if (appScope) {
                     if (mark.indexOf('app.color') > -1) {
-                        for (let color of appScope.colors) {
+                        for (const color of appScope.colors) {
                             rows.push(color.name);
                         }
                     } else if (mark.indexOf('app.string') > -1) {
-                        for (let color of appScope.strings) {
+                        for (const color of appScope.strings) {
                             rows.push(color.name);
                         }
                     } else if (mark.indexOf('app.media') > -1) {
-                        for (let media of appScope.medias) {
+                        for (const media of appScope.medias) {
                             rows.push(media);
                         }
                     }
                 }
                 if (projectModule) {
                     if (mark.indexOf('app.color') > -1) {
-                        for (let color of projectModule.colors) {
+                        for (const color of projectModule.colors) {
                             rows.push(color.name);
                         }
                     } else if (mark.indexOf('app.string') > -1) {
-                        for (let color of projectModule.strings) {
+                        for (const color of projectModule.strings) {
                             rows.push(color.name);
                         }
                     } else if (mark.indexOf('app.media') > -1) {
-                        for (let media of projectModule.medias) {
+                        for (const media of projectModule.medias) {
                             rows.push(media);
                         }
                     }
@@ -55,8 +55,8 @@ export class resourcesCompletionItem {
     }
 
     private static newItems(marks: string[]) {
-        for (let mark of marks) {
-            let item = {
+        for (const mark of marks) {
+            const item = {
                 label: mark,
                 insertText: mark,
                 kind: vscode.CompletionItemKind.Value

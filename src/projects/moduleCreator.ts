@@ -27,7 +27,7 @@ class moduleCreator {
                     await this.createFeatureModule(moduleName, appName, authorName);
                     break;
             }
-            let targets = projectLoader.globalProfile?.modules[0].targets ?? [];
+            const targets = projectLoader.globalProfile?.modules[0].targets ?? [];
             projectLoader.globalProfile?.modules.push({
                 name: moduleName,
                 srcPath: `./${moduleName}`,
@@ -40,22 +40,22 @@ class moduleCreator {
     }
 
     private async createSharedModule(moduleName: string, authorName: string) {
-        let module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
+        const module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
             element = path.join(base, 'element'), components = path.join(ets, 'components'),
             profi = path.join(base, 'profile'), page = path.join(ets, 'pages');
         await createDirectories([module, src, main, resources, ets, base, element, components, profi, page]);
         //build-profile.json5
-        let profile: moduleProfile = {
+        const profile: moduleProfile = {
             buildOption: {},
             apiType: 'stageMode',
             targets: [{ name: "default" }]
         };
-        let profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
+        const profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
-        let pkg: ohPackage = {
+        const pkg: ohPackage = {
             name: moduleName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
@@ -65,16 +65,16 @@ class moduleCreator {
             packageType: "InterfaceHar",
             dependencies: {}
         };
-        let packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
+        const packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //Index.ets
-        let index = vscode.Uri.parse(path.join(module, 'Index.ets'));
+        const index = vscode.Uri.parse(path.join(module, 'Index.ets'));
         await vscode.workspace.fs.writeFile(index, new Uint8Array());
         //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'hsp.txt');
+        const har = path.join(globalData.extensionPath, 'templates', 'project', 'hsp.txt');
         fs.copyFileSync(har, path.join(module, 'hvigorfile.ts'));
         //element
-        let bs = path.join(element, 'string.json');
+        const bs = path.join(element, 'string.json');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [{
                 name: "shared_desc",
@@ -82,7 +82,7 @@ class moduleCreator {
             }]
         }));
         //module
-        let moduleInfo: module = {
+        const moduleInfo: module = {
             module: {
                 type: 'shared',
                 name: moduleName,
@@ -92,31 +92,31 @@ class moduleCreator {
                 description: "$string:shared_desc"
             }
         };
-        let modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
+        const modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
         await vscode.workspace.fs.writeFile(modulePath, objToBuffer(moduleInfo));
         //profile
-        let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
+        const pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
         //pages
         fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), path.join(page, 'Index.ets'));
     }
 
     private async createStaticModule(moduleName: string, authorName: string) {
-        let module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
+        const module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
             element = path.join(base, 'element'), components = path.join(ets, 'components');
         await createDirectories([module, src, main, resources, ets, base, element, components]);
         //build-profile.json5
-        let profile: moduleProfile = {
+        const profile: moduleProfile = {
             apiType: 'stageMode',
             buildOption: {},
             targets: [{ name: "default" }]
         };
-        let profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
+        const profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
-        let pkg: ohPackage = {
+        const pkg: ohPackage = {
             name: moduleName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
@@ -125,16 +125,16 @@ class moduleCreator {
             license: 'Apache-2.0',
             dependencies: {}
         };
-        let packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
+        const packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //Index.ets
-        let index = vscode.Uri.parse(path.join(module, 'Index.ets'));
+        const index = vscode.Uri.parse(path.join(module, 'Index.ets'));
         await vscode.workspace.fs.writeFile(index, new Uint8Array());
         //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'har.txt');
+        const har = path.join(globalData.extensionPath, 'templates', 'project', 'har.txt');
         fs.copyFileSync(har, path.join(module, 'hvigorfile.ts'));
         //element
-        let bs = path.join(element, 'string.json');
+        const bs = path.join(element, 'string.json');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [
                 {
@@ -143,7 +143,7 @@ class moduleCreator {
                 }]
         }));
         //module
-        let moduleInfo: module = {
+        const moduleInfo: module = {
             module: {
                 type: 'har',
                 name: moduleName,
@@ -151,12 +151,12 @@ class moduleCreator {
                 deviceTypes: ['default', 'tablet']
             }
         };
-        let modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
+        const modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
         await vscode.workspace.fs.writeFile(modulePath, objToBuffer(moduleInfo));
     }
 
     private async createFeatureModule(moduleName: string, appName: string, authorName: string) {
-        let module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
+        const module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), cpp = path.join(main, 'cpp'),
             base = path.join(resources, 'base'), profi = path.join(base, 'profile'),
@@ -165,7 +165,7 @@ class moduleCreator {
             types = path.join(cpp, 'types'), libapplication = path.join(cpp, 'libapplication');
         await createDirectories([module, src, main, resources, ets, cpp, base, profi, media, element, ability, page, types, libapplication]);
         //build-profile.json5
-        let profile: moduleProfile = {
+        const profile: moduleProfile = {
             apiType: 'stageMode',
             buildOption: {
                 externalNativeOptions: {
@@ -184,10 +184,10 @@ class moduleCreator {
             targets: [{ name: "default" },
             { name: "ohosTest" }]
         };
-        let profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
+        const profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
-        let pkg: ohPackage = {
+        const pkg: ohPackage = {
             name: moduleName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
@@ -198,18 +198,18 @@ class moduleCreator {
                 "libapplication.so": "file:./src/main/cpp/types/libapplication"
             }
         };
-        let packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
+        const packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
+        const har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
         fs.copyFileSync(har, path.join(module, 'hvigorfile.ts'));
         //media
-        let icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
+        const icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
             startIcon = path.join(globalData.extensionPath, 'templates', 'media', 'startIcon.png');
         fs.copyFileSync(icon, path.join(media, 'icon.png'));
         fs.copyFileSync(startIcon, path.join(media, 'startIcon.png'));
         //element
-        let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
+        const bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [
                 {
@@ -232,10 +232,10 @@ class moduleCreator {
             }]
         }));
         //profile
-        let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
+        const pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
         //module
-        let moduleInfo: module = {
+        const moduleInfo: module = {
             module: {
                 type: 'feature',
                 name: moduleName,
@@ -257,7 +257,7 @@ class moduleCreator {
                 }]
             }
         };
-        let modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
+        const modulePath = vscode.Uri.parse(path.join(main, 'module.json5'));
         await vscode.workspace.fs.writeFile(modulePath, objToBuffer(moduleInfo));
         //ability
         fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'ability.txt'), path.join(ability, 'ApplicationAbility.ets'));
@@ -270,7 +270,7 @@ class moduleCreator {
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(path.join(libapplication, 'index.d.ts')),
             textToBuffer('export const add: (a: number, b: number) => number;'));
         //oh-package.json5
-        let pack: ohPackage = {
+        const pack: ohPackage = {
             main: '',
             version: '',
             license: '',
@@ -284,7 +284,7 @@ class moduleCreator {
     }
 
     private async createEntryModule(moduleName: string, appName: string, authorName: string) {
-        let module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
+        const module = path.join(globalData.projectPath.fsPath, moduleName), src = path.join(module, 'src'),
             main = path.join(src, 'main'), resources = path.join(main, 'resources'),
             ets = path.join(main, 'ets'), base = path.join(resources, 'base'),
             profi = path.join(base, 'profile'), media = path.join(base, 'media'),
@@ -292,16 +292,16 @@ class moduleCreator {
             page = path.join(ets, 'pages');
         await createDirectories([module, src, main, resources, ets, base, profi, media, element, ability, page]);
         //build-profile.json5
-        let profile: moduleProfile = {
+        const profile: moduleProfile = {
             apiType: 'stageMode',
             targets: [
                 { name: "default" },
                 { name: "ohosTest" }]
         };
-        let profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
+        const profileUri = vscode.Uri.parse(path.join(module, 'build-profile.json5'));
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
-        let pkg: ohPackage = {
+        const pkg: ohPackage = {
             name: moduleName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
@@ -310,18 +310,18 @@ class moduleCreator {
             license: '',
             dependencies: {}
         };
-        let packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
+        const packageUri = vscode.Uri.parse(path.join(module, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
+        const har = path.join(globalData.extensionPath, 'templates', 'project', 'hap.txt');
         fs.copyFileSync(har, path.join(module, 'hvigorfile.ts'));
         //media
-        let icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
+        const icon = path.join(globalData.extensionPath, 'templates', 'media', 'icon.png'),
             startIcon = path.join(globalData.extensionPath, 'templates', 'media', 'startIcon.png');
         fs.copyFileSync(icon, path.join(media, 'icon.png'));
         fs.copyFileSync(startIcon, path.join(media, 'startIcon.png'));
         //element
-        let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
+        const bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [
                 {
@@ -344,7 +344,7 @@ class moduleCreator {
             }]
         }));
         //profile
-        let pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
+        const pages = path.join(profi, 'main_pages.json'), obj: mainPages = { src: ['pages/Index'] };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(pages), objToBuffer(obj));
         //module
         fs.copyFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'module.txt'), path.join(main, 'module.json5'));

@@ -9,7 +9,7 @@ import { resourcesProvider } from './providers/resourcesProvider';
 
 export function registerProvider(context: vscode.ExtensionContext) {
     [keyProvider, importProvider, variableProvider, classProvider, stateProvider, pathProvider, resourcesProvider].forEach((provider) => {
-        let disposable = vscode.languages.registerCompletionItemProvider(provider.selector, provider.provider, ...(provider.triggerCharacters || []));
+        const disposable = vscode.languages.registerCompletionItemProvider(provider.selector, provider.provider, ...(provider.triggerCharacters || []));
         context.subscriptions.push(disposable);
     });
 }

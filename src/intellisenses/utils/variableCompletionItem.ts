@@ -13,7 +13,7 @@ export class variableCompletionItem {
             if (tag || tag === '') {
                 tag = mark.toLowerCase().split('@')?.[1] ?? '';
             }
-            let arr = tag === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(tag));
+            const arr = tag === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(tag));
             this.newItems(arr);
         } catch (err) {
             console.log(err);
@@ -22,8 +22,8 @@ export class variableCompletionItem {
     }
 
     private static newItems(marks: string[]) {
-        for (let mark of marks) {
-            let item = {
+        for (const mark of marks) {
+            const item = {
                 label: mark,
                 insertText: mark,
                 kind: vscode.CompletionItemKind.Variable

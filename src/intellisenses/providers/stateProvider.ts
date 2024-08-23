@@ -19,7 +19,7 @@ async function provideCompletionItems(document: vscode.TextDocument, position: v
     const { textFullLine } = context;
     if (typeof textFullLine !== 'undefined') {
         const text = textFullLine.replace('@', '').trim();
-        let arr = stateCompletionItem.create(text);
+        const arr = stateCompletionItem.create(text);
         return Promise.resolve(arr);
     }
     return Promise.resolve([]);

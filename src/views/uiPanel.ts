@@ -66,8 +66,6 @@ export default class UiPanel {
         const appDistPathUri = vscode.Uri.file(appDistPath);
         const baseUri = this.panel.webview.asWebviewUri(appDistPathUri);
         const indexPath = path.join(appDistPath, 'dependencies.html');
-        let indexHtml = fs.readFileSync(indexPath, { encoding: 'utf8' });
-        indexHtml = indexHtml.replace('<base href="/">', `<base href="${String(baseUri)}/">`);
-        return indexHtml;
+        return fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
     }
 }

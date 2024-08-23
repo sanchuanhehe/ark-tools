@@ -12,7 +12,7 @@ export class projectBuilder {
     }
 
     async check() {
-        let ret = await buildTools.check();
+        const ret = await buildTools.check();
         if (!ret) {
             const result = await vscode.window.showInformationMessage($r('pjBuildFailed'), $r('open'), $r('cancel'));
             if (result === $r('open')) {
@@ -25,16 +25,16 @@ export class projectBuilder {
 
     async build(fileUri: vscode.Uri) {
         try {
-            let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
-            let path = fileUri.fsPath.substring(0, index);
+            const index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
+            const path = fileUri.fsPath.substring(0, index);
             if (this.projectPath.fsPath === path) {
-                let entries = projectLoader.moduleEntries;
-                let mode = await vscode.window.showQuickPick(['debug', 'release']);
+                const entries = projectLoader.moduleEntries;
+                const mode = await vscode.window.showQuickPick(['debug', 'release']);
                 if (mode) {
                     if (entries.length === 1) {
                         buildTools.build(entries[0], mode);
                     } else {
-                        let name = await vscode.window.showQuickPick(entries);
+                        const name = await vscode.window.showQuickPick(entries);
                         if (name) {
                             buildTools.build(name, mode);
                         }

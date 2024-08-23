@@ -17,8 +17,8 @@ export class client {
     static async query(keywords?: string) {
         try {
             this._keywords = keywords ?? '';
-            let url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=1&pageSize=10&sortedType=relevancy&isHomePage=false`;
-            let response = await axios({
+            const url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=1&pageSize=10&sortedType=relevancy&isHomePage=false`;
+            const response = await axios({
                 url: url,
                 method: 'get',
                 headers: {
@@ -27,7 +27,7 @@ export class client {
                 }
             });
             if (response.status === 200) {
-                let data: ajaxDenpencies = response.data.body;
+                const data: ajaxDenpencies = response.data.body;
                 this._page_count = data.pages;
                 this._denpencies = data.rows;
                 return data.rows;
@@ -44,8 +44,8 @@ export class client {
     static async load(page_num: number) {
         try {
             if (this._page_count >= page_num) {
-                let url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=${page_num}&pageSize=10&sortedType=relevancy&isHomePage=false`;
-                let response = await axios({
+                const url = `https://ohpm.openharmony.cn/ohpmweb/registry/oh-package/openapi/v1/search?condition=${this._keywords}&pageNum=${page_num}&pageSize=10&sortedType=relevancy&isHomePage=false`;
+                const response = await axios({
                     url: url,
                     method: 'get',
                     headers: {
@@ -54,7 +54,7 @@ export class client {
                     }
                 });
                 if (response.status === 200) {
-                    let data: ajaxDenpencies = response.data.body;
+                    const data: ajaxDenpencies = response.data.body;
                     this._denpencies.push(...data.rows);
                     return data.rows;
                 } else {

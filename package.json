@@ -1,7 +1,7 @@
 {
   "name": "ark-tools",
   "icon": "icon.png",
-  "displayName": "ArkUI/TS",
+  "displayName": "ArkTools",
   "description": "%ext.description%",
   "version": "0.1.0",
   "publisher": "michaelding",
@@ -167,50 +167,50 @@
           "command": "arkts.dependencies"
         }
       ]
-    }
-  },
-  "configuration": {
-    "title": "ArkTS Tools",
-    "properties": {
-      "arktsTools.ohpmPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to ohpm"
-      },
-      "arktsTools.hvigorPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to hvigor"
-      },
-      "arktsTools.hdcPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to hdc"
-      },
-      "arktsTools.jdkPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to jdk"
-      },
-      "arktsTools.codelinterPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to codelinter"
-      },
-      "arktsTools.codelinterReloadChange": {
-        "type": "boolean",
-        "default": false,
-        "description": "Refresh struct after file/resources/folder change"
-      },
-      "arktsTools.codelinterCheckAfterSave": {
-        "type": "boolean",
-        "default": false,
-        "description": "Run codelinter after save text document"
-      },
-      "arktsTools.intellisensesModulesPath": {
-        "type": "string",
-        "default": "",
-        "description": "The absolute path to intellisenses modules roles. \n WARNING! \n The Location MUST be a FOLDER and file name MUST like \"ets_role_***.json\""
+    },
+    "configuration": {
+      "title": "ArkTS Tools",
+      "properties": {
+        "arktsTools.ohpmPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to ohpm"
+        },
+        "arktsTools.hvigorPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to hvigor"
+        },
+        "arktsTools.hdcPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to hdc"
+        },
+        "arktsTools.jdkPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to jdk"
+        },
+        "arktsTools.codelinterPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to codelinter"
+        },
+        "arktsTools.codelinterReloadChange": {
+          "type": "boolean",
+          "default": false,
+          "description": "Refresh struct after file/resources/folder change"
+        },
+        "arktsTools.codelinterCheckAfterSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run codelinter after save text document"
+        },
+        "arktsTools.intellisensesModulesPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to intellisenses modules roles. \n WARNING! \n The Location MUST be a FOLDER and file name MUST like \"ets_role_***.json\""
+        }
       }
     }
   },

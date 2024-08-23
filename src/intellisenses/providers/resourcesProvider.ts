@@ -20,7 +20,7 @@ async function provideCompletionItems(document: vscode.TextDocument, position: v
     const { textFullLine } = context;
     if (typeof textFullLine !== 'undefined') {
         if (textFullLine.startsWith('$')) {
-            let arr = resourcesCompletionItem.create(textFullLine, context);
+            const arr = resourcesCompletionItem.create(textFullLine, context);
             return Promise.resolve(arr);
         }
     }

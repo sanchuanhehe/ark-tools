@@ -18,7 +18,7 @@ async function provideCompletionItems(document: vscode.TextDocument, position: v
     const context = createContext(document, position);
     const { textFullLine } = context;
     if (typeof textFullLine !== 'undefined' && textFullLine.length > 0) {
-        let arr = variableCompletionItem.create(textFullLine.trim());
+        const arr = variableCompletionItem.create(textFullLine.trim());
         return Promise.resolve(arr);
     }
     return Promise.resolve([]);

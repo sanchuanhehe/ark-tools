@@ -23,7 +23,7 @@ export default class WebviewMessageHandler {
 
     private readToml(pgFilePath: string, command = 'dependencies') {
         this.loader.loadFile();
-        let packages: dependencie[] = this.loader.getPackages();
+        const packages: dependencie[] = this.loader.getPackages();
         this.webview.postMessage({ command: command, data: { packages, pgFilePath } });
     }
 
@@ -38,22 +38,22 @@ export default class WebviewMessageHandler {
     private handleMessage(message: UIMessage): void {
         switch (message.command) {
             case 'apply': {
-                let pgFilePath = message.data.toString();
+                const pgFilePath = message.data.toString();
                 this.applySave(pgFilePath);
                 break;
             }
             case 'search': {
-                let keywords = message.data.toString();
+                const keywords = message.data.toString();
                 denpenciesLoader.query(keywords).then((denpencies) => {
                     if (denpencies) {
-                        let page_count = client.page_count ?? 0;
+                        const page_count = client.page_count ?? 0;
                         this.webview.postMessage({ command: 'search', data: { denpencies, page_count } });
                     }
                 });
                 break;
             }
             case 'next': {
-                let page = parseInt(message.data);
+                const page = parseInt(message.data);
                 denpenciesLoader.load(page).then((denpencies) => {
                     if (denpencies) {
                         this.webview.postMessage({ command: 'next', data: { denpencies } });
@@ -62,19 +62,19 @@ export default class WebviewMessageHandler {
                 break;
             }
             case 'install-package': {
-                let pm = message as PackageMessage;
+                const pm = message as PackageMessage;
                 this.loader.addNode(pm);
                 this._needApply = true;
                 break;
             }
             case 'update-package': {
-                let pm = message as PackageMessage;
+                const pm = message as PackageMessage;
                 this.loader.updateNode(pm);
                 this._needApply = true;
                 break;
             }
             case 'remove-package': {
-                let pm = message as PackageMessage;
+                const pm = message as PackageMessage;
                 this.loader.rmeoveNode(pm);
                 this._needApply = true;
                 break;

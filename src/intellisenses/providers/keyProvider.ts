@@ -17,7 +17,7 @@ export const keyProvider: intellisenseProvider = {
     const context = createContext(document, position);
     const { textFullLine } = context;
     if (typeof textFullLine !== 'undefined' && textFullLine.length > 0) {
-      let arr = keyCompletionItem.create(textFullLine.trim(), context);
+      const arr = keyCompletionItem.create(textFullLine.trim(), context);
       return Promise.resolve(arr);
     }
     return Promise.resolve([]);

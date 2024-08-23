@@ -19,7 +19,7 @@ export function isEmpty(obj: any) {
 }
 
 export function objToBuffer(obj: any) {
-    let json = JSON.stringify(obj);
+    const json = JSON.stringify(obj);
     return textToBuffer(json);
 }
 
@@ -38,7 +38,7 @@ export function textToBuffer(text: string) {
 }
 
 export function $r(key: string, end?: any) {
-    let content = language.instance.getContent(key);
+    const content = language.instance.getContent(key);
     return `${content} ${end ?? ''}`;
 }
 
@@ -47,8 +47,8 @@ export async function fileToJson(path: string | vscode.Uri) {
         if (typeof path === 'string') {
             path = vscode.Uri.parse(path);
         }
-        let stream = await vscode.workspace.fs.readFile(path);
-        let content = decoder.decode(stream);
+        const stream = await vscode.workspace.fs.readFile(path);
+        const content = decoder.decode(stream);
         return JSON5.parse(content);
     } catch (err) {
         console.log(err);
@@ -61,8 +61,8 @@ export function fileToJsonSync(path: string | vscode.Uri) {
         if (typeof path !== 'string') {
             path = path.fsPath;
         }
-        let stream = fs.readFileSync(path);
-        let content = decoder.decode(stream);
+        const stream = fs.readFileSync(path);
+        const content = decoder.decode(stream);
         return JSON5.parse(content);
     } catch (err) {
         console.log(err);
@@ -75,7 +75,7 @@ export async function fileToContent(path: string | vscode.Uri) {
         if (typeof path === 'string') {
             path = vscode.Uri.parse(path);
         }
-        let stream = await vscode.workspace.fs.readFile(path);
+        const stream = await vscode.workspace.fs.readFile(path);
         return decoder.decode(stream);
     } catch (err) {
         console.log(err);
@@ -84,7 +84,7 @@ export async function fileToContent(path: string | vscode.Uri) {
 }
 
 export async function createDirectories(dirs: string[]) {
-    for (let dir of dirs) {
+    for (const dir of dirs) {
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(dir));
     }
 }
@@ -96,7 +96,7 @@ export function sleep(ms: number): Promise<void> {
 }
 
 export function relativePath(mark: string) {
-    let fidx = mark.lastIndexOf('from');
+    const fidx = mark.lastIndexOf('from');
     let relative = mark.substring(fidx + 4).trim().replace(/\'/g, '');
     if (!relative.endsWith('\'') || !relative.endsWith('\"')) {
         relative = relative.replace(';', '');
@@ -105,11 +105,14 @@ export function relativePath(mark: string) {
 }
 
 export function getFolder(fsPath: string) {
-    let index = fsPath.lastIndexOf('/');
-    let lastPart = fsPath.substring(index);
+    const index = fsPath.lastIndexOf('/'), lastPart = fsPath.substring(index);
     if (lastPart.indexOf('.') !== -1) {
         return fsPath.substring(0, index);
     } else {
         return fsPath;
     }
+}
+
+export function toObject(json: string) {
+    return JSON5.parse(json);
 }

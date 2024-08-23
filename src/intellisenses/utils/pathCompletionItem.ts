@@ -31,9 +31,8 @@ export class pathCompletionItem {
     private static getPathOfFolderToLookupFiles(fileName: string, text: string | undefined, rootPath?: string): string {
         const normalizedText = path.normalize(text || "");
         const isPathAbsolute = normalizedText.startsWith(path.sep);
-        let rootFolder, pathEntered;
-        rootFolder = isPathAbsolute ? rootPath || "" : path.dirname(fileName);
-        pathEntered = normalizedText;
+        const rootFolder = isPathAbsolute ? rootPath || "" : path.dirname(fileName);
+        const pathEntered = normalizedText;
         return path.join(rootFolder, pathEntered);
     }
 

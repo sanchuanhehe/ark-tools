@@ -3,7 +3,7 @@ import path from 'path';
 import * as vscode from 'vscode';
 import { executor } from '../../executor';
 import projectLoader from '../projectLoader';
-import { $r, fileToJson, hasFile } from '../../utils';
+import { $r, fileToContent, fileToJson, hasFile } from '../../utils';
 
 class codelinterTools {
     private folder = './';
@@ -11,7 +11,7 @@ class codelinterTools {
     check(): Promise<boolean> {
         return new Promise((resolve) => {
             try {
-                let codelinter = vscode.workspace.getConfiguration("arktsTools").inspect<string>('codelinterPath')?.globalValue ?? '';
+                const codelinter = vscode.workspace.getConfiguration("arktsTools").inspect<string>('codelinterPath')?.globalValue ?? '';
                 if (codelinter.trim() !== '') {
                     fs.accessSync(codelinter);
                     this.enable = true;
@@ -27,14 +27,11 @@ class codelinterTools {
 
     async exec(target: string) {
         if (this.enable) {
-            let index = target.lastIndexOf('/'),
+            const index = target.lastIndexOf('/'),
                 name = `${target.substring(index)}-${new Date().getTime()}.json`,
                 out = path.join(this.folder, name);
             await executor.exec(`codelinter "${target}" -f json -o "${out}"`);
-            let data = await fileToJson(out);
-            if (data) {
-
-            }
+            return await fileToContent(out);
         }
     }
 

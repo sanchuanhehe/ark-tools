@@ -18,7 +18,7 @@ export class arkts {
             prompt: $r('enterProjectName'),
             placeHolder: $r('pjPlaceHolder')
         });
-        let projectPath = await vscode.window.withProgress<string>(
+        const projectPath = await vscode.window.withProgress<string>(
             { location: vscode.ProgressLocation.Notification, cancellable: false },
             async (progress) => {
                 progress.report({ message: $r('pjCreateNew', projectName) });
@@ -36,7 +36,7 @@ export class arkts {
                         return '';
                     }
                     const projectPath = path.join(folder, projectName);
-                    let uri = vscode.Uri.parse(projectPath);
+                    const uri = vscode.Uri.parse(projectPath);
                     await vscode.workspace.fs.createDirectory(uri);
                     return projectCreator.create(projectPath);
                 } catch (error) {
@@ -56,8 +56,8 @@ export class arkts {
     }
 
     static async refreshProject(fileUri: vscode.Uri) {
-        let index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
-        let path = fileUri.fsPath.substring(0, index);
+        const index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
+        const path = fileUri.fsPath.substring(0, index);
         if (path === globalData.projectPath.fsPath) {
             projectLoader.load(vscode.Uri.parse(path));
         } else {
@@ -77,10 +77,10 @@ export class arkts {
             placeHolder: $r('filePlaceHolder')
         });
         if (fileName && fileUri && fileUri.fsPath) {
-            let targetPath = path.extname(fileUri.path).length > 0 ? path.dirname(fileUri.path) : fileUri.path;
-            let uri = vscode.Uri.parse(path.join(targetPath, `${fileName}.ets`));
-            let source = fs.readFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), 'utf-8');
-            let data = this.encoder.encode(source.replace('Index', fileName));
+            const targetPath = path.extname(fileUri.path).length > 0 ? path.dirname(fileUri.path) : fileUri.path;
+            const uri = vscode.Uri.parse(path.join(targetPath, `${fileName}.ets`));
+            const source = fs.readFileSync(path.join(globalData.extensionPath, 'templates', 'project', 'page.txt'), 'utf-8');
+            const data = this.encoder.encode(source.replace('Index', fileName));
             await vscode.workspace.fs.writeFile(uri, data);
         }
     }
@@ -92,7 +92,7 @@ export class arkts {
     }
 
     static showAbout() {
-        let panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
+        const panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
             enableScripts: true,
             localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))],
             retainContextWhenHidden: true,
@@ -107,7 +107,7 @@ export class arkts {
 
     static async format(fileUri: vscode.Uri) {
         if (fileUri && fileUri.fsPath) {
-            let filePath = fileUri.fsPath;
+            const filePath = fileUri.fsPath;
             const text = fs.readFileSync(filePath, { encoding: 'utf8' });
             const document = vscode.window.activeTextEditor?.document;
             if (document) {
@@ -137,7 +137,7 @@ export class arkts {
             prompt: $r('enterModuleName'),
             placeHolder: $r('modulePlaceHolder')
         });
-        let mode = await vscode.window.showQuickPick(['entry', 'shared', 'static', 'feature']);
+        const mode = await vscode.window.showQuickPick(['entry', 'shared', 'static', 'feature']);
         await vscode.window.withProgress<void>(
             { location: vscode.ProgressLocation.Notification, cancellable: false },
             async (progress) => {

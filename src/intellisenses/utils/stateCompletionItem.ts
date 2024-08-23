@@ -12,7 +12,7 @@ export class stateCompletionItem {
     static create(mark: string) {
         this.arr = [];
         try {
-            let arr = mark === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(mark));
+            const arr = mark === '' ? keys : keys.filter((i) => i.toLowerCase().startsWith(mark));
             this.newItems(arr);
         } catch (err) {
             console.log(err);
@@ -21,8 +21,8 @@ export class stateCompletionItem {
     }
 
     private static newItems(marks: string[]) {
-        for (let mark of marks) {
-            let item = {
+        for (const mark of marks) {
+            const item = {
                 label: mark,
                 insertText: mark,
                 kind: vscode.CompletionItemKind.Variable

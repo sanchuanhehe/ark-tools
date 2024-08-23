@@ -14,11 +14,11 @@ class projectCreator {
     async create(projectPath: string): Promise<string> {
         try {
             if (!isEmpty(projectPath)) {
-                let appName = await vscode.window.showInputBox({
+                const appName = await vscode.window.showInputBox({
                     prompt: $r('enterAppName'),
                     placeHolder: $r('appPlaceHolder')
                 });
-                let authorName = await vscode.window.showInputBox({
+                const authorName = await vscode.window.showInputBox({
                     prompt: $r('enterAuthorName'),
                     placeHolder: $r('authorPlaceHolder')
                 });
@@ -41,7 +41,7 @@ class projectCreator {
 
     private async global(appName: string, authorName: string) {
         //build-profile.json5
-        let profile: globalProfile = {
+        const profile: globalProfile = {
             app: {
                 signingConfigs: [],
                 products: [{
@@ -66,10 +66,10 @@ class projectCreator {
                 }]
             }]
         };
-        let profileUri = vscode.Uri.parse(path.join(this.projectPath, 'build-profile.json5'));
+        const profileUri = vscode.Uri.parse(path.join(this.projectPath, 'build-profile.json5'));
         await vscode.workspace.fs.writeFile(profileUri, objToBuffer(profile));
         //oh-package.json5
-        let pkg: ohPackage = {
+        const pkg: ohPackage = {
             name: appName,
             version: "1.0.0",
             description: 'Please describe the basic information.',
@@ -83,18 +83,18 @@ class projectCreator {
                 "@ohos/hamock": "1.0.0"
             }
         };
-        let packageUri = vscode.Uri.parse(path.join(this.projectPath, 'oh-package.json5'));
+        const packageUri = vscode.Uri.parse(path.join(this.projectPath, 'oh-package.json5'));
         await vscode.workspace.fs.writeFile(packageUri, objToBuffer(pkg));
         //hvigorfile.ts
-        let har = path.join(globalData.extensionPath, 'templates', 'project', 'app.txt');
+        const har = path.join(globalData.extensionPath, 'templates', 'project', 'app.txt');
         fs.copyFileSync(har, path.join(this.projectPath, 'hvigorfile.ts'),);
         //hvigorw
-        let hvigorw = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw.txt');
-        fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw.bat'));
-        hvigorw = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw');
+        const hvigorwScript = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw.txt');
+        fs.copyFileSync(hvigorwScript, path.join(this.projectPath, 'hvigorw.bat'));
+        const hvigorw = path.join(globalData.extensionPath, 'templates', 'project', 'hvigorw');
         fs.copyFileSync(hvigorw, path.join(this.projectPath, 'hvigorw'));
         //hvigor
-        let hvigor = path.join(this.projectPath, 'hvigor'),
+        const hvigor = path.join(this.projectPath, 'hvigor'),
             config = path.join(globalData.extensionPath, 'templates', 'project', 'config.txt'),
             wrapper = path.join(globalData.extensionPath, 'templates', 'project', 'wrapper.txt');
         await vscode.workspace.fs.createDirectory(vscode.Uri.parse(hvigor));
@@ -103,12 +103,12 @@ class projectCreator {
     }
 
     private async appScope(appName: string, authorName: string) {
-        let app = path.join(this.projectPath, 'AppScope'), resources = path.join(app, 'resources'),
+        const app = path.join(this.projectPath, 'AppScope'), resources = path.join(app, 'resources'),
             base = path.join(resources, 'base'), element = path.join(base, 'element'),
             media = path.join(base, 'media');
         createDirectories([app, resources, base, element, media]);
-        let af = path.join(app, 'app.json5');
-        let content: appScope = {
+        const af = path.join(app, 'app.json5');
+        const content: appScope = {
             app: {
                 bundleName: `com.${authorName.trim()}.${appName.trim()}`,
                 vendor: authorName.trim(),
@@ -119,7 +119,7 @@ class projectCreator {
             }
         };
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(af), objToBuffer(content));
-        let bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json'),
+        const bs = path.join(element, 'string.json'), bc = path.join(element, 'color.json'),
             icon = path.join(media, 'app_icon.png');
         await vscode.workspace.fs.writeFile(vscode.Uri.parse(bs), objToBuffer({
             string: [{

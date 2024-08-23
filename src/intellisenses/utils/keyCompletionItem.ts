@@ -10,8 +10,8 @@ export class keyCompletionItem {
         this.arr = [];
         try {
             this.context = context;
-            let tag = mark.toLowerCase();
-            let arr = keys.filter((i) => i.startsWith(tag));
+            const tag = mark.toLowerCase();
+            const arr = keys.filter((i) => i.startsWith(tag));
             this.newItems(arr);
         } catch (err) {
             console.log(err);
@@ -21,11 +21,11 @@ export class keyCompletionItem {
 
     private static newItems(marks: string[]) {
         for (let mark of marks) {
-            let label = mark;
+            const label = mark;
             if (mark === 'import') {
                 mark = `import {} from '';`;
             }
-            let item = {
+            const item = {
                 label: label,
                 insertText: mark,
                 range: this.context.importRange,

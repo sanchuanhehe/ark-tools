@@ -1,7 +1,6 @@
 import * as fs from 'fs';
-import { $r } from '../utils';
-import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
+import { $r, fileToJsonSync } from '../utils';
 import { PackageMessage } from "../models/uiMessage";
 import { dependencie, dependencies } from "../models/ohosFile";
 
@@ -14,18 +13,16 @@ export class ohLoader {
 
     loadFile() {
         try {
-            const content = fs.readFileSync(this.filePath, 'utf8');
-            const obj = JSON5.parse(content);
+            const obj = fileToJsonSync(this.filePath);
             if (obj.dependencies) {
                 const dep: dependencies = obj.dependencies;
                 for (const key in dep) {
                     if (dep.hasOwnProperty(key)) {
                         const value = dep[key];
-                        let row: dependencie = {
+                        this.packages.push({
                             packageName: key,
                             packageVersion: value
-                        };
-                        this.packages.push(row);
+                        });
                     }
                 }
             }
@@ -40,15 +37,14 @@ export class ohLoader {
     }
 
     applyNow() {
-        const content = fs.readFileSync(this.filePath, 'utf8');
-        const obj = JSON5.parse(content);
+        const obj = fileToJsonSync(this.filePath);
         delete obj.dependencies;
         const dependencies: dependencies = {};
         this.packages.forEach((item) => {
             dependencies[item.packageName] = item.packageVersion;
         });
         obj.dependencies = dependencies;
-        const updatedJsonString = JSON5.stringify(obj, null, 2);
+        const updatedJsonString = JSON.stringify(obj);
         fs.writeFileSync(this.filePath, updatedJsonString);
     }
 
@@ -60,14 +56,14 @@ export class ohLoader {
     }
 
     updateNode(message: PackageMessage) {
-        let update = this.packages.find((i) => i.packageName.toLowerCase() === message.packageName.toLowerCase());
+        const update = this.packages.find((i) => i.packageName.toLowerCase() === message.packageName.toLowerCase());
         if (update) {
             update.packageVersion = message.packageVersion ?? "";
         }
     }
 
     rmeoveNode(message: PackageMessage) {
-        let index = this.packages.findIndex((i) => i.packageName.toLowerCase() === message.packageName.toLowerCase());
+        const index = this.packages.findIndex((i) => i.packageName.toLowerCase() === message.packageName.toLowerCase());
         if (index !== -1) {
             this.packages.splice(index, 1);
         }

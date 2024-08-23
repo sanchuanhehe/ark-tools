@@ -10,17 +10,17 @@ export class classCompletionItem {
     static async create(mark: string, context: context): Promise<vscode.CompletionItem[]> {
         return new Promise((resolve) => {
             this.arr = [];
-            let relative = relativePath(mark),
+            const relative = relativePath(mark),
                 root = getFolder(context.document.uri.fsPath);
-            let absolute = path.resolve(root, relative),
+            const absolute = path.resolve(root, relative),
                 index = absolute.lastIndexOf('/'),
                 folder = absolute.substring(0, index),
                 name = absolute.substring(index + 1);
-            let files = fs.readdirSync(folder),
+            const files = fs.readdirSync(folder),
                 file = files.filter(x => x.startsWith(name))?.[0],
                 absoluteFile = path.join(folder, file);
             if (hasFile(absoluteFile)) {
-                let rl = readline.createInterface({ input: fs.createReadStream(absoluteFile) });
+                const rl = readline.createInterface({ input: fs.createReadStream(absoluteFile) });
                 rl.on('line', line => {
                     if (line.trim().startsWith('export')) {
                         if (line.includes('function')) {
@@ -30,17 +30,17 @@ export class classCompletionItem {
                                 this.newItem(name, vscode.CompletionItemKind.Function);
                             }
                         } else if (line.includes('const')) {
-                            let match = line.match(/export\s+const\s+([^ :=]+)/);
+                            const match = line.match(/export\s+const\s+([^ :=]+)/);
                             const name = match?.[1];
                             if (name) {
-                                let idx = name.lastIndexOf(':');
+                                const idx = name.lastIndexOf(':');
                                 this.newItem(idx > -1 ? name.substring(0, idx) : name, vscode.CompletionItemKind.Value);
                             }
                         } else if (line.includes('class') || line.includes('enum') || line.includes('struct')) {
                             const match = line.match(/export\s+(class|enum|struct)\s+([^ ,{]+)/);
                             const name = match?.[2];
                             if (name) {
-                                let kind = line.includes('class') ? vscode.CompletionItemKind.Class : (line.includes('enum') ? vscode.CompletionItemKind.Enum : vscode.CompletionItemKind.Struct);
+                                const kind = line.includes('class') ? vscode.CompletionItemKind.Class : (line.includes('enum') ? vscode.CompletionItemKind.Enum : vscode.CompletionItemKind.Struct);
                                 this.newItem(name, kind);
                             }
                         }
@@ -56,7 +56,7 @@ export class classCompletionItem {
     }
 
     private static newItem(mark: string, kind: vscode.CompletionItemKind) {
-        let item = {
+        const item = {
             label: mark,
             insertText: mark,
             kind: kind

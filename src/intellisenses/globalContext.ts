@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import { std } from './std';
 import * as path from 'path';
-import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
+import { fileToJsonSync } from '../utils';
 import { moduleName } from '../models/moduleName';
 
 export class globalContext {
@@ -20,7 +20,7 @@ export class globalContext {
     }
 
     initialize() {
-        for (let k of std) {
+        for (const k of std) {
             this._root.push(k.root);
         }
         this.importModules = std;
@@ -29,19 +29,17 @@ export class globalContext {
 
     private loadExtend() {
         try {
-            let config = vscode.workspace.getConfiguration("arktsTools");
-            let modulesPath = config.inspect<string>('intellisensesModulesPath')?.globalValue ?? '';
+            const config = vscode.workspace.getConfiguration("arktsTools");
+            const modulesPath = config.inspect<string>('intellisensesModulesPath')?.globalValue ?? '';
             if (typeof modulesPath !== 'undefined' && modulesPath !== '') {
-                let files = fs.readdirSync(modulesPath);
-                files = files.filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));
+                const files = fs.readdirSync(modulesPath).filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));
                 if (files && files.length > 0) {
-                    let root: string[] = [], modules: moduleName[] = [];
-                    for (let file of files) {
+                    const root: string[] = [], modules: moduleName[] = [];
+                    for (const file of files) {
                         try {
-                            let fp = path.join(modulesPath, file);
-                            const jsonContent = fs.readFileSync(fp, 'utf8');
-                            let obj: moduleName[] = JSON5.parse(jsonContent);
-                            for (let k of obj) {
+                            const fp = path.join(modulesPath, file);
+                            const obj: moduleName[] = fileToJsonSync(fp);
+                            for (const k of obj) {
                                 if (k.digit > 0 && typeof k.root !== 'undefined' && k.libs.length > 0) {
                                     root.push(k.root);
                                     modules.push(k);
@@ -61,12 +59,12 @@ export class globalContext {
     }
 
     getModules(ns: string, digit: number = 1, fns: string) {
-        let arr: string[] = [];
+        const arr: string[] = [];
         try {
             if (this.importModules) {
-                let nameSpace = this.importModules.find((i) => i.digit === digit && i.root === ns.toLowerCase());
+                const nameSpace = this.importModules.find((i) => i.digit === digit && i.root === ns.toLowerCase());
                 if (nameSpace) {
-                    arr = nameSpace.libs.filter((i) => i.includes(fns));
+                    arr.push(...nameSpace.libs.filter((i) => i.includes(fns)));
                 }
             }
         } catch (err) {

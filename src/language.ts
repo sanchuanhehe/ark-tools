@@ -18,14 +18,14 @@ export class language {
     }
 
     constructor(extensionPath: string) {
-        let root = path.join(extensionPath, 'lang'),
+        const root = path.join(extensionPath, 'lang'),
             zh = path.join(root, 'zhs.json'), en = path.join(root, 'en.json');
         this.zhJson = fileToJsonSync(zh);
         this.enJson = fileToJsonSync(en);
     }
 
     getContent(key: string): string {
-        let zh = vscode.env.language.includes('zh');
+        const zh = vscode.env.language.includes('zh');
         if (zh) {
             if (this.zhJson.hasOwnProperty(key)) {
                 return this.zhJson[key];

@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
+import { toObject } from '../utils';
+import codelinterTools from './build/codelinterTools';
 
 export class projectLinter {
     register() {
-        let codelinter = vscode.workspace.getConfiguration("arktsTools"),
+        const codelinter = vscode.workspace.getConfiguration("arktsTools"),
             reloadChange = codelinter.inspect<boolean>('codelinterReloadChange')?.globalValue ?? false,
             checkAfterSave = codelinter.inspect<boolean>('codelinterCheckAfterSave')?.globalValue ?? false;
         if (reloadChange) {
@@ -17,7 +19,7 @@ export class projectLinter {
 
     private renameFiles() {
         vscode.workspace.onDidRenameFiles((e) => {
-            for (let file of e.files) {
+            for (const file of e.files) {
                 if (file.newUri.fsPath.includes('resources')) {
 
                 }
@@ -27,7 +29,7 @@ export class projectLinter {
 
     private createFiles() {
         vscode.workspace.onDidCreateFiles((e) => {
-            for (let file of e.files) {
+            for (const file of e.files) {
                 if (file.fsPath.includes('resources')) {
 
                 }
@@ -37,7 +39,7 @@ export class projectLinter {
 
     private deleteFiles() {
         vscode.workspace.onDidDeleteFiles((e) => {
-            for (let file of e.files) {
+            for (const file of e.files) {
                 if (file.fsPath.includes('resources')) {
 
                 }
@@ -53,10 +55,10 @@ export class projectLinter {
         });
     }
 
-    execute(path: string) {
-        if (path.endsWith('.ets') || path.endsWith('.ts')) {
-
-        } else {
+    async execute(path: string) {
+        const json = await codelinterTools.exec(path);
+        if (json) {
+            const obj = toObject(json);
 
         }
     }

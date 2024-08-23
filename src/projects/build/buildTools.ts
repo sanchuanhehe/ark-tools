@@ -11,10 +11,10 @@ export class buildTools {
 
     static check(): Promise<boolean> {
         return new Promise((resolve) => {
-            let jdkPath = vscode.workspace.getConfiguration("arktsTools.jdkPath").inspect<string>('jdkPath')?.globalValue ?? '';
-            let hdcPath = vscode.workspace.getConfiguration("arktsTools.hdcPath").inspect<string>('hdcPath')?.globalValue ?? '';
-            let ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '';
-            let hvigorPath = vscode.workspace.getConfiguration("arktsTools.hvigorPath").inspect<string>('hvigorPath')?.globalValue ?? '';
+            const jdkPath = vscode.workspace.getConfiguration("arktsTools.jdkPath").inspect<string>('jdkPath')?.globalValue ?? '',
+                hdcPath = vscode.workspace.getConfiguration("arktsTools.hdcPath").inspect<string>('hdcPath')?.globalValue ?? '',
+                ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '',
+                hvigorPath = vscode.workspace.getConfiguration("arktsTools.hvigorPath").inspect<string>('hvigorPath')?.globalValue ?? '';
             if (jdkPath.trim() === '' || hdcPath.trim() === '' || ohpmPath.trim() === '' || hvigorPath.trim() === '') {
                 vscode.window.showErrorMessage("Failed to init build tools. Please check your env or config!");
                 resolve(false);
@@ -36,8 +36,8 @@ export class buildTools {
 
     static init() {
         if (this.enable) {
-            for (let i of projectLoader.globalProfile?.modules ?? []) {
-                let modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
+            for (const i of projectLoader.globalProfile?.modules ?? []) {
+                const modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
                 executor.runInTerminal(`cd \"${modulePath}\"`);
                 executor.runInTerminal('ohpm install');
             }
@@ -54,11 +54,11 @@ export class buildTools {
     }
 
     static async buildModule(fileUri: vscode.Uri, path: string) {
-        let profile: module = await fileToJson(fileUri),
+        const profile: module = await fileToJson(fileUri),
             m = projectLoader.getProjectModule(profile.module.name);
         executor.runInTerminal(`cd \"${path}\"`);
         executor.runInTerminal('hvigorw clean --no-daemon');
-        let entry = profile.module.name,
+        const entry = profile.module.name,
             targetName = m?.moduleProfile?.targets[0] ?? '';
         if (profile.module.type === 'har') {
             executor.runInTerminal(`hvigorw assembleHar --mode module -p module=${entry}@${targetName} -p product=${entry} --no-daemon`);
@@ -69,7 +69,7 @@ export class buildTools {
 
     static install(start: boolean = false) {
         if (!isEmpty(this.lastEntry)) {
-            let scope = projectLoader.appScope,
+            const scope = projectLoader.appScope,
                 m = projectLoader.getProjectModule(this.lastEntry);
             executor.runInTerminal(`hdc file send "${m?.modulePath?.fsPath}/build/default/outputs/default/entry-default-signed.hap" "data/local/tmp/entry-default-signed.hap"`);
             executor.runInTerminal('hdc shell bm install -p "data/local/tmp/entry-default-signed.hap"');

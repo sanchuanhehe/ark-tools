@@ -7,13 +7,13 @@ export class importCompletionItem {
         this.arr = [];
         try {
             if (mark === 'import') {
-                let root = globalContext.instance.root;
+                const root = globalContext.instance.root;
                 this.newItems(root);
             } else {
-                let fns = mark.split(' ')?.[1]?.trim(), cld = fns?.split('.'), root = cld[0]?.toLowerCase();
-                let digit = cld.filter((i) => i.trim() !== '').length;
+                const fns = mark.split(' ')?.[1]?.trim(), cld = fns?.split('.'), root = cld[0]?.toLowerCase();
+                const digit = cld.filter((i) => i.trim() !== '').length;
                 if (globalContext.instance.root.includes(root)) {
-                    let modules = globalContext.instance.getModules(root, digit, fns);
+                    const modules = globalContext.instance.getModules(root, digit, fns);
                     this.newItems(modules, fns);
                 }
             }
@@ -28,7 +28,7 @@ export class importCompletionItem {
             if (replace) {
                 mark = mark.replace(replace, '');
             }
-            let item = {
+            const item = {
                 label: mark,
                 insertText: mark,
                 kind: vscode.CompletionItemKind.Module

@@ -51,8 +51,8 @@ class projectLoader {
 
     tryGetAuthor() {
         let author = '';
-        for (let value of this._modules.values()) {
-            let ret = value.package?.author;
+        for (const value of this._modules.values()) {
+            const ret = value.package?.author;
             if (ret && !isEmpty(ret)) {
                 author = ret;
             }
@@ -75,18 +75,18 @@ class projectLoader {
         if (typeof ctx === 'string') {
             return this._modules.get(ctx);
         } else {
-            let name = this._ctxs.get(ctx);
+            const name = this._ctxs.get(ctx);
             if (name) {
                 return this._modules.get(name);
             } else {
-                let filePath = ctx.document.uri.fsPath,
+                const filePath = ctx.document.uri.fsPath,
                     index = filePath.includes('src') ? filePath.lastIndexOf('src') :
-                        filePath.lastIndexOf(process.platform === 'win32' ? '\\' : '/'),
-                    path = filePath.substring(0, index);
+                        filePath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
+                let path = filePath.substring(0, index);
                 if (path.endsWith('/')) {
                     path = path.substring(0, path.length - 1);
                 }
-                let module = this._profile?.modules.find((i) => path.endsWith(i.srcPath.replace('./', '')));
+                const module = this._profile?.modules.find((i) => path.endsWith(i.srcPath.replace('./', '')));
                 return this._modules.get(module?.name ?? '');
             }
         }
@@ -103,7 +103,7 @@ class projectLoader {
     }
 
     async tryLoad() {
-        let files = await vscode.workspace.findFiles('build-profile.json5', globalData.projectPath.fsPath, 1);
+        const files = await vscode.workspace.findFiles('build-profile.json5', globalData.projectPath.fsPath, 1);
         if (files.length > 0) {
             await this.load(globalData.projectPath);
         }
@@ -112,11 +112,11 @@ class projectLoader {
     async load(projectPath: vscode.Uri): Promise<boolean> {
         try {
             this._path = projectPath;
-            let profile = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
+            const profile = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
             this._profile = await fileToJson(profile);
             if (typeof this.globalProfile?.modules !== 'undefined') {
                 this.loadAppScope();
-                for (let module of this.globalProfile.modules) {
+                for (const module of this.globalProfile.modules) {
                     await this.loadModule(module.srcPath);
                 }
                 this.builder = new projectBuilder(projectPath);
@@ -133,8 +133,8 @@ class projectLoader {
     async updateGlobalProfile() {
         try {
             if (this.globalProfile) {
-                let data = objToBuffer(this.globalProfile);
-                let profileUri = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
+                const data = objToBuffer(this.globalProfile);
+                const profileUri = vscode.Uri.joinPath(this.projectPath, 'build-profile.json5');
                 await vscode.workspace.fs.writeFile(profileUri, data);
             }
         } catch (err) {
@@ -143,36 +143,36 @@ class projectLoader {
     }
 
     private async loadAppScope() {
-        let app = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'app.json5');
+        const app = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'app.json5');
         this._scope = await fileToJson(app);
         this._appName = this._scope?.app.label.trim() ?? '';
         if (this._appName.startsWith('$string:')) {
-            let index = this._appName.indexOf(':');
+            const index = this._appName.indexOf(':');
             this._appName = this._appName.substring(index);
         }
-        let module: moduleResource = {
+        const module: moduleResource = {
             colors: [],
             medias: [],
             strings: [],
             name: 'appScope'
         };
-        let medias = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'media');
-        for (let file of await vscode.workspace.fs.readDirectory(medias)) {
+        const medias = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'media');
+        for (const file of await vscode.workspace.fs.readDirectory(medias)) {
             if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
-                let idx = file[0].lastIndexOf('.');
+                const idx = file[0].lastIndexOf('.');
                 module.medias.push(file[0].substring(0, idx));
             }
         }
-        let resources = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'element');
-        for (let file of await vscode.workspace.fs.readDirectory(resources)) {
+        const resources = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'element');
+        for (const file of await vscode.workspace.fs.readDirectory(resources)) {
             if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
-                let content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
+                const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
                 if (content) {
                     if (file[0].startsWith('color')) {
-                        let arr: resNode[] = content.color;
+                        const arr: resNode[] = content.color;
                         module.colors = arr;
                     } else if (file[0].startsWith('string')) {
-                        let arr: resNode[] = content.string;
+                        const arr: resNode[] = content.string;
                         module.strings = arr;
                     }
                 }
@@ -185,13 +185,13 @@ class projectLoader {
     }
 
     async loadModule(moduleName: string) {
-        let pack = vscode.Uri.joinPath(this.projectPath, moduleName, 'oh-package.json5');
-        let profile = vscode.Uri.joinPath(this.projectPath, moduleName, 'build-profile.json5');
-        let module = vscode.Uri.joinPath(this.projectPath, moduleName, 'src', 'main', 'module.json5');
-        let m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile),
+        const pack = vscode.Uri.joinPath(this.projectPath, moduleName, 'oh-package.json5');
+        const profile = vscode.Uri.joinPath(this.projectPath, moduleName, 'build-profile.json5');
+        const module = vscode.Uri.joinPath(this.projectPath, moduleName, 'src', 'main', 'module.json5');
+        const m: module = await fileToJson(module), mp: moduleProfile = await fileToJson(profile),
             pkg: ohPackage = await fileToJson(pack),
             name = m.module.name;
-        let resource: moduleResource = {
+        const resource: moduleResource = {
             colors: [],
             medias: [],
             strings: [],
@@ -207,13 +207,13 @@ class projectLoader {
     }
 
     private async loadMedias(name: string, modulePath: string) {
-        let module = this._modules?.get(name);
+        const module = this._modules?.get(name);
         if (module) {
-            let resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
-            let files = await vscode.workspace.fs.readDirectory(resources);
-            for (let file of files) {
+            const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
+            const files = await vscode.workspace.fs.readDirectory(resources);
+            for (const file of files) {
                 if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
-                    let idx = file[0].lastIndexOf('.');
+                    const idx = file[0].lastIndexOf('.');
                     module.medias.push(file[0].substring(0, idx));
                 }
             }
@@ -221,19 +221,19 @@ class projectLoader {
     }
 
     private async loadResources(name: string, modulePath: string) {
-        let module = this._modules?.get(name);
+        const module = this._modules?.get(name);
         if (module) {
-            let resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'element');
-            let files = await vscode.workspace.fs.readDirectory(resources);
-            for (let file of files) {
+            const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'element');
+            const files = await vscode.workspace.fs.readDirectory(resources);
+            for (const file of files) {
                 if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
-                    let content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
+                    const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
                     if (content) {
                         if (file[0].startsWith('color')) {
-                            let arr: resNode[] = content.color;
+                            const arr: resNode[] = content.color;
                             module.colors = arr;
                         } else if (file[0].startsWith('string')) {
-                            let arr: resNode[] = content.string;
+                            const arr: resNode[] = content.string;
                             module.strings = arr;
                         }
                     }
