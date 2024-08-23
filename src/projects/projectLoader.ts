@@ -60,6 +60,13 @@ class projectLoader {
         return author;
     }
 
+    executeCodelinter(path: string | vscode.Uri) {
+        if (typeof path !== 'string') {
+            path = path.fsPath;
+        }
+        this.linter.execute(path);
+    }
+
     onChangeInit() {
         this.linter.register();
     }

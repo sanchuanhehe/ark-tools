@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
 
 export class projectLinter {
-
     register() {
-        let codelinter = vscode.workspace.getConfiguration("arktsTools.codelinter"),
-            reloadChange = codelinter.inspect<boolean>('reloadChange')?.globalValue ?? false,
-            checkAfterSave = codelinter.inspect<boolean>('checkAfterSave')?.globalValue ?? false;
+        let codelinter = vscode.workspace.getConfiguration("arktsTools"),
+            reloadChange = codelinter.inspect<boolean>('codelinterReloadChange')?.globalValue ?? false,
+            checkAfterSave = codelinter.inspect<boolean>('codelinterCheckAfterSave')?.globalValue ?? false;
         if (reloadChange) {
             this.deleteFiles();
             this.createFiles();
@@ -48,14 +47,17 @@ export class projectLinter {
 
     private checkAfterSave() {
         vscode.workspace.onDidSaveTextDocument((e) => {
-            switch (e.languageId) {
-                case 'arkts':
-
-                    break;
-                case 'json5':
-
-                    break;
+            if (e.fileName.endsWith('.ts') || e.fileName.endsWith('.ets')) {
+                this.execute(e.uri.fsPath);
             }
         });
+    }
+
+    execute(path: string) {
+        if (path.endsWith('.ets') || path.endsWith('.ts')) {
+
+        } else {
+
+        }
     }
 }

@@ -29,6 +29,8 @@ export function activate(context: vscode.ExtensionContext) {
 		(fileUri: vscode.Uri) => arkts.format(fileUri)));
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.createModule",
 		() => arkts.createModule()));
+	context.subscriptions.push(vscode.commands.registerCommand("arkts.codelinter",
+		(fileUri: vscode.Uri) => arkts.codelinter(fileUri)));
 	registerProvider(context);
 	language.newInstance(context.extensionPath);
 	vscode.window.showInformationMessage($r('activeMessage'));

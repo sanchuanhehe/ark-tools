@@ -7,5 +7,6 @@
     "ext.command.refreshProject": "Refresh ArkTs Project",
     "ext.command.buildProject": "Build ArkTs Project",
     "ext.command.about": "About Tools",
-    "ext.command.format": "Format Document"
+    "ext.command.format": "Format Document",
+    "ext.command.codelinter": "Execute Code Linter"
 }

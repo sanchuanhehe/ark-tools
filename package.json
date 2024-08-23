@@ -6,7 +6,7 @@
   "version": "0.1.0",
   "publisher": "michaelding",
   "engines": {
-    "vscode": "^1.65.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Themes",
@@ -31,10 +31,7 @@
     "type": "git",
     "url": "https://gitee.com/michael-eddy/ark-tools.git"
   },
-  "activationEvents": [
-    "onLanguage:arkts",
-    "onLanguage:json5"
-  ],
+  "activationEvents": [],
   "main": "./out/extension.js",
   "extensionKind": [
     "ui",
@@ -122,6 +119,10 @@
       {
         "command": "arkts.format",
         "title": "%ext.command.format%"
+      },
+      {
+        "command": "arkts.codelinter",
+        "title": "%ext.command.codelinter%"
       }
     ],
     "menus": {
@@ -150,6 +151,11 @@
           "when": "explorerResourceIsFolder",
           "command": "arkts.createModule",
           "group": "navigation@5"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "arkts.codelinter",
+          "group": "navigation@6"
         }
       ],
       "editor/context": [
@@ -186,22 +192,22 @@
         "default": "",
         "description": "The absolute path to jdk"
       },
-      "arktsTools.codelinter": {
+      "arktsTools.codelinterPath": {
         "type": "string",
         "default": "",
         "description": "The absolute path to codelinter"
       },
-      "arktsTools.codelinter.reloadChange": {
+      "arktsTools.codelinterReloadChange": {
         "type": "boolean",
         "default": false,
         "description": "Refresh struct after file/resources/folder change"
       },
-      "arktsTools.codelinter.checkAfterSave": {
+      "arktsTools.codelinterCheckAfterSave": {
         "type": "boolean",
         "default": false,
         "description": "Run codelinter after save text document"
       },
-      "arktsTools.intellisenses.modulesPath": {
+      "arktsTools.intellisensesModulesPath": {
         "type": "string",
         "default": "",
         "description": "The absolute path to intellisenses modules roles. \n WARNING! \n The Location MUST be a FOLDER and file name MUST like \"ets_role_***.json\""
@@ -227,7 +233,7 @@
   "devDependencies": {
     "vscode-nls-dev": "^4.0.4",
     "@types/opn": "^5.5.0",
-    "@types/vscode": "^1.65.0",
+    "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^7.11.0",

@@ -165,4 +165,10 @@ export class arkts {
             }
         );
     }
+
+    static codelinter(fileUri: vscode.Uri) {
+        if (fileUri && fileUri.fsPath) {
+            projectLoader.executeCodelinter(fileUri);
+        }
+    }
 }

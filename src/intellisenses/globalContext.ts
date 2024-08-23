@@ -29,8 +29,8 @@ export class globalContext {
 
     private loadExtend() {
         try {
-            let config = vscode.workspace.getConfiguration("arktsTools.intellisenses");
-            let modulesPath = config.inspect<string>('modulesPath')?.globalValue ?? '';
+            let config = vscode.workspace.getConfiguration("arktsTools");
+            let modulesPath = config.inspect<string>('intellisensesModulesPath')?.globalValue ?? '';
             if (typeof modulesPath !== 'undefined' && modulesPath !== '') {
                 let files = fs.readdirSync(modulesPath);
                 files = files.filter((i) => i.startsWith('ets_role_') && i.endsWith('.json'));

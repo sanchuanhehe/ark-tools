@@ -7,5 +7,6 @@
     "ext.command.refreshProject": "刷新项目",
     "ext.command.buildProject": "构建项目",
     "ext.command.about": "关于本工具",
-    "ext.command.format": "格式化文档"
+    "ext.command.format": "格式化文档",
+    "ext.command.codelinter": "执行代码检查"
 }
