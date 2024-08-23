@@ -1,7 +1,7 @@
 {
   "name": "ark-tools",
   "icon": "icon.png",
-  "displayName": "ArkTools",
+  "displayName": "ArkTS Tools",
   "description": "%ext.description%",
   "version": "0.1.0",
   "publisher": "michaelding",
@@ -84,7 +84,7 @@
     "viewsWelcome": [
       {
         "view": "explorer",
-        "contents": "[Read](command:arkts.about) About ArkTS Tools\n[Create ArkTS Project](command:arkts.createProject)"
+        "contents": "%ext.explorer.contents%"
       }
     ],
     "commands": [
@@ -123,6 +123,10 @@
       {
         "command": "arkts.codelinter",
         "title": "%ext.command.codelinter%"
+      },
+      {
+        "command": "arkts.toolsInit",
+        "title": "%ext.command.toolsInit%"
       }
     ],
     "menus": {
@@ -228,13 +232,15 @@
     "axios": "1.7.x",
     "json5": "^2.2.3",
     "prettier": "^2.8.8",
-    "vscode-nls": "^5.2.0"
+    "vscode-nls": "^5.2.0",
+    "adm-zip": "^0.5.15"
   },
   "devDependencies": {
     "vscode-nls-dev": "^4.0.4",
     "@types/opn": "^5.5.0",
     "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.6",
+    "@types/adm-zip": "^0.5.5",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",

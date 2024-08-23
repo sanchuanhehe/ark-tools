@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { $r } from './utils';
 import * as vscode from 'vscode';
+import tools from './projects/tools';
 import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
 import { globalData } from './globalData';
@@ -28,8 +29,7 @@ export class arkts {
                     }
                     const folders = await vscode.window.showOpenDialog({
                         openLabel: $r('select'),
-                        canSelectFolders: true,
-                        canSelectFiles: false,
+                        canSelectFiles: true
                     });
                     const folder = folders ? folders[0].fsPath : undefined;
                     if (!folder) {
@@ -169,6 +169,21 @@ export class arkts {
     static codelinter(fileUri: vscode.Uri) {
         if (fileUri && fileUri.fsPath) {
             projectLoader.executeCodelinter(fileUri);
+        }
+    }
+
+    static async toolsInit() {
+        const folders = await vscode.window.showOpenDialog({
+            openLabel: $r('select'),
+            canSelectFiles: true,
+            filters: {
+                'Zip': ['zip']
+            }
+        });
+        let path = folders?.[0].fsPath;
+        if (path && path.endsWith('.zip')) {
+            tools.unZip(path);
+            await tools.config();
         }
     }
 }
