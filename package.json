@@ -233,15 +233,15 @@
     "json5": "^2.2.3",
     "prettier": "^2.8.8",
     "vscode-nls": "^5.2.0",
-    "adm-zip": "^0.5.15"
+    "node-stream-zip": "^1.15.0"
   },
   "devDependencies": {
     "vscode-nls-dev": "^4.0.4",
     "@types/opn": "^5.5.0",
     "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.6",
-    "@types/adm-zip": "^0.5.5",
     "@types/node": "18.x",
+    "@skorczan/node-stream-zip":"^1.15.1",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",

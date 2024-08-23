@@ -1,14 +1,22 @@
 import path from 'path';
-import AdmZip from 'adm-zip';
-import { hasFile } from '../utils';
+import * as vscode from 'vscode';
+import { $r, hasFile } from '../utils';
 import { executor } from '../executor';
+import StreamZip from 'node-stream-zip';
 import { globalData } from '../globalData';
 
 class tools {
-    unZip(file: string) {
-        const zip = new AdmZip(file);
-        const root = path.join(globalData.extensionPath, 'tools');
-        zip.extractAllTo(root, true);
+    async unZip(file: string, callback: Function) {
+        try {
+            const zip = new StreamZip.async({ file: file });
+            const index = file.lastIndexOf('/'), name = file.substring(index + 1);
+            const root = path.join(globalData.extensionPath, 'tools');
+            await zip.extract(`${name.replace('.zip', '')}/`, root);
+            zip.on('extract', (entry) => callback(entry));
+            await zip.close();
+        } catch (error) {
+            vscode.window.showErrorMessage($r('unzipToolsFailed', error));
+        }
     }
 
     async config() {
