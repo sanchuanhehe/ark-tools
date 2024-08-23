@@ -29,5 +29,7 @@
     "emptyModules": "Load Project Done, but it sense none modules?",
     "pjLoadFailed": "Failed to load project",
     "updateProfileFailed": "Failed to update project profile.",
-    "ccInitFailed": "Failed to init Code Linter Tools."
+    "ccInitFailed": "Failed to init Code Linter Tools.",
+    "extractTips": "Extract File:",
+    "unzipTools": "Unziping HarmonyOS Command Line Tools..."
 }

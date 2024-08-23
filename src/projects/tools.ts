@@ -11,8 +11,8 @@ class tools {
             const zip = new StreamZip.async({ file: file });
             const index = file.lastIndexOf('/'), name = file.substring(index + 1);
             const root = path.join(globalData.extensionPath, 'tools');
+            zip.on('entry', (entry) => callback(entry.name));
             await zip.extract(`${name.replace('.zip', '')}/`, root);
-            zip.on('extract', (entry) => callback(entry));
             await zip.close();
         } catch (error) {
             vscode.window.showErrorMessage($r('unzipToolsFailed', error));

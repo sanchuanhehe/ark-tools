@@ -5,7 +5,6 @@ import * as vscode from 'vscode';
 import tools from './projects/tools';
 import * as prettier from "prettier";
 import UiPanel from './views/uiPanel';
-import StreamZip from 'node-stream-zip';
 import { globalData } from './globalData';
 import moduleCreator from './projects/moduleCreator';
 import projectLoader from './projects/projectLoader';
@@ -183,12 +182,13 @@ export class arkts {
         });
         let path = folders?.[0].fsPath;
         if (path && path.endsWith('.zip')) {
+            let extractTips = $r('extractTips');
             await vscode.window.withProgress<void>(
                 { location: vscode.ProgressLocation.Notification, cancellable: false },
                 async (progress) => {
                     progress.report({ message: $r('unzipTools') });
-                    await tools.unZip(path, (entry: StreamZip.ZipEntry) => {
-                        progress.report({ message: `${entry.name}...` });
+                    await tools.unZip(path, (name: string) => {
+                        progress.report({ message: `${extractTips} ${name}...` });
                     });
                     await tools.config();
                 });
