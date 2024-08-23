@@ -43,10 +43,12 @@
         "id": "arkts",
         "aliases": [
           "ArkTs",
-          "ets"
+          "ets",
+          "ts"
         ],
         "extensions": [
-          ".ets"
+          ".ets",
+          ".ts"
         ],
         "configuration": "./templates/syntaxes/etsConfiguration.json"
       },

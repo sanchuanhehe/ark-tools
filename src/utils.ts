@@ -23,12 +23,14 @@ export function objToBuffer(obj: any) {
     return textToBuffer(json);
 }
 
-export function hasFile(path: string) {
+export function hasFile(path: string | vscode.Uri) {
     try {
+        if (typeof path !== 'string') {
+            path = path.fsPath;
+        }
         fs.statSync(path);
         return true;
-    } catch (err) {
-        console.log(err);
+    } catch {
         return false;
     }
 }
@@ -50,8 +52,7 @@ export async function fileToJson(path: string | vscode.Uri) {
         const stream = await vscode.workspace.fs.readFile(path);
         const content = decoder.decode(stream);
         return JSON5.parse(content);
-    } catch (err) {
-        console.log(err);
+    } catch {
         return undefined;
     }
 }
@@ -64,8 +65,7 @@ export function fileToJsonSync(path: string | vscode.Uri) {
         const stream = fs.readFileSync(path);
         const content = decoder.decode(stream);
         return JSON5.parse(content);
-    } catch (err) {
-        console.log(err);
+    } catch {
         return undefined;
     }
 }
@@ -77,8 +77,7 @@ export async function fileToContent(path: string | vscode.Uri) {
         }
         const stream = await vscode.workspace.fs.readFile(path);
         return decoder.decode(stream);
-    } catch (err) {
-        console.log(err);
+    } catch {
         return undefined;
     }
 }

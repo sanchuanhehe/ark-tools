@@ -8,7 +8,7 @@ import { projectBuilder } from './projectBuilder';
 import codelinterTools from './build/codelinterTools';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
-import { $r, fileToJson, isEmpty, objToBuffer } from '../utils';
+import { $r, fileToJson, hasFile, isEmpty, objToBuffer } from '../utils';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
@@ -162,23 +162,27 @@ class projectLoader {
             name: 'appScope'
         };
         const medias = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'media');
-        for (const file of await vscode.workspace.fs.readDirectory(medias)) {
-            if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
-                const idx = file[0].lastIndexOf('.');
-                module.medias.push(file[0].substring(0, idx));
+        if (hasFile(medias)) {
+            for (const file of await vscode.workspace.fs.readDirectory(medias)) {
+                if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
+                    const idx = file[0].lastIndexOf('.');
+                    module.medias.push(file[0].substring(0, idx));
+                }
             }
         }
         const resources = vscode.Uri.joinPath(this.projectPath, 'AppScope', 'resources', 'base', 'element');
-        for (const file of await vscode.workspace.fs.readDirectory(resources)) {
-            if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
-                const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
-                if (content) {
-                    if (file[0].startsWith('color')) {
-                        const arr: resNode[] = content.color;
-                        module.colors = arr;
-                    } else if (file[0].startsWith('string')) {
-                        const arr: resNode[] = content.string;
-                        module.strings = arr;
+        if (hasFile(resources)) {
+            for (const file of await vscode.workspace.fs.readDirectory(resources)) {
+                if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
+                    const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
+                    if (content) {
+                        if (file[0].startsWith('color')) {
+                            const arr: resNode[] = content.color;
+                            module.colors = arr;
+                        } else if (file[0].startsWith('string')) {
+                            const arr: resNode[] = content.string;
+                            module.strings = arr;
+                        }
                     }
                 }
             }
@@ -214,12 +218,14 @@ class projectLoader {
     private async loadMedias(name: string, modulePath: string) {
         const module = this._modules?.get(name);
         if (module) {
-            const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
-            const files = await vscode.workspace.fs.readDirectory(resources);
-            for (const file of files) {
-                if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
-                    const idx = file[0].lastIndexOf('.');
-                    module.medias.push(file[0].substring(0, idx));
+            const medias = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
+            if (hasFile(medias)) {
+                const files = await vscode.workspace.fs.readDirectory(medias);
+                for (const file of files) {
+                    if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
+                        const idx = file[0].lastIndexOf('.');
+                        module.medias.push(file[0].substring(0, idx));
+                    }
                 }
             }
         }
@@ -229,17 +235,19 @@ class projectLoader {
         const module = this._modules?.get(name);
         if (module) {
             const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'element');
-            const files = await vscode.workspace.fs.readDirectory(resources);
-            for (const file of files) {
-                if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
-                    const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
-                    if (content) {
-                        if (file[0].startsWith('color')) {
-                            const arr: resNode[] = content.color;
-                            module.colors = arr;
-                        } else if (file[0].startsWith('string')) {
-                            const arr: resNode[] = content.string;
-                            module.strings = arr;
+            if (hasFile(resources)) {
+                const files = await vscode.workspace.fs.readDirectory(resources);
+                for (const file of files) {
+                    if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
+                        const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
+                        if (content) {
+                            if (file[0].startsWith('color')) {
+                                const arr: resNode[] = content.color;
+                                module.colors = arr;
+                            } else if (file[0].startsWith('string')) {
+                                const arr: resNode[] = content.string;
+                                module.strings = arr;
+                            }
                         }
                     }
                 }
