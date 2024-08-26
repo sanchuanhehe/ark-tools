@@ -170,9 +170,9 @@ export class arkts {
             openLabel: $r('select'),
             filters: { 'Zip': ['zip'] }
         });
-        let path = folders?.[0].fsPath;
+        const path = folders?.[0].fsPath;
         if (path && path.endsWith('.zip')) {
-            let extractTips = $r('extractTips');
+            const extractTips = $r('extractTips');
             await vscode.window.withProgress<void>(
                 { location: vscode.ProgressLocation.Notification, cancellable: false },
                 async (progress, token) => {

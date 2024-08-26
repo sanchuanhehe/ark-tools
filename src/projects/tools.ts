@@ -38,8 +38,8 @@ class tools {
                 }
                 case 'linux':
                 case 'darwin': {
-                    let type = await executor.exec('echo $SHELL');
-                    let file = type.includes('/bin/bash') ? '~/.bash_profile' : '~/.zshrc';
+                    const type = await executor.exec('echo $SHELL'),
+                        file = type.includes('/bin/bash') ? '~/.bash_profile' : '~/.zshrc';
                     executor.runInTerminal(`echo "export PATH=${root}/bin:$PATH" > ${file}`);
                     executor.runInTerminal(`source ${file}`);
                     break;

@@ -1,3 +1,4 @@
+import path from 'path';
 import * as vscode from 'vscode';
 import { globalData } from '../globalData';
 import { resNode } from '../models/resNode';
@@ -17,6 +18,7 @@ class projectLoader {
     private _appName = '';
     private readonly linter;
     private _entries: string[] = [];
+    private _modulePaths: string[] = [];
     private _scope: appScope | undefined;
     private builder: projectBuilder | undefined;
     private _profile: globalProfile | undefined;
@@ -26,6 +28,10 @@ class projectLoader {
 
     get globalProfile() {
         return this._profile;
+    }
+
+    get modulePaths() {
+        return this._modulePaths;
     }
 
     get appName() {
@@ -69,6 +75,12 @@ class projectLoader {
     }
 
     onChangeInit() {
+        vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration('arktsTools.codelinterReloadChange')
+                || e.affectsConfiguration('arktsTools.codelinterCheckAfterSave')) {
+                this.linter.register();
+            }
+        });
         this.linter.register();
     }
 
@@ -213,6 +225,7 @@ class projectLoader {
         this._modules?.set(name, resource);
         this.loadMedias(name, moduleName);
         this.loadResources(name, moduleName);
+        this._modulePaths.push(path.join(this.projectPath.fsPath, moduleName));
     }
 
     private async loadMedias(name: string, modulePath: string) {
