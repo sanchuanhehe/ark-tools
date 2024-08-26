@@ -36,7 +36,7 @@ export default class UiPanel {
             localResourceRoots: [vscode.Uri.file(path.join(this.extensionPath, this.builtAppFolder))],
             retainContextWhenHidden: true,
         });
-        this.panel.webview.html = this._getHtmlForWebview(sourcePath !== './');
+        this.panel.webview.html = this._getHtmlForWebview(!sourcePath.includes('about'));
         this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
         UiPanel.currentMessageHandler[projectFileUri.path] = new WebviewMessageHandler(this.panel.webview, this.projectFileUri.fsPath);
     }

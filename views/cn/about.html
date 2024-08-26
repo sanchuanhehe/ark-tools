@@ -6,16 +6,21 @@
             font-size: 16px;
         }
     </style>
+    <script>
+        const vscode = acquireVsCodeApi();
+        function init() {
+            vscode.postMessage({ command: "init" });
+        }
+    </script>
 </head>
 
 <body>
     <div>
-        <h3>This is the extension for ArkTs Language. Fast way to create, init, build and
-            run ArkTs project.</h3>
-        <h2>Requirements</h2>
-        <p>After VsCode 1.65.0</p>
-        <h2>Extension Settings</h2>
-        <p>This extension contributes the following settings:</p>
+        <h3>这是一个ArkTs/UI的扩展库. 能够实现快速的创建、初始化、构建和运行你的项目.</h3>
+        <h2>要求</h2>
+        <p>VsCode 1.75.0以后版本</p>
+        <h2>扩展设置</h2>
+        <p>本扩展包含一下设置项:</p>
         <ul>
             <li><code>arktsTools.ohpmPath</code>: The absolute path to ohpm</li>
             <li><code>arktsTools.hvigorPath</code>: The absolute path to hvigor</li>
@@ -27,18 +32,25 @@
             <li><code>arktsTools.intellisensesModulesPath</code>: The absolute path to intellisenses modules roles. \n
                 WARNING! \n The Location MUST be a FOLDER and file name MUST like "ets_role_***.json"</li>
         </ul>
-        <p>
-            <strong>About Init Build Tool!</strong>
-        </p>
+        <div>
+            <p>
+                <strong>关于自动构建工具初始化。但仍建议自行配置，以防自动脚本破坏系统环境! </strong>
+            </p>
+            <p>请根据这个
+                <a
+                    href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-commandline-get-0000001954334245-V5">向导</a>
+                完成环境配置
+            </p>
+            <p>然后在完善扩展设置</p>
+            <a href="javascript:;" onclick="init();">自动配置</a>
+        </div>
     </div>
     <div>
-        <h2>Intellisenses Modules Roles</h2>
-        <p>Introduce Role Field</p>
-        <p>1 - root: Package Name or Modules Name, like 'std' in native module;</p>
-        <p>2 - digit: check trigger digit. for exmaple, if the value is 1, it'll get the name when you key in "import
-            std.".when
-            value is 2 will happend key in "import std.collection.";</p>
-        <p>3 - libs: all Modules Name in this Package;</p>
+        <h2>Intellisenses模块要求</h2>
+        <p>配置字段</p>
+        <p>1 - root: 包名或模块名, 如原生模块的'std'</p>
+        <p>2 - digit: 判断触发层级。比如, 如果为1会在你键入"import std."的时候会触发此下的内容。如果为会在你键入"import std.collection."时触发</p>
+        <p>3 - libs: 在当前包下的所有模块名</p>
         </p>
     </div>
 </body>

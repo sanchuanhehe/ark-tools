@@ -93,20 +93,7 @@ export class arkts {
     }
 
     static showAbout() {
-        UiPanel.createOrShow(vscode.Uri.parse('./'));
-        const panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
-            enableScripts: true,
-            retainContextWhenHidden: true,
-            localResourceRoots: [vscode.Uri.file(path.join(globalData.extensionPath, "app"))]
-        });
-        const lng = vscode.env.language.includes('zh') ? 'cn' : 'en',
-            appDistPath = path.join(globalData.extensionPath, 'views', lng),
-            appDistPathUri = vscode.Uri.file(appDistPath),
-            indexPath = path.join(appDistPath, 'about.html'),
-            baseUri = panel.webview.asWebviewUri(appDistPathUri);
-        const content = fs.readFileSync(indexPath, { encoding: 'utf8' });
-        panel.webview.html = content.replace('<base href="/">', `<base href="${String(baseUri)}/">`);
-        panel.onDidDispose(() => panel.dispose(), null);
+        UiPanel.createOrShow(vscode.Uri.parse('about'));
     }
 
     static async format(fileUri: vscode.Uri) {
