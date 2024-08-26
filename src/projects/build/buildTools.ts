@@ -1,8 +1,8 @@
 import fs from 'fs';
 import * as vscode from 'vscode';
 import { executor } from '../../executor';
-import { fileToJson, isEmpty } from '../../utils';
 import { module } from '../../models/modules/module';
+import { $r, fileToJson, isEmpty } from '../../utils';
 import projectLoader from '../../projects/projectLoader';
 
 export class buildTools {
@@ -16,7 +16,7 @@ export class buildTools {
                 ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '',
                 hvigorPath = vscode.workspace.getConfiguration("arktsTools.hvigorPath").inspect<string>('hvigorPath')?.globalValue ?? '';
             if (jdkPath.trim() === '' || hdcPath.trim() === '' || ohpmPath.trim() === '' || hvigorPath.trim() === '') {
-                vscode.window.showErrorMessage("Failed to init build tools. Please check your env or config!");
+                vscode.window.showErrorMessage($r('buildInitFailed'));
                 resolve(false);
             } else {
                 try {
@@ -27,7 +27,7 @@ export class buildTools {
                     this.enable = true;
                     resolve(true);
                 } catch (err) {
-                    vscode.window.showErrorMessage(`Failed to init build tools. Please check your env or config! ${err}`);
+                    vscode.window.showErrorMessage($r('buildInitFailed', err));
                     resolve(false);
                 }
             }
@@ -42,7 +42,7 @@ export class buildTools {
                 executor.runInTerminal('ohpm install');
             }
         } else {
-            vscode.window.showErrorMessage('Failed to init build tools. Please check your env or config then restart the VsCode!');
+            vscode.window.showErrorMessage($r('buildInitFailed'));
         }
     }
 
@@ -78,7 +78,7 @@ export class buildTools {
                 executor.runInTerminal(`hdc shell aa start -a ${m?.detail?.mainElement} -b ${scope?.app.bundleName} -m entry`);
             }
         } else {
-            vscode.window.showErrorMessage("Please build project first! ");
+            vscode.window.showErrorMessage($r('installFailedError'));
         }
     }
 }

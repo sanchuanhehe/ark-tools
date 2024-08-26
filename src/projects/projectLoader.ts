@@ -8,10 +8,10 @@ import { projectBuilder } from './projectBuilder';
 import codelinterTools from './build/codelinterTools';
 import { appScope } from '../models/appScope/appScope';
 import { context } from '../intellisenses/utils/context';
-import { $r, fileToJson, hasFile, isEmpty, objToBuffer } from '../utils';
 import { moduleProfile } from '../models/profiles/moduleProfile';
 import { globalProfile } from '../models/profiles/globalProfile';
 import { moduleResource } from '../models/modules/moduleResource';
+import { $r, fileToJson, hasFile, isEmpty, objToBuffer } from '../utils';
 
 class projectLoader {
     private _appName = '';

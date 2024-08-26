@@ -187,8 +187,11 @@ export class arkts {
             let extractTips = $r('extractTips');
             await vscode.window.withProgress<void>(
                 { location: vscode.ProgressLocation.Notification, cancellable: false },
-                async (progress) => {
+                async (progress, token) => {
                     progress.report({ message: $r('unzipTools') });
+                    token.onCancellationRequested(async () => {
+                        await tools.abort();
+                    });
                     await tools.unZip(path, (name: string) => {
                         progress.report({ message: `${extractTips} ${name}...` });
                     });

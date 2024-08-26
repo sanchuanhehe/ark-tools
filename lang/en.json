@@ -31,5 +31,9 @@
     "updateProfileFailed": "Failed to update project profile.",
     "ccInitFailed": "Failed to init Code Linter Tools.",
     "extractTips": "Extract File:",
-    "unzipTools": "Unziping HarmonyOS Command Line Tools..."
+    "unzipTools": "Unziping HarmonyOS Command Line Tools...",
+    "installFailedError": "Please build project first!",
+    "buildInitFailed": "Failed to init build tools. Please check your env or config then restart the VsCode!",
+    "intellisensesAllFailed":"Load intellisenses modulesInfo Failed",
+    "intellisensesFailed":"Load Extend Modules Role Failed! Please check reference file!"
 }

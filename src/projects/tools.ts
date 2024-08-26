@@ -6,16 +6,25 @@ import StreamZip from 'node-stream-zip';
 import { globalData } from '../globalData';
 
 class tools {
+    private zip: StreamZip.StreamZipAsync | undefined;
     async unZip(file: string, callback: Function) {
         try {
-            const zip = new StreamZip.async({ file: file });
+            this.zip = new StreamZip.async({ file: file });
             const index = file.lastIndexOf('/'), name = file.substring(index + 1);
             const root = path.join(globalData.extensionPath, 'tools');
-            zip.on('entry', (entry) => callback(entry.name));
-            await zip.extract(`${name.replace('.zip', '')}/`, root);
-            await zip.close();
+            this.zip.on('entry', (entry) => callback(entry.name));
+            await this.zip.extract(`${name.replace('.zip', '')}/`, root);
+            await this.zip.close();
         } catch (error) {
             vscode.window.showErrorMessage($r('unzipToolsFailed', error));
+        } finally {
+            this.zip = undefined;
+        }
+    }
+
+    async abort() {
+        if (this.zip) {
+            await this.zip.close();
         }
     }
 

@@ -31,7 +31,10 @@
     "type": "git",
     "url": "https://gitee.com/michael-eddy/ark-tools.git"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:**/oh-package.json5",
+    "workspaceContains:**/build-profile.json5"
+  ],
   "main": "./out/extension.js",
   "extensionKind": [
     "ui",
@@ -243,7 +246,7 @@
     "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
-    "@skorczan/node-stream-zip":"^1.15.1",
+    "@skorczan/node-stream-zip": "^1.15.1",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",

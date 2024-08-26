@@ -3,7 +3,7 @@ import path from 'path';
 import * as vscode from 'vscode';
 import { executor } from '../../executor';
 import projectLoader from '../projectLoader';
-import { $r, fileToContent, fileToJson, hasFile } from '../../utils';
+import { $r, fileToContent, hasFile } from '../../utils';
 
 class codelinterTools {
     private folder = './';

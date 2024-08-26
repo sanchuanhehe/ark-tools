@@ -1,6 +1,7 @@
 import { $r } from './utils';
 import { arkts } from './arkts';
 import * as vscode from 'vscode';
+import tools from './projects/tools';
 import { language } from './language';
 import { globalData } from './globalData';
 import projectLoader from './projects/projectLoader';
@@ -37,4 +38,6 @@ export function activate(context: vscode.ExtensionContext) {
 	language.newInstance(context.extensionPath);
 	vscode.window.showInformationMessage($r('activeMessage'));
 }
-export function deactivate() { }
+export function deactivate() {
+	tools.abort();
+}

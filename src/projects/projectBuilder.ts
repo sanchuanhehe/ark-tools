@@ -16,7 +16,7 @@ export class projectBuilder {
         if (!ret) {
             const result = await vscode.window.showInformationMessage($r('pjBuildFailed'), $r('open'), $r('cancel'));
             if (result === $r('open')) {
-                this.open('http://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos');
+                this.open('https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-commandline-get-0000001954334245-V5');
             }
         } else {
             buildTools.init();

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { std } from './std';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { fileToJsonSync } from '../utils';
+import { $r, fileToJsonSync } from '../utils';
 import { moduleName } from '../models/moduleName';
 
 export class globalContext {
@@ -46,7 +46,7 @@ export class globalContext {
                                 }
                             }
                         } catch (e) {
-                            vscode.window.showErrorMessage(`Load Extend Modules Role [${file}] Failed! Please check reference file! Error Message: [${e}]`);
+                            vscode.window.showErrorMessage(`File [${file}] ${$r('intellisensesFailed')} Error Message: [${e}]`);
                         }
                     }
                     this._root.push(...root);
@@ -54,7 +54,7 @@ export class globalContext {
                 }
             }
         } catch (err) {
-            vscode.window.showErrorMessage(`Load intellisenses modulesInfo Failed, ${err}`);
+            vscode.window.showErrorMessage($r('intellisensesAllFailed', err));
         }
     }
 
