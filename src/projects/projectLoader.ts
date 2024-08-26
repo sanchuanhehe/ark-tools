@@ -216,43 +216,47 @@ class projectLoader {
     }
 
     private async loadMedias(name: string, modulePath: string) {
-        const module = this._modules?.get(name);
-        if (module) {
-            const medias = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
-            if (hasFile(medias)) {
-                const files = await vscode.workspace.fs.readDirectory(medias);
-                for (const file of files) {
-                    if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
-                        const idx = file[0].lastIndexOf('.');
-                        module.medias.push(file[0].substring(0, idx));
+        try {
+            const module = this._modules?.get(name);
+            if (module) {
+                const medias = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'media');
+                if (hasFile(medias)) {
+                    const files = await vscode.workspace.fs.readDirectory(medias);
+                    for (const file of files) {
+                        if ((file[0].endsWith('png') || file[0].endsWith('jpg') || file[0].endsWith('jpeg')) && file[1] === vscode.FileType.File) {
+                            const idx = file[0].lastIndexOf('.');
+                            module.medias.push(file[0].substring(0, idx));
+                        }
                     }
                 }
             }
-        }
+        } catch { }
     }
 
     private async loadResources(name: string, modulePath: string) {
-        const module = this._modules?.get(name);
-        if (module) {
-            const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'element');
-            if (hasFile(resources)) {
-                const files = await vscode.workspace.fs.readDirectory(resources);
-                for (const file of files) {
-                    if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
-                        const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
-                        if (content) {
-                            if (file[0].startsWith('color')) {
-                                const arr: resNode[] = content.color;
-                                module.colors = arr;
-                            } else if (file[0].startsWith('string')) {
-                                const arr: resNode[] = content.string;
-                                module.strings = arr;
+        try {
+            const module = this._modules?.get(name);
+            if (module) {
+                const resources = vscode.Uri.joinPath(this.projectPath, modulePath, 'src', 'main', 'resources', 'base', 'element');
+                if (hasFile(resources)) {
+                    const files = await vscode.workspace.fs.readDirectory(resources);
+                    for (const file of files) {
+                        if (file[0].endsWith('json') && file[1] === vscode.FileType.File) {
+                            const content = await fileToJson(vscode.Uri.joinPath(resources, file[0]));
+                            if (content) {
+                                if (file[0].startsWith('color')) {
+                                    const arr: resNode[] = content.color;
+                                    module.colors = arr;
+                                } else if (file[0].startsWith('string')) {
+                                    const arr: resNode[] = content.string;
+                                    module.strings = arr;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
+        } catch { }
     }
 }
 export default new projectLoader();
