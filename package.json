@@ -183,42 +183,42 @@
         "arktsTools.ohpmPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to ohpm"
+          "description": "%ext.configuration.ohpmPath%"
         },
         "arktsTools.hvigorPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to hvigor"
+          "description": "%ext.configuration.hvigorPath%"
         },
         "arktsTools.hdcPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to hdc"
+          "description": "%ext.configuration.hdcPath%"
         },
         "arktsTools.jdkPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to jdk"
+          "description": "%ext.configuration.jdkPath%"
         },
         "arktsTools.codelinterPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to codelinter"
+          "description": "%ext.configuration.codelinterPath%"
         },
         "arktsTools.codelinterReloadChange": {
           "type": "boolean",
           "default": false,
-          "description": "Refresh struct after file/resources/folder change"
+          "description": "%ext.configuration.codelinterReloadChange%"
         },
         "arktsTools.codelinterCheckAfterSave": {
           "type": "boolean",
           "default": false,
-          "description": "Run codelinter after save text document"
+          "description": "%ext.configuration.codelinterCheckAfterSave%"
         },
         "arktsTools.intellisensesModulesPath": {
           "type": "string",
           "default": "",
-          "description": "The absolute path to intellisenses modules roles. \n WARNING! \n The Location MUST be a FOLDER and file name MUST like \"ets_role_***.json\""
+          "description": "%ext.configuration.intellisensesModulesPath%"
         }
       }
     }
