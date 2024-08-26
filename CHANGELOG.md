@@ -23,3 +23,6 @@
 ## [v0.1.0]
 - Fix Issues
 - Initial Command Line Tools
+
+## [v0.1.2]
+- Fix Issues
