@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import projectLoader from './projectLoader';
 import { resNode } from '../models/resNode';
-import { fileToJsonSync, toObject } from '../utils';
 import codelinterTools from './build/codelinterTools';
+import { $r, fileToJsonSync, toObject } from '../utils';
 
 type changeType = 'create' | 'rename' | 'remove';
 export class projectLinter {
@@ -34,32 +34,44 @@ export class projectLinter {
 
     private renameFiles() {
         vscode.workspace.onDidRenameFiles(async (e) => {
-            for (const file of e.files) {
-                if (file.newUri.fsPath.includes('/resources/')) {
-                    this.resourceFile('rename', file.oldUri.fsPath, file.newUri.fsPath);
+            try {
+                for (const file of e.files) {
+                    if (file.newUri.fsPath.includes('/resources/')) {
+                        this.resourceFile('rename', file.oldUri.fsPath, file.newUri.fsPath);
+                    }
+                    await this.moduleFolder('rename', file.oldUri.fsPath, file.newUri.fsPath);
                 }
-                await this.moduleFolder('rename', file.oldUri.fsPath, file.newUri.fsPath);
+            } catch (err) {
+                vscode.window.showErrorMessage($r('reloadChangeFailed', err));
             }
         }, null, this.disposables);
     }
 
     private createFiles() {
         vscode.workspace.onDidCreateFiles(async (e) => {
-            for (const file of e.files) {
-                if (file.fsPath.includes('/resources/')) {
-                    this.resourceFile('create', file.fsPath);
+            try {
+                for (const file of e.files) {
+                    if (file.fsPath.includes('/resources/')) {
+                        this.resourceFile('create', file.fsPath);
+                    }
                 }
+            } catch (err) {
+                vscode.window.showErrorMessage($r('reloadChangeFailed', err));
             }
         }, null, this.disposables);
     }
 
     private deleteFiles() {
         vscode.workspace.onDidDeleteFiles(async (e) => {
-            for (const file of e.files) {
-                if (file.fsPath.includes('/resources/')) {
-                    this.resourceFile('remove', file.fsPath);
+            try {
+                for (const file of e.files) {
+                    if (file.fsPath.includes('/resources/')) {
+                        this.resourceFile('remove', file.fsPath);
+                    }
+                    await this.moduleFolder('remove', file.fsPath);
                 }
-                await this.moduleFolder('remove', file.fsPath);
+            } catch (err) {
+                vscode.window.showErrorMessage($r('reloadChangeFailed', err));
             }
         }, null, this.disposables);
     }
@@ -151,26 +163,30 @@ export class projectLinter {
 
     private checkAfterSave() {
         vscode.workspace.onDidSaveTextDocument((e) => {
-            if (e.fileName.endsWith('.ts') || e.fileName.endsWith('.ets')) {
-                this.execute(e.uri.fsPath);
-            }
-            if (e.fileName.includes('/resources/')) {
-                const modulePath = projectLoader.modulePaths.filter(x => x.startsWith(e.fileName))?.[0];
-                if (modulePath) {
-                    const index = modulePath.lastIndexOf('/'), name = modulePath.substring(index),
-                        projectModule = projectLoader.getProjectModule(name);
-                    if (projectModule) {
-                        if (e.fileName.endsWith('color.json')) {
-                            const content = fileToJsonSync(e.fileName);
-                            const arr: resNode[] = content.color;
-                            projectModule.colors = arr;
-                        } else if (e.fileName.startsWith('string.json')) {
-                            const content = fileToJsonSync(e.fileName);
-                            const arr: resNode[] = content.string;
-                            projectModule.strings = arr;
+            try {
+                if (e.fileName.endsWith('.ts') || e.fileName.endsWith('.ets')) {
+                    this.execute(e.uri.fsPath);
+                }
+                if (e.fileName.includes('/resources/')) {
+                    const modulePath = projectLoader.modulePaths.filter(x => x.startsWith(e.fileName))?.[0];
+                    if (modulePath) {
+                        const index = modulePath.lastIndexOf('/'), name = modulePath.substring(index),
+                            projectModule = projectLoader.getProjectModule(name);
+                        if (projectModule) {
+                            if (e.fileName.endsWith('color.json')) {
+                                const content = fileToJsonSync(e.fileName);
+                                const arr: resNode[] = content.color;
+                                projectModule.colors = arr;
+                            } else if (e.fileName.startsWith('string.json')) {
+                                const content = fileToJsonSync(e.fileName);
+                                const arr: resNode[] = content.string;
+                                projectModule.strings = arr;
+                            }
                         }
                     }
                 }
+            } catch (err) {
+                vscode.window.showErrorMessage($r('checkAfterSaveFailed', err));
             }
         }, null, this.disposables);
     }

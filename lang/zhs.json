@@ -33,7 +33,9 @@
     "extractTips": "解压文件:",
     "unzipTools": "解压HaromonyOS命令行工具中...",
     "installFailedError": "请构建项目后再试！",
-    "buildInitFailed": "Failed to init build tools. Please check your env or config then restart the VsCode!",
+    "buildInitFailed": "初始化构建工具失败，请检查你的环境或者配置后重启重试！",
     "intellisensesAllFailed": "加载IntelliSense信息失败",
-    "intellisensesFailed": "加载IntelliSense失败！请检查文件格式！"
+    "intellisensesFailed": "加载IntelliSense失败,请检查文件格式！",
+    "checkAfterSaveFailed": "重载保存发生异常！",
+    "reloadChangeFailed": "重载变更发生异常！"
 }

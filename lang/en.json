@@ -34,6 +34,8 @@
     "unzipTools": "Unziping HarmonyOS Command Line Tools...",
     "installFailedError": "Please build project first!",
     "buildInitFailed": "Failed to init build tools. Please check your env or config then restart the VsCode!",
-    "intellisensesAllFailed":"Load intellisenses modulesInfo Failed",
-    "intellisensesFailed":"Load Extend Modules Role Failed! Please check reference file!"
+    "intellisensesAllFailed": "Load intellisenses modulesInfo Failed",
+    "intellisensesFailed": "Load Extend Modules Role Failed! Please check reference file!",
+    "checkAfterSaveFailed": "Check Save Change Failed!",
+    "reloadChangeFailed": "Reload Change Failed!"
 }
