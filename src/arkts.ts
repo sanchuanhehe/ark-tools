@@ -93,6 +93,7 @@ export class arkts {
     }
 
     static showAbout() {
+        UiPanel.createOrShow(vscode.Uri.parse('./'));
         const panel = vscode.window.createWebviewPanel('arkts.about', $r('about'), vscode.ViewColumn.One, {
             enableScripts: true,
             retainContextWhenHidden: true,

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { arkts } from '../arkts';
 import { client } from '../client';
 import { ohLoader } from './ohLoader';
 import { dependencie } from '../models/ohosFile';
@@ -6,7 +7,7 @@ import { denpenciesLoader } from './denpenciesLoader';
 import { PackageMessage, UIMessage } from '../models/uiMessage';
 
 export default class WebviewMessageHandler {
-    private readonly loader: ohLoader;
+    private readonly loader: ohLoader | undefined;
     private _needApply = false;
     private readonly disposables: vscode.Disposable[] = [];
     get needApply() {
@@ -17,21 +18,27 @@ export default class WebviewMessageHandler {
         this.webview.onDidReceiveMessage((message: UIMessage) => {
             this.handleMessage(message);
         }, null, this.disposables);
-        this.loader = new ohLoader(pgFilePath);
-        this.readToml(pgFilePath);
+        if (pgFilePath.includes('dependencies')) {
+            this.loader = new ohLoader(pgFilePath);
+            this.readToml(pgFilePath);
+        }
     }
 
     private readToml(pgFilePath: string, command = 'dependencies') {
-        this.loader.loadFile();
-        const packages: dependencie[] = this.loader.getPackages();
-        this.webview.postMessage({ command: command, data: { packages, pgFilePath } });
+        if (this.loader) {
+            this.loader.loadFile();
+            const packages: dependencie[] = this.loader.getPackages();
+            this.webview.postMessage({ command: command, data: { packages, pgFilePath } });
+        }
     }
 
     applySave(pgFilePath?: string) {
-        this.loader.applyNow();
-        this._needApply = false;
-        if (pgFilePath) {
-            this.readToml(pgFilePath, 'reload');
+        if (this.loader) {
+            this.loader.applyNow();
+            this._needApply = false;
+            if (pgFilePath) {
+                this.readToml(pgFilePath, 'reload');
+            }
         }
     }
 
@@ -40,6 +47,10 @@ export default class WebviewMessageHandler {
             case 'apply': {
                 const pgFilePath = message.data.toString();
                 this.applySave(pgFilePath);
+                break;
+            }
+            case 'init': {
+                arkts.toolsInit();
                 break;
             }
             case 'search': {
@@ -62,21 +73,27 @@ export default class WebviewMessageHandler {
                 break;
             }
             case 'install-package': {
-                const pm = message as PackageMessage;
-                this.loader.addNode(pm);
-                this._needApply = true;
+                if (this.loader) {
+                    const pm = message as PackageMessage;
+                    this.loader.addNode(pm);
+                    this._needApply = true;
+                }
                 break;
             }
             case 'update-package': {
-                const pm = message as PackageMessage;
-                this.loader.updateNode(pm);
-                this._needApply = true;
+                if (this.loader) {
+                    const pm = message as PackageMessage;
+                    this.loader.updateNode(pm);
+                    this._needApply = true;
+                }
                 break;
             }
             case 'remove-package': {
-                const pm = message as PackageMessage;
-                this.loader.rmeoveNode(pm);
-                this._needApply = true;
+                if (this.loader) {
+                    const pm = message as PackageMessage;
+                    this.loader.rmeoveNode(pm);
+                    this._needApply = true;
+                }
                 break;
             }
         }

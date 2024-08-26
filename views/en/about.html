@@ -6,6 +6,12 @@
             font-size: 16px;
         }
     </style>
+    <script>
+        const vscode = acquireVsCodeApi();
+        function init() {
+            vscode.postMessage({ command: "init" });
+        }
+    </script>
 </head>
 
 <body>
@@ -13,7 +19,7 @@
         <h3>This is the extension for ArkTs Language. Fast way to create, init, build and
             run ArkTs project.</h3>
         <h2>Requirements</h2>
-        <p>After VsCode 1.65.0</p>
+        <p>After VsCode 1.75.0</p>
         <h2>Extension Settings</h2>
         <p>This extension contributes the following settings:</p>
         <ul>
@@ -28,7 +34,13 @@
                 WARNING! \n The Location MUST be a FOLDER and file name MUST like "ets_role_***.json"</li>
         </ul>
         <p>
-            <strong>About Init Build Tool!</strong>
+            <strong>About Init Build Tool! The Tools support auto config, but suggest config the environment by
+                yourself. In case the auto script destory your system! </strong>
+        <p>Please follow this <a
+                href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-commandline-get-0000001954334245-V5">guide</a>
+            finish the environment config</p>
+        <p>Then please finish the extension setting</p>
+        <a href="javascript:;" onclick="init();">Use Auto Config</a>
         </p>
     </div>
     <div>

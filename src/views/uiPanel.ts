@@ -21,12 +21,12 @@ export default class UiPanel {
         if (existingPanel) {
             existingPanel.panel.reveal(column);
         } else {
-            UiPanel.currentPanels[projectFilePath] = new UiPanel(globalData.extensionPath, column || vscode.ViewColumn.One, projectFileUri);
+            UiPanel.currentPanels[projectFilePath] = new UiPanel(projectFilePath, globalData.extensionPath, column || vscode.ViewColumn.One, projectFileUri);
         }
         return UiPanel.currentPanels;
     }
 
-    private constructor(extensionPath: string, column: vscode.ViewColumn, projectFileUri: vscode.Uri) {
+    private constructor(sourcePath: string, extensionPath: string, column: vscode.ViewColumn, projectFileUri: vscode.Uri) {
         this.extensionPath = extensionPath;
         this.builtAppFolder = 'app';
         this.projectFileUri = projectFileUri;
@@ -36,7 +36,7 @@ export default class UiPanel {
             localResourceRoots: [vscode.Uri.file(path.join(this.extensionPath, this.builtAppFolder))],
             retainContextWhenHidden: true,
         });
-        this.panel.webview.html = this._getHtmlForWebview();
+        this.panel.webview.html = this._getHtmlForWebview(sourcePath !== './');
         this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
         UiPanel.currentMessageHandler[projectFileUri.path] = new WebviewMessageHandler(this.panel.webview, this.projectFileUri.fsPath);
     }
@@ -61,12 +61,12 @@ export default class UiPanel {
         }
     }
 
-    private _getHtmlForWebview() {
+    private _getHtmlForWebview(isDenp: boolean) {
         const lng = vscode.env.language.includes('zh') ? 'cn' : 'en',
             appDistPath = path.join(this.extensionPath, 'views', lng),
             appDistPathUri = vscode.Uri.file(appDistPath),
             baseUri = this.panel.webview.asWebviewUri(appDistPathUri),
-            indexPath = path.join(appDistPath, 'dependencies.html');
+            indexPath = path.join(appDistPath, isDenp ? 'dependencies.html' : 'about.html');
         return fs.readFileSync(indexPath, { encoding: 'utf8' }).replace('<base href="/">', `<base href="${String(baseUri)}/">`);
     }
 }
