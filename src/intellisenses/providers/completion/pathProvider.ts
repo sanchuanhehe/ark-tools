@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { createContext } from "../utils/createContext";
-import { intellisenseProvider } from "./intellisenseProvider";
-import { pathCompletionItem } from '../utils/pathCompletionItem';
+import { createContext } from '../../utils/createContext';
+import { completionProvider } from '../base/completionProvider';
+import { pathCompletionItem } from '../../utils/pathCompletionItem';
 
-export const pathProvider: intellisenseProvider = {
+export const pathProvider: completionProvider = {
     selector: {
         scheme: "file",
         language: "arkts"

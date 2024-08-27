@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { createContext } from '../utils/createContext';
-import { intellisenseProvider } from "./intellisenseProvider";
-import { stateCompletionItem } from '../utils/stateCompletionItem';
+import { createContext } from '../../utils/createContext';
+import { completionProvider } from '../base/completionProvider';
+import { classCompletionItem } from '../../utils/classCompletionItem';
 
-export const stateProvider: intellisenseProvider = {
+export const classProvider: completionProvider = {
     selector: {
         scheme: "file",
         language: "arkts"
@@ -11,15 +11,14 @@ export const stateProvider: intellisenseProvider = {
     provider: {
         provideCompletionItems,
     },
-    triggerCharacters: ['@']
+    triggerCharacters: ['{', ' ']
 };
 
 async function provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.CompletionItem[]> {
     const context = createContext(document, position);
     const { textFullLine } = context;
-    if (typeof textFullLine !== 'undefined') {
-        const text = textFullLine.replace('@', '').trim();
-        const arr = stateCompletionItem.create(text);
+    if (typeof textFullLine !== 'undefined' && textFullLine.includes('from')) {
+        const arr = classCompletionItem.create(textFullLine.trim(), context);
         return Promise.resolve(arr);
     }
     return Promise.resolve([]);
