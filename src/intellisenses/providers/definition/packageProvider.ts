@@ -30,7 +30,20 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
       destPath = (match?.[2] || match?.[4])?.trim();
     if (destPath) {
       if (destPath.startsWith('.') && !destPath.startsWith('/')) {
-        return Promise.resolve(new vscode.Location(vscode.Uri.file(destPath), pos));
+        const index = context.document.uri.fsPath.lastIndexOf('/'),
+          root = context.document.uri.fsPath.substring(0, index),
+          sourceIndex = destPath.lastIndexOf('/'),
+          source = destPath.substring(sourceIndex + 1),
+          absoluteFile = path.resolve(root, destPath),
+          absoluteIndex = absoluteFile.lastIndexOf('/'),
+          absoluteRoot = absoluteFile.substring(0, absoluteIndex);
+        let files = await vscode.workspace.fs.readDirectory(vscode.Uri.parse(absoluteRoot));
+        for (let file of files) {
+          if (file[0].startsWith(source)) {
+            const uri = vscode.Uri.parse(path.join(absoluteRoot, file[0]));
+            return Promise.resolve(new vscode.Location(uri, pos));
+          }
+        }
       } else {
         const index = destPath.indexOf('/');
         if (index !== -1) {
