@@ -1,4 +1,6 @@
+import path from 'path';
 import * as vscode from 'vscode';
+import { fileToJsonSync, getFolders } from './utils';
 
 export class globalData {
     private static _extensionPath: string;
@@ -14,9 +16,9 @@ export class globalData {
         this._projectPath = projectPath;
     }
 
-    private static _hosSdkPath: string;
-    static get hosSdkPath() {
-        return this._hosSdkPath;
+    private static _hosSdkList: Map<string, string> = new Map();
+    static get hosSdkList() {
+        return this._hosSdkList;
     }
 
     private static _ohosSdkPath: string;
@@ -26,8 +28,27 @@ export class globalData {
 
     static init(context: vscode.ExtensionContext) {
         this._extensionPath = context.extensionPath;
-        this._hosSdkPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('hosSdkPath')?.globalValue ?? '';
+        this.onChangeInit();
+        this.loadConfiguration();
+    }
+
+    private static loadConfiguration() {
+        const hosSdkPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('hosSdkPath')?.globalValue ?? '', folders = getFolders(hosSdkPath);
+        for (const folder of folders) {
+            const obj = fileToJsonSync(path.join(folder[1], 'sdk-pkh.json')),
+                name = `${obj.data.platformVersion}(${obj.data.apiVersion})`;
+            this._hosSdkList.set(name, folder[1]);
+        }
         this._ohosSdkPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('ohosSdkPath')?.globalValue ?? '';
         this._projectPath = vscode.workspace.workspaceFolders?.[0].uri ?? vscode.Uri.parse('./');
+    }
+
+    private static onChangeInit() {
+        vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration('arktsTools.hosSdkPath')
+                || e.affectsConfiguration('arktsTools.ohosSdkPath')) {
+                this.loadConfiguration();
+            }
+        });
     }
 }

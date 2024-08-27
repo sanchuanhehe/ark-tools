@@ -5,7 +5,7 @@ import { ohPackage } from '../../../models/ohPackage';
 import { createContext } from '../../utils/createContext';
 import projectLoader from '../../../projects/projectLoader';
 import { definitionProvider } from '../base/definitionProvider';
-import { fileToJsonSync, getFiles, hasFile } from '../../../utils';
+import { fileToJsonSync, hasFile } from '../../../utils';
 
 const modules: [string, vscode.FileType][] = [], pos = new vscode.Position(0, 0);
 export const packageProvider: definitionProvider = {
@@ -49,20 +49,22 @@ async function provideDefinition(document: vscode.TextDocument, position: vscode
             const compileSdkVersion = projectLoader.globalProfile?.app.products[0].compileSdkVersion;
             if (compileSdkVersion) {
               if (typeof compileSdkVersion === 'number') {
-                const sdk = path.join(globalData.ohosSdkPath, `${compileSdkVersion}`,
-                  (context.documentExtension === 'ets' || context.documentExtension === 'ts' ? 'ets'
-                    : context.documentExtension === 'js' ? 'js' : 'native'),
-                  (destPath.startsWith('@kit') ? 'kits' : 'api'));
-                if (hasFile(sdk) && !sdk.endsWith('native')) {
-                  const files = getFiles(sdk),
-                    file = files.filter(x => x[0] === `${destPath}.d.ts`)?.[0];
-                  return Promise.resolve(new vscode.Location(vscode.Uri.parse(file[1]), pos));
+                const ohosSdk = path.join(globalData.ohosSdkPath, `${compileSdkVersion}`,
+                  (context.documentExtension === 'ets' || context.documentExtension === 'ts' ? 'ets' : 'js'),
+                  (destPath.startsWith('@kit') ? 'kits' : 'api'), `${destPath}.d.ts`);
+                if (hasFile(ohosSdk)) {
+                  return Promise.resolve(new vscode.Location(vscode.Uri.parse(ohosSdk), pos));
                 }
               } else {
-                const ver = compileSdkVersion.match(/(\d+(\.\d+)*)(\((\d+)\))?/),
-                  codeVer = ver?.[1], apiVer = ver?.[4];
-                if (codeVer && apiVer) {
-
+                const sdk = globalData.hosSdkList.get(compileSdkVersion);
+                if (sdk) {
+                  const hmsSdk = path.join(sdk, 'hms', 'ets', destPath.startsWith('@hms') ? 'api' : 'kits', `${destPath}.d.ts`),
+                    ohosSdk = path.join(sdk, 'openharmony', (context.documentExtension === 'ets' || context.documentExtension === 'ts' ? 'ets' : 'js'), (destPath.startsWith('@kit') ? 'kits' : (destPath.startsWith('@arkts') ? 'arkts' : 'api')), `${destPath}.d.ts`);
+                  if (hasFile(hmsSdk)) {
+                    return Promise.resolve(new vscode.Location(vscode.Uri.parse(hmsSdk), pos));
+                  } else if (hasFile(ohosSdk)) {
+                    return Promise.resolve(new vscode.Location(vscode.Uri.parse(ohosSdk), pos));
+                  }
                 }
               }
             }

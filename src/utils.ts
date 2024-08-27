@@ -53,6 +53,23 @@ export function getFiles(uri: string | vscode.Uri) {
     return files;
 }
 
+export function getFolders(uri: string | vscode.Uri) {
+    let folders: [string, string][] = [];
+    try {
+        if (typeof uri !== 'string') {
+            uri = uri.fsPath;
+        }
+        for (let f of fs.readdirSync(uri)) {
+            const name = path.join(uri, f),
+                stat = fs.statSync(name);
+            if (stat.isDirectory()) {
+                folders.push([f, name]);
+            }
+        }
+    } catch { }
+    return folders;
+}
+
 export function textToBuffer(text: string) {
     return encoder.encode(text);
 }
