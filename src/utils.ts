@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import * as JSON5 from 'json5';
 import * as vscode from 'vscode';
 import { language } from './language';
@@ -33,6 +34,23 @@ export function hasFile(path: string | vscode.Uri) {
     } catch {
         return false;
     }
+}
+
+export function getFiles(uri: string | vscode.Uri) {
+    let files: [string, string][] = [];
+    try {
+        if (typeof uri !== 'string') {
+            uri = uri.fsPath;
+        }
+        for (let f of fs.readdirSync(uri)) {
+            const name = path.join(uri, f),
+                stat = fs.statSync(name);
+            if (!stat.isDirectory()) {
+                files.push([f, name]);
+            }
+        }
+    } catch { }
+    return files;
 }
 
 export function textToBuffer(text: string) {

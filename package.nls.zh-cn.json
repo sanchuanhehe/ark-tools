@@ -15,6 +15,8 @@
     "ext.configuration.hvigorPath": "hvigor的绝对路径",
     "ext.configuration.hdcPath": "hdc的绝对路径",
     "ext.configuration.jdkPath": "jdk的绝对路径",
+    "ext.configuration.hosSdkPath": "HarmonyOS SDK的绝对路径",
+    "ext.configuration.ohosSdkPath": "OpenHarmony SDK的绝对路径",
     "ext.configuration.codelinterPath": "codelinter的绝对路径",
     "ext.configuration.codelinterReloadChange": "在文件、资源、文件夹变更后刷新项目结构",
     "ext.configuration.codelinterCheckAfterSave": "保存文件后运行codelinter",

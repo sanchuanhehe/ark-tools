@@ -9,8 +9,7 @@ import { registerProvider } from './intellisenses/providers';
 import { globalContext } from './intellisenses/globalContext';
 
 export function activate(context: vscode.ExtensionContext) {
-	globalData.extensionPath = context.extensionPath;
-	globalData.projectPath = vscode.workspace.workspaceFolders?.[0].uri ?? vscode.Uri.parse('./');
+	globalData.init(context);
 	globalContext.instance.initialize();
 	projectLoader.tryLoad();
 	projectLoader.onChangeInit();

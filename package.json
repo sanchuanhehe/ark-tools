@@ -200,6 +200,16 @@
           "default": "",
           "description": "%ext.configuration.jdkPath%"
         },
+        "arktsTools.hosSdkPath": {
+          "type": "string",
+          "default": "",
+          "description": "%ext.configuration.hosSdkPath%"
+        },
+        "arktsTools.ohosSdkPath": {
+          "type": "string",
+          "default": "",
+          "description": "%ext.configuration.ohosSdkPath%"
+        },
         "arktsTools.codelinterPath": {
           "type": "string",
           "default": "",
