@@ -26,3 +26,7 @@
 
 ## [v0.1.2]
 - Fix Issues
+
+## [v0.1.4]
+- Fix Issues
+- Definition Provider support
