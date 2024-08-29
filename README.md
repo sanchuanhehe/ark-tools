@@ -21,12 +21,15 @@ VsCode 1.75.0 以后版本
 ## 截图
 
 - 资源管理器
+
   <img src="images/explorer.png">
 
 - 代码高亮
+
   <img src="images/high-light.png">
 
 - Intellisenses
+
   <img src="images/key-intellisenses.png">
   <img src="images/class-intellisenses.png">
   <img src="images/path-intellisenses.png">
