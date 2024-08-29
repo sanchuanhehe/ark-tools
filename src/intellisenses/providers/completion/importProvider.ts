@@ -4,10 +4,13 @@ import { completionProvider } from '../base/completionProvider';
 import { importCompletionItem } from '../../utils/importCompletionItem';
 
 export const importProvider: completionProvider = {
-  selector: {
-    scheme: "file",
-    language: "arkts"
-  },
+  selector: [{
+      scheme: "file",
+      language: "arkts"
+  }, {
+      scheme: "file",
+      language: "arkui"
+  }],
   provider: {
     provideCompletionItems,
   },
