@@ -170,21 +170,29 @@ export class arkts {
             openLabel: $r('select'),
             filters: { 'Zip': ['zip'] }
         });
-        const path = folders?.[0].fsPath;
-        if (path && path.endsWith('.zip')) {
-            const extractTips = $r('extractTips');
-            await vscode.window.withProgress<void>(
-                { location: vscode.ProgressLocation.Notification, cancellable: false },
-                async (progress, token) => {
-                    progress.report({ message: $r('unzipTools') });
-                    token.onCancellationRequested(async () => {
-                        await tools.abort();
+        const fsPath = folders?.[0].fsPath;
+        if (fsPath && fsPath.endsWith('.zip')) {
+            const folders = await vscode.window.showOpenDialog({
+                canSelectMany: false,
+                canSelectFolders: true,
+                openLabel: $r('select')
+            });
+            const folder = folders ? folders[0].fsPath : undefined;
+            if (folder) {
+                const root = path.join(folder, 'tools');
+                await vscode.window.withProgress<void>(
+                    { location: vscode.ProgressLocation.Notification, cancellable: false },
+                    async (progress, token) => {
+                        progress.report({ message: $r('unzipTools') });
+                        token.onCancellationRequested(async () => {
+                            await tools.abort();
+                        });
+                        await tools.unZip(fsPath, root, (name: string) => {
+                            progress.report({ message: `${$r('extractTips')} ${name}...` });
+                        });
+                        await tools.config(root);
                     });
-                    await tools.unZip(path, (name: string) => {
-                        progress.report({ message: `${extractTips} ${name}...` });
-                    });
-                    await tools.config();
-                });
+            }
         }
     }
 }
