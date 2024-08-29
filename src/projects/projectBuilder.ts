@@ -5,10 +5,9 @@ import { buildTools } from "./build/buildTools";
 
 export class projectBuilder {
     private readonly open;
-    private readonly projectPath;
-    constructor(projectPath: vscode.Uri) {
+    private hasInit = false;
+    constructor() {
         this.open = require('opn');
-        this.projectPath = projectPath;
     }
 
     async check() {
@@ -18,23 +17,26 @@ export class projectBuilder {
             if (result === $r('open')) {
                 this.open('https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-commandline-get-0000001954334245-V5');
             }
-        } else {
+        } else if (!this.hasInit) {
+            this.hasInit = true;
             buildTools.init();
         }
     }
 
     async build(fileUri: vscode.Uri) {
         try {
-            const index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/');
-            const path = fileUri.fsPath.substring(0, index);
-            if (this.projectPath.fsPath === path) {
-                const entries = projectLoader.moduleEntries;
-                const mode = await vscode.window.showQuickPick(['debug', 'release']);
+            const entries = projectLoader.moduleEntries,
+                keys = [...entries].map((e) => e[0]),
+                paths = [...entries].map((e) => e[1]),
+                index = fileUri.fsPath.lastIndexOf(process.platform === 'win32' ? '\\' : '/'),
+                path = fileUri.fsPath.substring(0, index),
+                mode = await vscode.window.showQuickPick(['debug', 'release']);
+            if (paths.findIndex((o) => path.startsWith(o)) !== -1) {
                 if (mode) {
-                    if (entries.length === 1) {
-                        buildTools.build(entries[0], mode);
+                    if (entries.size === 1) {
+                        buildTools.build(keys[0], mode);
                     } else {
-                        const name = await vscode.window.showQuickPick(entries);
+                        const name = await vscode.window.showQuickPick(keys);
                         if (name) {
                             buildTools.build(name, mode);
                         }

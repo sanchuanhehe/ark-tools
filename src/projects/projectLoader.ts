@@ -17,12 +17,12 @@ import { $r, fileToJson, hasFile, isEmpty, objToBuffer } from '../utils';
 class projectLoader {
     private _appName = '';
     private readonly linter;
-    private _entries: string[] = [];
     private _modulePaths: string[] = [];
     private _scope: appScope | undefined;
     private builder: projectBuilder | undefined;
     private _profile: globalProfile | undefined;
     private readonly _ctxs: Map<context, string>;
+    private _entries: Map<string, string> = new Map();
     private _path: vscode.Uri = vscode.Uri.parse('./');
     private readonly _modules: Map<string, moduleResource>;
 
@@ -132,7 +132,7 @@ class projectLoader {
                 for (const module of this.globalProfile.modules) {
                     await this.loadModule(module.srcPath);
                 }
-                this.builder = new projectBuilder(projectPath);
+                this.builder = new projectBuilder();
                 this.builder.check();
                 if (await codelinterTools.check()) {
                     this.linter.register();
@@ -199,9 +199,6 @@ class projectLoader {
                 }
             }
         }
-        if (module.detail?.type === 'entry') {
-            this._entries.push(module.detail.name);
-        }
         this._modules?.set('appScope', module);
     }
 
@@ -221,11 +218,14 @@ class projectLoader {
             moduleProfile: mp,
             name: m.module.name,
             modulePath: vscode.Uri.joinPath(this.projectPath, moduleName)
-        };
+        }, modulePath = path.join(this.projectPath.fsPath, moduleName);
+        if (m.module?.type === 'entry') {
+            this._entries.set(m.module.name, modulePath);
+        }
         this._modules?.set(name, resource);
         this.loadMedias(name, moduleName);
         this.loadResources(name, moduleName);
-        this._modulePaths.push(path.join(this.projectPath.fsPath, moduleName));
+        this._modulePaths.push();
     }
 
     private async loadMedias(name: string, modulePath: string) {

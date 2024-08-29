@@ -1,18 +1,40 @@
 import fs from 'fs';
+import path from 'path';
 import * as vscode from 'vscode';
 import { executor } from '../../executor';
+import { globalData } from '../../globalData';
 import { module } from '../../models/modules/module';
-import { $r, fileToJson, isEmpty } from '../../utils';
 import projectLoader from '../../projects/projectLoader';
+import { $r, fileToJson, hasFile, isEmpty } from '../../utils';
 
 export class buildTools {
     private static enable = false;
     private static lastEntry: string = '';
+    private static _hdcs: Map<number | string, string> = new Map();
+    static getHdc(key: number | string) {
+        return this._hdcs.get(key);
+    }
 
     static check(): Promise<boolean> {
         return new Promise((resolve) => {
-            const ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '',
-                hvigorPath = vscode.workspace.getConfiguration("arktsTools.hvigorPath").inspect<string>('hvigorPath')?.globalValue ?? '';
+            const ohpmPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('ohpmPath')?.globalValue ?? '',
+                hvigorPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('hvigorPath')?.globalValue ?? '';
+            for (let module of projectLoader.globalProfile?.app.products ?? []) {
+                if (typeof module.compileSdkVersion === 'number') {
+                    const ohosHdc = path.join(globalData.ohosSdkPath, `${module.compileSdkVersion}`, 'toolchains', process.platform === 'win32' ? 'hdc.exe' : 'hdc');
+                    if (hasFile(ohosHdc)) {
+                        this._hdcs.set(module.compileSdkVersion, ohosHdc);
+                    }
+                } else {
+                    const sdk = globalData.hosSdkList.get(module.compileSdkVersion);
+                    if (sdk) {
+                        const hosHdc = path.join(sdk, `${module.compileSdkVersion}`, 'openharmony', 'toolchains', process.platform === 'win32' ? 'hdc.exe' : 'hdc');
+                        if (hasFile(hosHdc)) {
+                            this._hdcs.set(module.compileSdkVersion, hosHdc);
+                        }
+                    }
+                }
+            }
             if (ohpmPath.trim() === '' || hvigorPath.trim() === '') {
                 vscode.window.showErrorMessage($r('buildInitFailed'));
                 resolve(false);
@@ -34,8 +56,14 @@ export class buildTools {
         if (this.enable) {
             for (const i of projectLoader.globalProfile?.modules ?? []) {
                 const modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
-                executor.runInTerminal(`cd \"${modulePath}\"`);
+                executor.runInTerminal(`cd \"${modulePath.fsPath}\"`);
                 executor.runInTerminal('ohpm install');
+            }
+            const npmrc = path.join(process.platform === 'win32' ? '' : '~/.npmrc');
+            if (!hasFile(npmrc)) {
+                if (process.platform !== 'win32') {
+                    executor.runInTerminal(`echo "registry=https://repo.huaweicloud.com/repository/npm/\n@ohos:registry=https://repo.harmonyos.com/npm/" > ${npmrc}`);
+                }
             }
         } else {
             vscode.window.showErrorMessage($r('buildInitFailed'));
@@ -43,7 +71,7 @@ export class buildTools {
     }
 
     static build(entry: string, mode: string) {
-        executor.runInTerminal(`cd \"${projectLoader.projectPath}\"`);
+        executor.runInTerminal(`cd \"${projectLoader.projectPath.fsPath}\"`);
         executor.runInTerminal('hvigorw clean --no-daemon');
         executor.runInTerminal(`hvigorw assembleHap --mode module -p product=${entry} -p debuggable=false -p buildMode=${mode} --no-daemon`);
         this.lastEntry = entry;
