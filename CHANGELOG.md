@@ -30,3 +30,7 @@
 ## [v0.1.4]
 - Fix Issues
 - Definition Provider support
+
+## [v0.1.5]
+- Fix Issues
+- Fix Command Line Tools Logic
