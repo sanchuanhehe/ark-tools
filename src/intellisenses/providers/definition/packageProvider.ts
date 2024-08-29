@@ -9,13 +9,10 @@ import { definitionProvider } from '../base/definitionProvider';
 
 const modules: [string, vscode.FileType][] = [], pos = new vscode.Position(0, 0);
 export const packageProvider: definitionProvider = {
-  selector: [{
-      scheme: "file",
-      language: "arkts"
-  }, {
-      scheme: "file",
-      language: "arkui"
-  }],
+  selector: {
+    scheme: "file",
+    language: "arkts"
+  },
   provider: {
     provideDefinition
   }

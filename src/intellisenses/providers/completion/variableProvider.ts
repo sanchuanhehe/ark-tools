@@ -4,13 +4,10 @@ import { completionProvider } from '../base/completionProvider';
 import { variableCompletionItem } from '../../utils/variableCompletionItem';
 
 export const variableProvider: completionProvider = {
-    selector: [{
+    selector: {
         scheme: "file",
         language: "arkts"
-    }, {
-        scheme: "file",
-        language: "arkui"
-    }],
+    },
     provider: {
         provideCompletionItems,
     },

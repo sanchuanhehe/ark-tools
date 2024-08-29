@@ -43,27 +43,17 @@
   "contributes": {
     "languages": [
       {
-        "id": "arkui",
-        "aliases": [
-          "ArkTs",
-          "arkui"
-        ],
-        "extensions": [
-          ".ets"
-        ],
-        "configuration": "./templates/syntaxes/etsConfiguration.json"
-      },
-      {
         "id": "arkts",
         "aliases": [
           "ArkTs",
-          "ets"
+          "ets",
+          "ts"
         ],
         "extensions": [
           ".ets",
           ".ts"
         ],
-        "configuration": "./templates/syntaxes/tsConfiguration.json"
+        "configuration": "./templates/syntaxes/etsConfiguration.json"
       },
       {
         "id": "json5",
