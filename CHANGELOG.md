@@ -34,3 +34,6 @@
 ## [v0.1.5]
 - Fix Issues
 - Fix Command Line Tools Logic
+
+## [v0.1.6]
+- Fix Issues

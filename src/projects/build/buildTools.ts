@@ -58,15 +58,14 @@ export class buildTools {
             for (const i of projectLoader.globalProfile?.modules ?? []) {
                 const modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
                 executor.runInTerminal(`cd \"${modulePath.fsPath}\"`);
-                executor.runInTerminal('ohpm install --all');
-                //@ohos/hvigor-ohos-plugin
+                executor.runInTerminal('ohpm install');
             }
-            const npmrc = (process.platform === 'win32') ? '' : 'cat ~/.npmrc';
+            const npmrc = (process.platform === 'win32') ? 'type %USERPROFILE%\\.npmrc' : 'cat ~/.npmrc';
             executor.exec(npmrc).catch(() => {
                 if (process.platform !== 'win32') {
                     executor.runInTerminal(`echo "registry=https://repo.huaweicloud.com/repository/npm/\n@ohos:registry=https://repo.harmonyos.com/npm/" > ~/.npmrc`);
                 } else {
-
+                    executor.runInTerminal(`(echo "registry=https://repo.huaweicloud.com/repository/npm" & echo "@ohos:registry=https://repo.harmonyos.com/npm/") >> "%USERPROFILE%\\.npmrc"`);
                 }
             });
         } else {

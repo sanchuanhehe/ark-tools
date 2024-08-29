@@ -33,7 +33,9 @@ class codelinterTools {
                 out = path.join(this.folder, name);
             await executor.exec(`codelinter "${target}" -f json -o "${out}"`);
             let content = await fileToContent(out);
-            fs.unlinkSync(out);
+            try {
+                fs.unlinkSync(out);
+            } catch { }
             return content;
         }
     }
