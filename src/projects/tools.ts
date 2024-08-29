@@ -22,7 +22,7 @@ class tools {
                     && o[1] === vscode.FileType.Directory)?.[0];
             if (dir) {
                 await fs.move(path.join(temp, dir[0]), target, { overwrite: true });
-                executor.exec(process.platform === 'win32' ? '' : `rm -rf "${temp}"`);
+                executor.exec(process.platform === 'win32' ? `rmdir /S /Q "${temp}"` : `rm -rf "${temp}"`);
                 return target;
             }
         } catch (error) {

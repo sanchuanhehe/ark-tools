@@ -190,7 +190,7 @@ export class arkts {
                             progress.report({ message: `${$r('extractTips')} ${name}...` });
                         });
                         if (target) {
-                            await vscode.workspace.getConfiguration("arktsTools").update('commandToolsPath', target);
+                            await vscode.workspace.getConfiguration("arktsTools").update('commandToolsPath', target, vscode.ConfigurationTarget.Global);
                             await tools.config(folder);
                         } else {
                             vscode.window.showErrorMessage($r('initToolsFailed'));
