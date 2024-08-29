@@ -13,8 +13,6 @@
     "ext.explorer.contents": "[阅读](command:arkts.about) 关于ArkTS Tools\n[创建ArkUI项目](command:arkts.createProject)",
     "ext.configuration.ohpmPath": "ohpm的绝对路径",
     "ext.configuration.hvigorPath": "hvigor的绝对路径",
-    "ext.configuration.hdcPath": "hdc的绝对路径",
-    "ext.configuration.jdkPath": "jdk的绝对路径",
     "ext.configuration.hosSdkPath": "HarmonyOS SDK的绝对路径",
     "ext.configuration.ohosSdkPath": "OpenHarmony SDK的绝对路径",
     "ext.configuration.codelinterPath": "codelinter的绝对路径",

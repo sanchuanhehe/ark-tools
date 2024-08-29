@@ -11,17 +11,13 @@ export class buildTools {
 
     static check(): Promise<boolean> {
         return new Promise((resolve) => {
-            const jdkPath = vscode.workspace.getConfiguration("arktsTools.jdkPath").inspect<string>('jdkPath')?.globalValue ?? '',
-                hdcPath = vscode.workspace.getConfiguration("arktsTools.hdcPath").inspect<string>('hdcPath')?.globalValue ?? '',
-                ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '',
+            const ohpmPath = vscode.workspace.getConfiguration("arktsTools.ohpmPath").inspect<string>('ohpmPath')?.globalValue ?? '',
                 hvigorPath = vscode.workspace.getConfiguration("arktsTools.hvigorPath").inspect<string>('hvigorPath')?.globalValue ?? '';
-            if (jdkPath.trim() === '' || hdcPath.trim() === '' || ohpmPath.trim() === '' || hvigorPath.trim() === '') {
+            if (ohpmPath.trim() === '' || hvigorPath.trim() === '') {
                 vscode.window.showErrorMessage($r('buildInitFailed'));
                 resolve(false);
             } else {
                 try {
-                    fs.accessSync(jdkPath);
-                    fs.accessSync(hdcPath);
                     fs.accessSync(ohpmPath);
                     fs.accessSync(hvigorPath);
                     this.enable = true;

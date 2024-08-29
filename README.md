@@ -10,8 +10,6 @@ VsCode version >= 1.75.0
 
 This extension contributes the following settings:
 
-- `arktsTools.jdkPath`: The absolute path to jdk.
-- `arktsTools.hdcPath`: The absolute path to hdc.
 - `arktsTools.ohpmPath`: The absolute path to ohpm.
 - `arktsTools.hvigorPath`: The absolute path to hvigor.
 - `arktsTools.codelinterPath`: The absolute path to codelinter.

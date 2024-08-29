@@ -190,16 +190,6 @@
           "default": "",
           "description": "%ext.configuration.hvigorPath%"
         },
-        "arktsTools.hdcPath": {
-          "type": "string",
-          "default": "",
-          "description": "%ext.configuration.hdcPath%"
-        },
-        "arktsTools.jdkPath": {
-          "type": "string",
-          "default": "",
-          "description": "%ext.configuration.jdkPath%"
-        },
         "arktsTools.hosSdkPath": {
           "type": "string",
           "default": "",

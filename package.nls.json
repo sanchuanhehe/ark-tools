@@ -15,8 +15,6 @@
     "ext.configuration.ohosSdkPath": "The absolute path to OpenHarmony SDK",
     "ext.configuration.ohpmPath": "The absolute path to ohpm",
     "ext.configuration.hvigorPath": "The absolute path to hvigor",
-    "ext.configuration.hdcPath": "The absolute path to hdc",
-    "ext.configuration.jdkPath": "The absolute path to jdk",
     "ext.configuration.codelinterPath": "The absolute path to codelinter",
     "ext.configuration.codelinterReloadChange": "Refresh struct after file/resources/folder change",
     "ext.configuration.codelinterCheckAfterSave": "Run codelinter after save text document",
