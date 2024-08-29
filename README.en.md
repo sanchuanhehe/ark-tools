@@ -1,4 +1,5 @@
 # ArkTs Tools
+<a href="./README.md">中文</a>
 
 This is the extension for ArkTs Language. Fast way to create, init, build and run ArkTs project.
 
