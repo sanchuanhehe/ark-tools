@@ -32,8 +32,14 @@ class codelinterTools {
                 name = `${target.substring(index)}-${new Date().getTime()}.json`,
                 out = path.join(this.folder, name);
             await executor.exec(`codelinter "${target}" -f json -o "${out}"`);
-            return await fileToContent(out);
+            let content = await fileToContent(out);
+            fs.unlinkSync(out);
+            return content;
         }
+    }
+
+    popup(obj: any) {
+
     }
 
     private init(projectPath: string) {

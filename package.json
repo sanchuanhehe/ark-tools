@@ -162,7 +162,7 @@
           "group": "navigation@5"
         },
         {
-          "when": "explorerResourceIsFolder",
+          "when": "resourceExtname == .ets || resourceExtname == .ts",
           "command": "arkts.codelinter",
           "group": "navigation@6"
         }

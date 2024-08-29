@@ -9,9 +9,9 @@ export class projectLinter {
     private disposables: vscode.Disposable[] = [];
 
     register() {
-        const codelinter = vscode.workspace.getConfiguration("arktsTools"),
-            reloadChange = codelinter.inspect<boolean>('codelinterReloadChange')?.globalValue ?? false,
-            checkAfterSave = codelinter.inspect<boolean>('codelinterCheckAfterSave')?.globalValue ?? false;
+        const configs = vscode.workspace.getConfiguration("arktsTools"),
+            reloadChange = configs.inspect<boolean>('codelinterReloadChange')?.globalValue ?? false,
+            checkAfterSave = configs.inspect<boolean>('codelinterCheckAfterSave')?.globalValue ?? false;
         this.dispose();
         if (reloadChange) {
             this.deleteFiles();
@@ -195,8 +195,8 @@ export class projectLinter {
         const json = await codelinterTools.exec(path);
         if (json) {
             const obj = toObject(json);
-            if (obj) {
-
+            if (obj && obj?.length > 1) {
+                codelinterTools.popup(obj);
             }
         }
     }

@@ -15,6 +15,9 @@ class tools {
                 name = file.substring(index + 1, file.lastIndexOf('.')).toLowerCase();
             this.zip = new StreamZip.async({ file: file });
             this.zip.on('entry', (entry) => callback(entry.name));
+            if (!hasFile(temp)) {
+                fs.mkdirSync(temp);
+            }
             await this.zip.extract(null, temp);
             await this.zip.close();
             const dirs = await vscode.workspace.fs.readDirectory(vscode.Uri.parse(temp)),
