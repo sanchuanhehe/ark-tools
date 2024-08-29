@@ -11,7 +11,8 @@ class codelinterTools {
     check(): Promise<boolean> {
         return new Promise((resolve) => {
             try {
-                const codelinter = vscode.workspace.getConfiguration("arktsTools").inspect<string>('codelinterPath')?.globalValue ?? '';
+                const commandToolsPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('commandToolsPath')?.globalValue ?? '',
+                    codelinter = path.join(commandToolsPath, 'bin', 'codelinter');
                 if (codelinter.trim() !== '') {
                     fs.accessSync(codelinter);
                     this.enable = true;

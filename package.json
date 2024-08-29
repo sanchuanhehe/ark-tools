@@ -180,15 +180,10 @@
     "configuration": {
       "title": "ArkTS Tools",
       "properties": {
-        "arktsTools.ohpmPath": {
+        "arktsTools.commandToolsPath": {
           "type": "string",
           "default": "",
-          "description": "%ext.configuration.ohpmPath%"
-        },
-        "arktsTools.hvigorPath": {
-          "type": "string",
-          "default": "",
-          "description": "%ext.configuration.hvigorPath%"
+          "description": "%ext.configuration.commandToolsPath%"
         },
         "arktsTools.hosSdkPath": {
           "type": "string",
@@ -199,11 +194,6 @@
           "type": "string",
           "default": "",
           "description": "%ext.configuration.ohosSdkPath%"
-        },
-        "arktsTools.codelinterPath": {
-          "type": "string",
-          "default": "",
-          "description": "%ext.configuration.codelinterPath%"
         },
         "arktsTools.codelinterReloadChange": {
           "type": "boolean",

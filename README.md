@@ -10,9 +10,7 @@ VsCode version >= 1.75.0
 
 This extension contributes the following settings:
 
-- `arktsTools.ohpmPath`: The absolute path to ohpm.
-- `arktsTools.hvigorPath`: The absolute path to hvigor.
-- `arktsTools.codelinterPath`: The absolute path to codelinter.
+- `arktsTools.commandToolsPath`: The absolute path to Command Line Tools.
 - `arktsTools.codelinterCheckAfterSave`: Run codelinter after save text document.
 - `arktsTools.codelinterReloadChange`: Refresh struct after file/resources/folder change.
 - `arktsTools.intellisensesModulesPath`: The absolute path to intellisenses modules roles. WARNING! The Location MUST be a FOLDER and file name MUST like "ets_role_***.json".

@@ -17,8 +17,9 @@ export class buildTools {
 
     static check(): Promise<boolean> {
         return new Promise((resolve) => {
-            const ohpmPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('ohpmPath')?.globalValue ?? '',
-                hvigorPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('hvigorPath')?.globalValue ?? '';
+            const commandToolsPath = vscode.workspace.getConfiguration("arktsTools").inspect<string>('commandToolsPath')?.globalValue ?? '',
+                ohpmPath = path.join(commandToolsPath, 'bin', 'ohpm'),
+                hvigorPath = path.join(commandToolsPath, 'bin', 'hvigorw');
             for (let module of projectLoader.globalProfile?.app.products ?? []) {
                 if (typeof module.compileSdkVersion === 'number') {
                     const ohosHdc = path.join(globalData.ohosSdkPath, `${module.compileSdkVersion}`, 'toolchains', process.platform === 'win32' ? 'hdc.exe' : 'hdc');
@@ -52,19 +53,22 @@ export class buildTools {
         });
     }
 
-    static init() {
+    static async init() {
         if (this.enable) {
             for (const i of projectLoader.globalProfile?.modules ?? []) {
                 const modulePath = vscode.Uri.joinPath(projectLoader.projectPath, i.srcPath);
                 executor.runInTerminal(`cd \"${modulePath.fsPath}\"`);
-                executor.runInTerminal('ohpm install');
+                executor.runInTerminal('ohpm install --all');
+                //@ohos/hvigor-ohos-plugin
             }
-            const npmrc = path.join(process.platform === 'win32' ? '' : '~/.npmrc');
-            if (!hasFile(npmrc)) {
+            const npmrc = (process.platform === 'win32') ? '' : 'cat ~/.npmrc';
+            executor.exec(npmrc).catch(() => {
                 if (process.platform !== 'win32') {
-                    executor.runInTerminal(`echo "registry=https://repo.huaweicloud.com/repository/npm/\n@ohos:registry=https://repo.harmonyos.com/npm/" > ${npmrc}`);
+                    executor.runInTerminal(`echo "registry=https://repo.huaweicloud.com/repository/npm/\n@ohos:registry=https://repo.harmonyos.com/npm/" > ~/.npmrc`);
+                } else {
+
                 }
-            }
+            });
         } else {
             vscode.window.showErrorMessage($r('buildInitFailed'));
         }
