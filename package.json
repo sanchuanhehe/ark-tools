@@ -227,10 +227,12 @@
     "axios": "1.7.x",
     "json5": "^2.2.3",
     "prettier": "^2.8.8",
+    "fs-extra": "^11.2.0",
     "vscode-nls": "^5.2.0",
     "node-stream-zip": "^1.15.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "vscode-nls-dev": "^4.0.4",
     "@types/opn": "^5.5.0",
     "@types/vscode": "^1.75.0",

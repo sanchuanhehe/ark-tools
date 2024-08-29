@@ -37,5 +37,6 @@
     "intellisensesAllFailed": "Load intellisenses modulesInfo Failed",
     "intellisensesFailed": "Load Extend Modules Role Failed! Please check reference file!",
     "checkAfterSaveFailed": "Check Save Change Failed!",
-    "reloadChangeFailed": "Reload Change Failed!"
+    "reloadChangeFailed": "Reload Change Failed!",
+    "initToolsFailed": "Init Command Line Tools Failed!"
 }

@@ -37,5 +37,6 @@
     "intellisensesAllFailed": "加载IntelliSense信息失败",
     "intellisensesFailed": "加载IntelliSense失败,请检查文件格式！",
     "checkAfterSaveFailed": "重载保存发生异常！",
-    "reloadChangeFailed": "重载变更发生异常！"
+    "reloadChangeFailed": "重载变更发生异常！",
+    "initToolsFailed": "初始化Command Line Tools失败!"
 }

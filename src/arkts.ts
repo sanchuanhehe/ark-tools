@@ -179,7 +179,6 @@ export class arkts {
             });
             const folder = folders ? folders[0].fsPath : undefined;
             if (folder) {
-                const root = path.join(folder, 'tools');
                 await vscode.window.withProgress<void>(
                     { location: vscode.ProgressLocation.Notification, cancellable: false },
                     async (progress, token) => {
@@ -187,10 +186,15 @@ export class arkts {
                         token.onCancellationRequested(async () => {
                             await tools.abort();
                         });
-                        await tools.unZip(fsPath, root, (name: string) => {
+                        let target = await tools.unZip(fsPath, folder, (name: string) => {
                             progress.report({ message: `${$r('extractTips')} ${name}...` });
                         });
-                        await tools.config(root);
+                        if (target) {
+                            await vscode.workspace.getConfiguration("arktsTools").update('commandToolsPath', target);
+                            await tools.config(folder);
+                        } else {
+                            vscode.window.showErrorMessage($r('initToolsFailed'));
+                        }
                     });
             }
         }
