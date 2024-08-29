@@ -1,39 +1,41 @@
 # ArkTs Tools
 
-This is the extension for ArkTs Language. Fast way to create, init, build and run ArkTs project.
+这是一个 ArkTs/UI 的扩展库. 能够实现快速的创建、初始化、构建和运行你的项目。
 
-## Requirements
+## 要求
 
-VsCode version >= 1.75.0
+VsCode 1.75.0 以后版本
 
-## Extension Settings
+## 扩展设置
 
-This extension contributes the following settings:
+本扩展包含一下设置项:
 
-- `arktsTools.commandToolsPath`: The absolute path to Command Line Tools.
-- `arktsTools.codelinterCheckAfterSave`: Run codelinter after save text document.
-- `arktsTools.codelinterReloadChange`: Refresh struct after file/resources/folder change.
-- `arktsTools.intellisensesModulesPath`: The absolute path to intellisenses modules roles. WARNING! The Location MUST be a FOLDER and file name MUST like "ets_role_***.json".
+- `arktsTools.hosSdkPath`: HarmonyOS SDK 的绝对路径
+- `arktsTools.ohosSdkPath`: OpenHarmony SDK 的绝对路径
+- `arktsTools.commandToolsPath`: Command Line Tools 的绝对路径
+- `arktsTools.codelinterCheckAfterSave`: 在文件、资源、文件夹变更后刷新项目结构
+- `arktsTools.codelinterReloadChange`: 保存文件后运行 codelinter
+- `arktsTools.intellisensesModulesPath`: intellisenses 规则文件的绝对路径. 注意! 文件名必须以\"ets*role*\*\*\*.json\"开头
 
-## Capture
+## 截图
 
-- Explorer
-<img src="images/explorer.png">
+- 资源管理器
+  <img src="images/explorer.png">
 
-- High Light
-<img src="images/high-light.png">
+- 代码高亮
+  <img src="images/high-light.png">
 
 - Intellisenses
-<img src="images/key-intellisenses.png">
-<img src="images/class-intellisenses.png">
-<img src="images/path-intellisenses.png">
+  <img src="images/key-intellisenses.png">
+  <img src="images/class-intellisenses.png">
+  <img src="images/path-intellisenses.png">
 
-## Report Issues
+## 反馈问题
 
-[Click Me](https://gitee.com/michael-eddy/ark-tools/issues)
+[点击这里](https://gitee.com/michael-eddy/ark-tools/issues)
 
-## Change Log
+## 变更日志
 
-[Click Me](https://marketplace.visualstudio.com/items/MichaelDing.ark-tools/changelog)
+[点击这里](https://marketplace.visualstudio.com/items/MichaelDing.ark-tools/changelog)
 
 **Enjoy!**

@@ -10,23 +10,24 @@
         const vscode = acquireVsCodeApi();
         function init() {
             vscode.postMessage({ command: "init" });
-        }
+        } 
     </script>
 </head>
 
 <body>
     <div>
-        <h3>这是一个ArkTs/UI的扩展库. 能够实现快速的创建、初始化、构建和运行你的项目.</h3>
+        <h3>这是一个ArkTs/UI的扩展库. 能够实现快速的创建、初始化、构建和运行你的项目。</h3>
         <h2>要求</h2>
         <p>VsCode 1.75.0以后版本</p>
         <h2>扩展设置</h2>
         <p>本扩展包含一下设置项:</p>
         <ul>
-            <li><code>arktsTools.commandToolsPath</code>: The absolute path to Command Line Tools</li>
-            <li><code>arktsTools.codelinterReloadChange</code>: Refresh struct after file/resources/folder change</li>
-            <li><code>arktsTools.codelinterCheckAfterSave</code>: Run codelinter after save text document</li>
-            <li><code>arktsTools.intellisensesModulesPath</code>: The absolute path to intellisenses modules roles. \n
-                WARNING! \n The Location MUST be a FOLDER and file name MUST like "ets_role_***.json"</li>
+            <li><code>arktsTools.hosSdkPath</code>: HarmonyOS SDK的绝对路径</li>
+            <li><code>arktsTools.ohosSdkPath</code>: OpenHarmony SDK的绝对路径</li>
+            <li><code>arktsTools.commandToolsPath</code>: Command Line Tools的绝对路径</li>
+            <li><code>arktsTools.codelinterReloadChange</code>: 在文件、资源、文件夹变更后刷新项目结构</li>
+            <li><code>arktsTools.codelinterCheckAfterSave</code>: 保存文件后运行codelinter</li>
+            <li><code>arktsTools.intellisensesModulesPath</code>: intellisenses规则文件的绝对路径. 注意! 文件名必须以\"ets_role_***.json\"开头</li>
         </ul>
         <div>
             <p>
