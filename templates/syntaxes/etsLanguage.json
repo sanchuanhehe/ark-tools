@@ -19,7 +19,7 @@
                     "name": "keyword.other.import.dart"
                 }
             },
-            "end": ";",
+            "end": ";?",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.terminator.dart"
@@ -33,8 +33,11 @@
                     "include": "#comments"
                 },
                 {
+                    "include": "#keywords"
+                },
+                {
                     "name": "keyword.other.import.dart",
-                    "match": "\\b(as|show|hide)\\b"
+                    "match": "\\b(as|show|hide|from)\\b"
                 },
                 {
                     "name": "keyword.control.dart",
@@ -203,7 +206,7 @@
             "patterns": [
                 {
                     "name": "constant.language.dart",
-                    "match": "(?<!\\$)\\b(true|false|null)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(true|false|null|undefined)\\b(?!\\$)"
                 },
                 {
                     "name": "variable.language.dart",
@@ -224,7 +227,7 @@
         "class-identifier": {
             "patterns": [
                 {
-                    "match": "(?<!\\$)\\b(bool|num|int|double|dynamic)\\b(?!\\$)",
+                    "match": "(?<!\\$)\\b(boolean|number|string|Boolean|Number|String)\\b(?!\\$)",
                     "name": "support.class.dart"
                 },
                 {
@@ -232,7 +235,7 @@
                     "name": "storage.type.primitive.dart"
                 },
                 {
-                    "begin": "(?<![a-zA-Z0-9_$])([_$]*[A-Z][a-zA-Z0-9_$]*)\\b",
+                    "begin": "(?<:?[a-zA-Z0-9_$])([_$]*[A-Z][a-zA-Z0-9_$]*)\\b",
                     "end": "(?!<)",
                     "beginCaptures": {
                         "1": {
@@ -307,7 +310,7 @@
                 },
                 {
                     "name": "keyword.control.dart",
-                    "match": "(?<!\\$)\\b(break|case|continue|default|do|else|for|if|in|switch|while|when)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(break|case|continue|default|do|else|for|if|in|switch|while|when|readonly)\\b(?!\\$)"
                 },
                 {
                     "name": "keyword.control.dart",
@@ -327,7 +330,11 @@
                 },
                 {
                     "name": "keyword.declaration.dart",
-                    "match": "(?<!\\$)\\b(abstract|sealed|base|interface|class|enum|extends|extension type|extension|external|factory|implements|get(?![(<])|mixin|native|operator|set(?![(<])|typedef|with|covariant)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(abstract|sealed|base|interface|class|enum|extends|extension type|extension|external|function|from|factory|implements|get(?![(<])|mixin|native|operator|set(?![(<])|typedef|with|covariant)\\b(?!\\$)"
+                },
+                {
+                    "name": "keyword.declaration.access.dart",
+                    "match": "(?<!\\$)\\b(private|public|protected)\\b(?!\\$)"
                 },
                 {
                     "name": "storage.modifier.dart",
@@ -335,7 +342,7 @@
                 },
                 {
                     "name": "storage.type.primitive.dart",
-                    "match": "(?<!\\$)\\b(?:void|var)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(?:void|var|let|typeof)\\b(?!\\$)"
                 }
             ]
         },
