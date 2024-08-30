@@ -1,5 +1,6 @@
 # ArkTs Tools
-<a href="./README.en.md">English</a>
+
+[English](https://gitee.com/michael-eddy/ark-tools/blob/master/README.en.md)
 
 这是一个 ArkTs/UI 的扩展库. 能够实现快速的创建、初始化、构建和运行你的项目。
 
