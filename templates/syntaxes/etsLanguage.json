@@ -231,7 +231,11 @@
                     "name": "support.class.dart"
                 },
                 {
-                    "match": "(?<=:\\s*)\\b([a-zA-Z0-9]*(\\[\\])?)\\b(?!\\$)",
+                    "match": "(!{?<=:\\s*)\\b([a-zA-Z0-9]*(\\[\\])?)\\b(?!\\$)",
+                    "name": "support.class.dart"
+                },
+                {
+                    "match": "(?<!\\$)\\b(?<=(struct|class))\\s([a-zA-Z0-9]*)\\b(?!\\$)",
                     "name": "support.class.dart"
                 },
                 {
@@ -334,7 +338,7 @@
                 },
                 {
                     "name": "keyword.declaration.dart",
-                    "match": "(?<!\\$)\\b(abstract|sealed|base|interface|class|enum|extends|extension type|extension|external|function|from|factory|implements|get(?![(<])|mixin|native|operator|set(?![(<])|typedef|with|covariant)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(abstract|sealed|struct|base|interface|class|enum|extends|extension type|extension|external|function|from|factory|implements|get(?![(<])|mixin|native|operator|set(?![(<])|typedef|with|covariant)\\b(?!\\$)"
                 },
                 {
                     "name": "keyword.declaration.access.dart",
@@ -455,6 +459,16 @@
                     ]
                 },
                 {
+                    "name": "string.interpolated.triple.grave.dart",
+                    "begin": "(?<!r)```",
+                    "end": "```(?!`)",
+                    "patterns": [
+                        {
+                            "include": "#string-interp"
+                        }
+                    ]
+                },
+                {
                     "name": "string.quoted.triple.double.dart",
                     "begin": "r\"\"\"",
                     "end": "\"\"\"(?!\")"
@@ -465,9 +479,28 @@
                     "end": "'''(?!')"
                 },
                 {
+                    "name": "string.quoted.triple.grave.dart",
+                    "begin": "r```",
+                    "end": "```(?!`)"
+                },
+                {
                     "name": "string.interpolated.double.dart",
                     "begin": "(?<!\\|r)\"",
                     "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "invalid.string.newline",
+                            "match": "\\n"
+                        },
+                        {
+                            "include": "#string-interp"
+                        }
+                    ]
+                },
+                {
+                    "name": "string.interpolated.grave.dart",
+                    "begin": "(?<!\\|r)`",
+                    "end": "`",
                     "patterns": [
                         {
                             "name": "invalid.string.newline",
@@ -500,6 +533,17 @@
                         },
                         {
                             "include": "#string-interp"
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.grave.dart",
+                    "begin": "r`",
+                    "end": "`",
+                    "patterns": [
+                        {
+                            "name": "invalid.string.newline",
+                            "match": "\\n"
                         }
                     ]
                 },
