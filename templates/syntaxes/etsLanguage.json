@@ -227,11 +227,19 @@
         "class-identifier": {
             "patterns": [
                 {
-                    "match": "(?<!\\$)\\b(boolean|number|string|Boolean|Number|String)\\b(?!\\$)",
+                    "match": "(?<!\\$)\\b(Boolean|Number|String|Map<\\w+>|Resource|ResourceStr|Length)\\b(?!\\$)",
                     "name": "support.class.dart"
                 },
                 {
-                    "match": "(!{?<=:\\s*)\\b([a-zA-Z0-9]*(\\[\\])?)\\b(?!\\$)",
+                    "match": "(!{?<=:\\s*)\\b(\\w+(\\[\\])?)(\\s*{\\s*)?\\b(?!\\$)",
+                    "name": "support.class.dart"
+                },
+                {
+                    "match": "(?<=:\\s*)\\b\\s*(\\w+)\\s*({)?\\b(?!\\$)",
+                    "name": "support.class.dart"
+                },
+                {
+                    "match": "(?<=:)\\b(\\w+.\\w+)\\b(?!\\$)",
                     "name": "support.class.dart"
                 },
                 {
@@ -322,7 +330,7 @@
                 },
                 {
                     "name": "keyword.control.dart",
-                    "match": "(?<!\\$)\\b(sync(\\*)?|async(\\*)?|await|yield(\\*)?)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(sync(\\*)?|await|yield(\\*)?)\\b(?!\\$)"
                 },
                 {
                     "name": "keyword.control.dart",
@@ -346,7 +354,11 @@
                 },
                 {
                     "name": "storage.modifier.dart",
-                    "match": "(?<!\\$)\\b(static|final|const|required|late)\\b(?!\\$)"
+                    "match": "(?<!\\$)\\b(static|final|const|required|async(\\*)?|late)\\b(?!\\$)"
+                },
+                {
+                    "name": "storage.modifier.dart",
+                    "match": "(?<!\\$)\\b(boolean|number|string)\\b(?!\\$)"
                 },
                 {
                     "name": "storage.type.primitive.dart",
