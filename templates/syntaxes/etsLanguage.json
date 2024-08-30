@@ -231,6 +231,10 @@
                     "name": "support.class.dart"
                 },
                 {
+                    "match": "(?<=:\\s*)\\b([a-zA-Z0-9]*(\\[\\])?)\\b(?!\\$)",
+                    "name": "support.class.dart"
+                },
+                {
                     "match": "(?<!\\$)\\bvoid\\b(?!\\$)",
                     "name": "storage.type.primitive.dart"
                 },
