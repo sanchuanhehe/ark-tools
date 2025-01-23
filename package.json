@@ -47,7 +47,8 @@
         "aliases": [
           "ArkTs",
           "ets",
-          "ts"
+          "ts", 
+          "arkts"
         ],
         "extensions": [
           ".ets",

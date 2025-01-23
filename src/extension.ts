@@ -36,11 +36,15 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.toolsInit",
 		() => arkts.toolsInit()));
 	context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            { scheme: 'file', language: 'arkts' },
-            new ArkTSDocumentFormatter()
-        )
-    );
+		vscode.languages.registerDocumentFormattingEditProvider(
+			[
+				{ scheme: 'file', language: 'arkts' },
+				{ scheme: 'file', pattern: '**/*.ets' },
+				{ scheme: 'file', pattern: '**/*.ts' }
+			],
+			new ArkTSDocumentFormatter()
+		)
+	);
 	registerProvider(context);
 	language.newInstance(context.extensionPath);
 	vscode.window.showInformationMessage($r('activeMessage'));
