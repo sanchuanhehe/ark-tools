@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { arkts } from '../arkts';
+import { arkts } from '../../../arkts';
 
 export class ArkTSDocumentFormatter implements vscode.DocumentFormattingEditProvider {
     async provideDocumentFormattingEdits(
