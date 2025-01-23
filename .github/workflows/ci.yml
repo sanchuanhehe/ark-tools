@@ -10,6 +10,9 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       # 1. 检出代码
       - name: Checkout Code
@@ -60,6 +63,17 @@ jobs:
       # 9. 构建扩展
       - name: Package Extension
         run: npm run package
+
+      - name: Commit package-lock.json
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          if [[ -n $(git status --porcelain package-lock.json) ]]; then
+            git add package-lock.json
+            git commit -m "chore: update package-lock.json [skip ci]"
+            git push
+          fi
 
   # 可选：自动发布到 Visual Studio Marketplace
   # 需要在 GitHub Secrets 中配置 `VSCE_TOKEN`
