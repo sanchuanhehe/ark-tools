@@ -68,6 +68,11 @@
         "configuration": "./templates/syntaxes/json5Configuration.json"
       }
     ],
+    "configurationDefaults": {
+      "[arkts]": {
+        "editor.defaultFormatter": "sanchuanhehe.ark-tools"
+      }
+    },
     "capabilities": {
       "documentFormattingProvider": "true"
     },
