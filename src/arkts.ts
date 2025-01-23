@@ -96,33 +96,43 @@ export class arkts {
         UiPanel.createOrShow(vscode.Uri.parse('about'));
     }
 
-    static async format(fileUri: vscode.Uri) {
+    static async format(fileUri: vscode.Uri): Promise<vscode.TextEdit[]> {
         if (fileUri && fileUri.fsPath) {
             const filePath = fileUri.fsPath;
             const text = fs.readFileSync(filePath, { encoding: 'utf8' });
             const document = vscode.window.activeTextEditor?.document;
+
             if (document) {
-                let i = 0, j = 0;
-                const string0 = document.getText(), formatted = prettier.format(text, {
+                const formatted = prettier.format(text, {
                     tabWidth: 4,
                     semi: false,
                     parser: (filePath.endsWith('.json') || filePath.endsWith('.json5')) ? "json5" : "typescript"
                 });
+
+                // 计算需要替换的文本范围
+                let i = 0, j = 0;
+                const string0 = document.getText();
                 while (i < string0.length && i < formatted.length && string0[i] === formatted[i]) {
                     ++i;
                 }
                 while (i + j < string0.length && i + j < formatted.length && string0[string0.length - j - 1] === formatted[formatted.length - j - 1]) {
                     ++j;
                 }
+
+                // 生成替换范围
                 const newText = formatted.substring(i, formatted.length - j);
-                const pos0 = document.positionAt(i), pos1 = document.positionAt(string0.length - j);
-                const edit = new vscode.WorkspaceEdit();
-                edit.replace(document.uri, new vscode.Range(pos0, pos1), newText);
-                return vscode.workspace.applyEdit(edit);
+                const pos0 = document.positionAt(i);
+                const pos1 = document.positionAt(string0.length - j);
+                const range = new vscode.Range(pos0, pos1);
+
+                // 返回 TextEdit
+                return [vscode.TextEdit.replace(range, newText)];
             }
         }
-    }
 
+        // 如果无法格式化，返回空数组
+        return [];
+    }
     static async createModule() {
         const moduleName = await vscode.window.showInputBox({
             prompt: $r('enterModuleName'),

@@ -8,10 +8,11 @@ export class ArkTSDocumentFormatter implements vscode.DocumentFormattingEditProv
         token: vscode.CancellationToken
     ): Promise<vscode.TextEdit[]> {
         try {
-            await arkts.format(document.uri);
-            return [];
+            // 调用 arkts.format 获取 TextEdit[]
+            return await arkts.format(document.uri);
         } catch (error) {
             console.error('Format failed:', error);
+            vscode.window.showErrorMessage(`Formatting failed: ${error.message}`);
             return [];
         }
     }
