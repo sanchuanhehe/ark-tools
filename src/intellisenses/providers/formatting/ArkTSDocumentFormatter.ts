@@ -10,3 +10,5 @@ export class ArkTSDocumentFormatter implements vscode.DocumentFormattingEditProv
         return [];
     }
 }
+
+export default ArkTSDocumentFormatter;

@@ -7,7 +7,7 @@ import { globalData } from './globalData';
 import projectLoader from './projects/projectLoader';
 import { registerProvider } from './intellisenses/providers';
 import { globalContext } from './intellisenses/globalContext';
-import { ArkTSFormatter } from './intellisenses/providers/formatting/ArkTSDocumentFormatter';
+import { ArkTSDocumentFormatter } from './intellisenses/providers/formatting/ArkTSDocumentFormatter';
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             { scheme: 'file', language: 'arkts' },
-            new ArkTSFormatter()
+            new ArkTSDocumentFormatter()
         )
     );
 	registerProvider(context);
