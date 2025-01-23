@@ -4,7 +4,7 @@
   "displayName": "ArkTS Tools",
   "description": "%ext.description%",
   "version": "0.1.8",
-  "publisher": "michaelding",
+  "publisher": "sanchuanhehe",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -24,12 +24,12 @@
     "arkui"
   ],
   "bugs": {
-    "url": "https://gitee.com/michael-eddy/ark-tools/issues"
+    "url": "https://github.com/sanchuanhehe/ark-tools/issues"
   },
-  "homepage": "https://gitee.com/michael-eddy/ark-tools",
+  "homepage": "https://github.com/sanchuanhehe/ark-tools",
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/michael-eddy/ark-tools.git"
+    "url": "https://github.com/sanchuanhehe/ark-tools.git"
   },
   "activationEvents": [
     "workspaceContains:**/oh-package.json5",
@@ -221,7 +221,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
-    "package": "vsce package --baseImagesUrl https://gitee.com/michael-eddy/ark-tools/raw/master/",
+    "package": "vsce package --baseImagesUrl https://github.com/sanchuanhehe/ark-tools/raw/master/",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
