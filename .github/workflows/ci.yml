@@ -70,7 +70,7 @@ jobs:
 
       # 新增：上传构建产物到 Artifacts
       - name: Upload Extension Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ark-tools-extension
           path: "*.vsix"
@@ -118,7 +118,7 @@ jobs:
 
       # 新增：下载之前的构建产物
       - name: Download Extension Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ark-tools-extension
 
