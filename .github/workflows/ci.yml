@@ -88,7 +88,7 @@ jobs:
           fi
 
   # 可选：自动发布到 Visual Studio Marketplace
-  # 需要在 GitHub Secrets 中配置 `VSCE_TOKEN`
+  # 需要在 GitHub Secrets 中配置 `VSCE_PAT`
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
