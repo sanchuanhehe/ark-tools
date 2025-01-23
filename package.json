@@ -73,6 +73,12 @@
         "editor.defaultFormatter": "sanchuanhehe.ark-tools"
       }
     },
+    "formatting": [
+      {
+        "language": "arkts",
+        "documentFormatting": true
+      }
+    ],
     "capabilities": {
       "documentFormattingProvider": "true"
     },
