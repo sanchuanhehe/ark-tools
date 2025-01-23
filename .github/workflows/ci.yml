@@ -68,6 +68,14 @@ jobs:
       - name: Package Extension
         run: npm run package
 
+      # 新增：上传构建产物到 Artifacts
+      - name: Upload Extension Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ark-tools-extension
+          path: "*.vsix"
+          retention-days: 5
+
       - name: Commit package-lock.json
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         run: |
@@ -84,6 +92,9 @@ jobs:
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
+    # 添加写入权限
+    permissions:
+      contents: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -103,6 +114,21 @@ jobs:
 
       - name: Package Extension
         run: npm run package
+
+      # 新增：下载之前的构建产物
+      - name: Download Extension Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ark-tools-extension
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.vsix"
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to Visual Studio Marketplace
         if: startsWith(github.ref, 'refs/tags/')
