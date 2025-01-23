@@ -1,0 +1,68 @@
+name: CI/CD for VS Code Extension
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # VS Code 通常与 Node.js 16 兼容
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 4. 执行代码检查（可选择使用 ESLint 或其他工具）
+      - name: Lint Code with ESLint
+        run: npm run lint
+
+      # 5. 执行测试
+      - name: Run Tests
+        run: npm test
+
+      # 6. 构建扩展
+      - name: Build Extension
+        run: npm run build
+
+      # 7. 验证扩展是否可以打包（可选步骤）
+      - name: Package VS Code Extension
+        run: npx vsce package
+
+  # 可选：自动发布到 Visual Studio Marketplace
+  # 需要在 GitHub Secrets 中配置 `VSCE_TOKEN`
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Package Extension
+        run: npx vsce package
+
+      - name: Publish to Visual Studio Marketplace
+        run: npx vsce publish
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
