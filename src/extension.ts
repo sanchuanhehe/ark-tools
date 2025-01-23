@@ -39,8 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.languages.registerDocumentFormattingEditProvider(
 			[
 				{ scheme: 'file', language: 'arkts' },
-				{ scheme: 'file', pattern: '**/*.ets' },
-				{ scheme: 'file', pattern: '**/*.ts' }
+				{ scheme: 'file', pattern: '**/*.ets' }
 			],
 			new ArkTSDocumentFormatter()
 		)
