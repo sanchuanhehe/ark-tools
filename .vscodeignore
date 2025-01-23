@@ -10,27 +10,3 @@ vsc-extension-quickstart.md
 images/**
 tools/**
 
-# 新增排除项
-.git/**
-.github/**
-.npmignore
-.eslintrc.js
-.prettierrc
-jest.config.js
-webpack.config.js
-test/**
-**/__tests__/**
-**/*.test.js
-**/*.spec.js
-**/test-results/**
-coverage/**
-.nyc_output/**
-docs/**
-.editorconfig
-CHANGELOG.md
-README.md
-LICENSE
-
-# 保留项（取消注释以保留）
-# !images/icon.png
-# !dist/**/*.js
