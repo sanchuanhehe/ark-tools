@@ -28,23 +28,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb
 
-      # 4. 安装依赖
+      # 4. 生成 package-lock.json
+      - name: Generate package-lock.json
+        run: npm i --package-lock-only
+
+      # 5. 安装依赖
       - name: Install dependencies
         run: npm ci
 
-      # 5. 构建扩展
+      # 6. 构建扩展
       - name: Build
         run: npm run compile
 
-      # 6. 执行代码检查（可选择使用 ESLint 或其他工具）
+      # 7. 执行代码检查（可选择使用 ESLint 或其他工具）
       - name: Lint Code with ESLint
         run: npm run lint
 
-      # 7. 执行测试
+      # 8. 执行测试
       - name: Run Tests with xvfb
         run: xvfb-run --auto-servernum npm test
 
-      # 8. 构建扩展
+      # 9. 构建扩展
       - name: Package Extension
         run: npm run package
 
