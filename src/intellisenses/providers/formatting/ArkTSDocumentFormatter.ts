@@ -11,8 +11,8 @@ export class ArkTSDocumentFormatter implements vscode.DocumentFormattingEditProv
             // 调用 arkts.format 获取 TextEdit[]
             return await arkts.format(document.uri);
         } catch (error) {
-            console.error('Format failed:', error);
-            vscode.window.showErrorMessage(`Formatting failed: ${error.message}`);
+            console.error('Format failed:', error as any);
+            vscode.window.showErrorMessage(`Formatting failed: ${(error as any).message}`);
             return [];
         }
     }
