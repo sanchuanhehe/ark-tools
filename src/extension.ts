@@ -7,6 +7,8 @@ import { globalData } from './globalData';
 import projectLoader from './projects/projectLoader';
 import { registerProvider } from './intellisenses/providers';
 import { globalContext } from './intellisenses/globalContext';
+import { ArkTSFormatter } from './intellisenses/providers/formatting/ArkTSDocumentFormatter';
+
 
 export function activate(context: vscode.ExtensionContext) {
 	globalData.init(context);
@@ -33,6 +35,12 @@ export function activate(context: vscode.ExtensionContext) {
 		(fileUri: vscode.Uri) => arkts.codelinter(fileUri)));
 	context.subscriptions.push(vscode.commands.registerCommand("arkts.toolsInit",
 		() => arkts.toolsInit()));
+	context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            { scheme: 'file', language: 'arkts' },
+            new ArkTSFormatter()
+        )
+    );
 	registerProvider(context);
 	language.newInstance(context.extensionPath);
 	vscode.window.showInformationMessage($r('activeMessage'));

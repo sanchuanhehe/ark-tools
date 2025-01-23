@@ -67,6 +67,9 @@
         "configuration": "./templates/syntaxes/json5Configuration.json"
       }
     ],
+    "capabilities": {
+      "documentFormattingProvider": "true"
+    },
     "grammars": [
       {
         "language": "json5",
