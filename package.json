@@ -3,7 +3,7 @@
   "icon": "icon.png",
   "displayName": "ArkTS Tools",
   "description": "%ext.description%",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "publisher": "sanchuanhehe",
   "engines": {
     "vscode": "^1.75.0"
